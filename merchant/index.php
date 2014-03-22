@@ -7,6 +7,7 @@ getbalance of wallet/user ?
 
 ob_start(); //so we can redirect even after headers are sent
 
+
 //include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
 //need our own constants.php 
 //include functmail.php /jsonsrpc/jsonRPCClient.php maybe server too
@@ -22,7 +23,11 @@ if(DEBUGMODE>0){
 	error_reporting(E_ERROR | E_PARSE);
 }
 
+//$strOutPutType= "json"; //text json
 
+if(RETURN_OUTPUTTYPE=="json"){
+	header('Content-Type: application/json'); //spit out JSON
+}
 
 //common varibles and connection strings used in this file
 //$DB_LINK for database
@@ -71,10 +76,14 @@ $strPassword_DB=	$row["user_password"];
 $strEmail=			$row["user_email"];
 $strCallbackURL=	$row["callbackurl"];
 $intLastLogin=		$row["date_updated"];
+$strSecret=			$row["user_secret"];
 
 if(!$intUserID){$strError_Login="nouser" ;}
-//if(!password_verify($strLoginPassword, $strPassword_DB)){ $strError_Login = "fail"; } //check hashed password match
-if($strPassword_DB!=$strLoginPassword){ $strError_Login=="fail" ;} //check non hashed password match
+if(PASSWORD_ENCRYPT){
+	if(!password_verify($strLoginPassword, $strPassword_DB)){ $strError_Login = "fail"; } //check hashed password match
+}else{
+	if($strPassword_DB!=$strLoginPassword){ $strError_Login=="fail" ;} //check non hashed password match
+}
 if($strError_Login=="fail"){ $strError_Login_msg= "error: wrong username or password"; }
 if($strError_Login=="nouser"){ $strError_Login_msg= "error: no such user"; }
 
@@ -115,13 +124,15 @@ switch ($strMethod){
 		//if(!$strAddress){$strAddress='*';}
 		$strAccount = $strUserName; //might be depreciated in new system
 		try{
-		  	$strReturnError= $mybtc->getnewaddress($strAccount);
+		  	$strReturnError= $mybtc->getnewaddress($strAccount) ;
 		  	$strWalletAddress = $strReturnError ;
+		  	if( strlen($strWalletAddress)>=27 ){ $strReturnError = "*ok*" ;}
+		  	
 		  	
 	        // add to address table
 			$query = "INSERT INTO ".$tbl_Addresses.
-			" ( user_id,		user_name,		address,			crypto_type,		date_created ) VALUES ".
-			" (	'$intUserID',	'$strUserName',	'$strWalletAddress','$strCryptoType',	NOW() 	  ) " ;
+			" ( user_id,		user_name,		address,			label,			label2,			label3,			crypto_type,		date_created ) VALUES ".
+			" (	'$intUserID',	'$strUserName',	'$strWalletAddress','$strLabel1',	'$strLabel2',	'$strLabel3',	'$strCryptoType',	NOW() 	  ) " ;
 			//echo "Insert into user Table - SQL STMNT = " . $query .  "<br>";
 			$strERRORUserMessage="Database CREATE NEW ADDRESS Error. Admin has been informed \n $strReturnError "; $strERRORMessageAdmin="$strQueryString \n SQL statement failed - $query "; 
 			mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage)  ;
@@ -138,7 +149,11 @@ switch ($strMethod){
 		}
         
 		//return error will be wallet address if it works
-		echo $strReturnError ; die;
+		if(RETURN_OUTPUTTYPE=="json"){
+			echo json_encode(array( 'address'=>"$strWalletAddress", 'label'=>"$strLabel1", 'error'=>"$strReturnError" ));
+		}else{
+			echo $strReturnError ; //die;
+		}
 		
     break;
     
@@ -162,10 +177,14 @@ switch ($strMethod){
         $strComment = 	mysqli_real_escape_string($DB_LINK, funct_FormVarSecurity($_GET['comment']));  
         $strCommentTo = mysqli_real_escape_string($DB_LINK, funct_FormVarSecurity($_GET['commentto'])); 
 
+		//do we take the amount in satoshi ? $crypto_amt = $value_in_satoshi / 100000000;
+
 		//Request error: -1 - value is type str, expected real
 		//$intAmount = (float)0.000100 ;
 		$intAmount = (float)$intAmount ;
-		echo "amt= ".$intAmount."<br>";
+		//echo "amt= ".$intAmount."<br>";
+		
+		
 
 
 		//RPC call to the bitcoin server 
@@ -178,35 +197,49 @@ switch ($strMethod){
 			}else{ //send from any availabe balance
 		  		$strReturnError = $mybtc->sendtoaddress( $strAddress , $intAmount , $strComment , $strCommentTo );
 		  	}
-		  	return $strReturnError ;
+		  	//return $strReturnError ;
 		  	//should return transaction id if it works
 		  	if($strReturnError){ 
 		  		$strTransactionID = $strReturnError ; 
+		  		
+				//if it returns back a transactionid then add to the transactions table
+				$query = "INSERT INTO ".$tbl_Transactions.
+				" ( txid, 				user_id,	method,		ipaddress,		crypto_amount,	crypto_type,		address_to,		address_from,	 response, 				date_created ) VALUES ".
+				" ('$strTransactionID',$intUserID,	'$strMethod','$strIPaddress','$intAmount', 	'$strCryptoType',	'$strAddress',	'$strFrom',		'$strError_Login_msg',	NOW() 	  ) " ;
+				//echo "Insert into transactions Table - SQL STMNT = " . $query .  "<br>";
+				$strERRORUserMessage="Database CREATE NEW TRANSACTION $strMethod Error. Admin has been informed "; $strERRORMessageAdmin="$strQueryString \n SQL statement failed - $query "; 
+				mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage, $intNewLogID)  ;
+				//CATCH ERROR AND EMAIL 
+				$intNewTransactionID = mysqli_insert_id($DB_LINK);		  		
+		  		
+		  		$strERRORUserMessage = "*ok*";
 		  	}
 		  
 		} catch(Exception $e){
 		  	//echo nl2br($e->getMessage()).'<br />'."\n";
 		  	$strReturnError = $e->getMessage() ;
-		  	
+		  	$strERRORUserMessage = $strReturnError ;
 		  	//CATCH ERROR AND EMAIL
-			$strERRORUserMessage="Sending Transaction $strMethod Failed. Admin has been informed ".$strReturnError; $strERRORMessageAdmin="$strQueryString \n error= $strReturnError ";
-			funct_die_and_Report($strReturnError, $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage);
+			$strERRORUserMessage="Sending Transaction $strMethod Failed. Admin has been informed "; $strERRORMessageAdmin="$strQueryString \n error= $strReturnError ";
+			//funct_die_and_Report($strReturnError, $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage);
 		}
 
-		//if it returns back a transactionid then add to the transactions table
-		$query = "INSERT INTO ".$tbl_Transactions.
-		" ( txid, 				user_id,	method,		ipaddress,		crypto_amount,	crypto_type,		address_to,		address_from,	 response, 				date_created ) VALUES ".
-		" ('$strTransactionID',$intUserID,	'$strMethod','$strIPaddress','$intAmount', 	'$strCryptoType',	'$strAddress',	'$strFrom',		'$strError_Login_msg',	NOW() 	  ) " ;
-		echo "Insert into user Table - SQL STMNT = " . $query .  "<br>";
-		$strERRORUserMessage="Database CREATE NEW TRANSACTION $strMethod Error. Admin has been informed "; $strERRORMessageAdmin="$strQueryString \n SQL statement failed - $query "; 
-		mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage)  ;
-		//CATCH ERROR AND EMAIL 
-		$intNewTransactionID = mysqli_insert_id($DB_LINK);
 
-
-		echo $strReturnError; die;
+		//return error will be wallet address if it works
+		if(RETURN_OUTPUTTYPE=="json"){
+			echo json_encode(array( 'message'=>"$strERRORUserMessage", 'tx_hash'=>"$strTransactionID", 'error'=>"$strReturnError" ));
+		}else{
+			echo $strReturnError ; //die;
+		}
+		
+		//$message = $json_feed->message;
+		//$txid = $json_feed->tx_hash;
+		//$error = $json_feed->error;
+		//echo $strReturnError; die;
 
 	break;
+	
+	
 	
 	
 	
@@ -217,7 +250,7 @@ switch ($strMethod){
 	//calls a web url specified in the user account
 
         $strTransaction = mysqli_real_escape_string($DB_LINK, funct_FormVarSecurity($_GET['txid'])); 
-		$strTransaction="10c724bdfe52f95b482949101cc1bb3657c9f92d7f61d469a309eacbb6782d24";
+		//test //$strTransaction="10c724bdfe52f95b482949101cc1bb3657c9f92d7f61d469a309eacbb6782d24";
 
 		if(!$strTransaction){ 
 			$strReturnError = "no transaction id provided...";
@@ -237,31 +270,33 @@ switch ($strMethod){
 		  	//use the getrawtransaction call to request information about any transaction 
 		  	
 		  	//bind values to variables
-			$strTransactionID = $trxinfo["txid"] ;
-			$intAmount = $trxinfo["amount"] ;
-			$intConfirmations = $trxinfo["confirmations"] ;
-			$intTime = $trxinfo["time"] ;
-			$strAccountName = $trxinfo["details"][0]["account"] ;
-			$strAddress = $trxinfo["details"][0]["address"] ;
-			$strAddressFrom = "" ;
+			$strTransactionID = 	$trxinfo["txid"] ;
+			$intAmount = 			$trxinfo["amount"] ; //this is a decimal.. NOT satoshi
+			$intConfirmations = 	$trxinfo["confirmations"] ;
+			$intTime = 				$trxinfo["time"] ;
+			$strAccountName = 		$trxinfo["details"][0]["account"] ;
+			$strAddress = 			$trxinfo["details"][0]["address"] ;
+			$strAddressFrom = 		"" ;
 			
-			$new = "\n\nTransaction hash: ".$argv[1]
-			."\n Getinfo balance: ".$walletinfo["balance"]
-			."\n Gettransaction amount: ".$trxinfo["amount"]
-			."\n Gettransaction confirmations: ".$trxinfo["confirmations"]
-			."\n Gettransaction blockhash: ".$trxinfo["blockhash"]
-			."\n Gettransaction blockindex: ".$trxinfo["blockindex"]
-			."\n Gettransaction blocktime: ".$trxinfo["blocktime"]
-			."\n Gettransaction txid: ".$trxinfo["txid"]
-			."\n Gettransaction time: ".$trxinfo["time"]
-			."\n Gettransaction timereceived: ".$trxinfo["timereceived"]
-			."\n Gettransaction account: ".$trxinfo["details"][0]["account"]
-			."\n Gettransaction address: ".$trxinfo["details"][0]["address"]
-			."\n Gettransaction category: ".$trxinfo["details"][0]["category"]
-			."\n Gettransaction amount: ".$trxinfo["details"][0]["amount"]
-			."\n Gettransaction fee: ".$trxinfo["details"][0]["fee"]  // According to https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list, fee is returned, but it doesn't seem that way here
+			$new = "Transaction hash: ".$argv[1]
+			."\n balance: ".$walletinfo["balance"]
+			."\n amount: ".$trxinfo["amount"]
+			."\n confirmations: ".$trxinfo["confirmations"]
+			."\n blockhash: ".$trxinfo["blockhash"]
+			."\n blockindex: ".$trxinfo["blockindex"]
+			."\n blocktime: ".$trxinfo["blocktime"]
+			."\n txid: ".$trxinfo["txid"]
+			."\n time: ".$trxinfo["time"]
+			."\n timereceived: ".$trxinfo["timereceived"]
+			."\n account: ".$trxinfo["details"][0]["account"]
+			."\n address: ".$trxinfo["details"][0]["address"]
+			."\n category: ".$trxinfo["details"][0]["category"]
+			."\n amount: ".$trxinfo["details"][0]["amount"]
+			."\n fee: ".$trxinfo["details"][0]["fee"]  // According to https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list, fee is returned, but it doesn't seem that way here
 			;
-			echo nl2br($new)."<br>";
+			//echo nl2br($new)."<br>";
+			
+			$strReturnError = $strTransactionID ;
 		  
 		} catch(Exception $e){
 
@@ -269,7 +304,7 @@ switch ($strMethod){
 			
 			//CATCH ERROR AND EMAIL
 			$strERRORUserMessage="Getting Transaction Info Failed. Admin has been informed ".$strReturnError; $strERRORMessageAdmin="$strQueryString \n error= $strReturnError ";
-			funct_die_and_Report($strReturnError, $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage);
+			funct_die_and_Report($strReturnError, $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage, $intNewLogID);
 		}
 		
 		
@@ -279,7 +314,8 @@ switch ($strMethod){
 			//first check if the record exists
 			$query=	"SELECT * FROM " . $tbl_Transactions . " WHERE txid = '" . $strTransactionID . "' ";
 			//echo "SQLSTMNT= $query <br>";
-			$rs=mysqli_query($DB_LINK, $query);
+			$rs=mysqli_query($DB_LINK, $query)  or funct_die_and_Report(mysqli_error($DB_LINK), "Error searching transactions table. Admin informed.", "Error searching transactions table. \n $strQueryString \n $query ", $strERRORPage, $intNewLogID)  ;
+
 			if(mysqli_num_rows($rs)<1){
 
 				//if it does not exist then insert
@@ -288,7 +324,7 @@ switch ($strMethod){
 				" ('$strTransactionID',$intUserID,	'$strMethod','$strIPaddress','$intAmount', 	'$strCryptoType',	'$strAddress',	'$strAddressFrom',	'$intConfirmations','$strReturnError',	NOW() 	  ) " ;
 				//echo "Insert into user Table - SQL STMNT = " . $query .  "<br>";
 				$strERRORUserMessage="Database CREATE NEW TRANSACTION $strMethod Error. Admin has been informed "; $strERRORMessageAdmin=" $strQueryString \n SQL statement failed - $query "; 
-				mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage)  ;
+				mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage, $intNewLogID)  ;
 				//CATCH ERROR AND EMAIL 
 				$intTransactionID = mysqli_insert_id($DB_LINK);
 
@@ -298,17 +334,29 @@ switch ($strMethod){
 				$intTransactionID =	$row["id"];
 				
 				//update with the new confirmations count
-				$query="UPDATE " . $tbl_Transactions . " SET confirmations='$intConfirmations' $strSQL2 WHERE id='".$intNewTransactionID."'" ;
+				$query="UPDATE " . $tbl_Transactions . " SET confirmations='$intConfirmations' WHERE id='".$intNewTransactionID."'" ;
 				//echo "SQL STMNT = " . $query .  "<br>";
-				mysqli_query($DB_LINK, $query) or die(mysqli_error());
+				mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), "Error updating confirmations.  Admin has been informed", "$strQueryString \n $query \n error= $strReturnError ", $strERRORPage, $intNewLogID) ;
 				
 			}// end if records found
 		
-				
+			
+			//convert $intAmount to satoshi as our script is setup to handle that... blockchain.info does it.. legacy
+			$intAmount = $intAmount * 100000000; //bitcoind never passes more than 8 decimal places thus value will always be a whole number.. satoshi
+			
+			// secret transaction_hash input_address value confirmations
+			if(!$strCallbackURL){$strCallbackURL="http://getcoincafe.com/mods/processorder.php";}
 			//call processorder script
-			$json_url = "http://getcoincafe.com/mods/processorder.php?transaction_hash=$strTransactionID&address=$strAddress&input_address=unknown&value=$intAmount";
-			//$json_data = file_get_contents($json_url);
-			$strCallbackResponse = "*ok*";
+			$json_url = $strCallbackURL."?real_secret=$strSecret&transaction_hash=$strTransactionID&address=$strAddress&input_address=$strAddress&value=$intAmount&confirms=$intConfirmations";
+			//echo "<br>url: $json_url";
+			$json_data = file_get_contents($json_url);
+			//echo $json_data ;
+			$json_feed = json_decode($json_data);
+			$strCallbackResponse = $json_data;
+			//$strCallbackResponse = "*ok*";
+			//echo $json_data ;
+			
+			$strReturnError = $strCallbackResponse ;
 			//CATCH ERROR AND EMAIL
 
 			if($strCallbackResponse=="*ok*"){
@@ -319,23 +367,30 @@ switch ($strMethod){
 			$query="UPDATE " . $tbl_Transactions . " SET response_callback='".$strCallbackResponse."' $strSQL2 WHERE id='".$intTransactionID."'" ;
 			//echo "SQL STMNT = " . $query .  "<br>";
 			mysqli_query($DB_LINK, $query) or die(mysqli_error());
-	
+			
 			//if we do not get back an ok we need some method of 
 			//hitting the callback url over and over until we get an *ok* how?
 
 			
 		}
 		
-		echo $strReturnError; die;
-
+		
+		if(RETURN_OUTPUTTYPE=="json"){
+			echo json_encode(array( 'confirmations'=>"$intConfirmations", 'address'=>"$strAddress", 'amount'=>"$intAmount", 'txid'=>"$strTransactionID", 'error'=>"$strReturnError" ));
+		}else{
+			echo $strReturnError ; //die;
+		}
+		
+		
 	break;
 	
 } //End Switch Statement
 
+
 //update log record
 $query="UPDATE " . $tbl_Logs . 
 " SET response= '".$strReturnError."' ".
-" WHERE id=".$intNewLogID ;
+" WHERE log_id=".$intNewLogID ;
 //echo "SQL STMNT = " . $query .  "<br>";
 mysqli_query($DB_LINK, $query) or die(mysqli_error($DB_LINK));
 //CATCH ERROR AND EMAIL

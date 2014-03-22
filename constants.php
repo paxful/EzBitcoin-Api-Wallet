@@ -8,6 +8,7 @@
 //##############################
 // Settings
 define("JSONRPC_CONNECTIONSTRING_CC",		"https://A7sC5sYk1q4ef3XBoaqXYNq:9VnBT373isI1S3cA0cLqabs@5.153.60.162:8332"); //CoinCafe Custom RPC server at Softlayer
+define("RETURN_OUTPUTTYPE", 				"json");
 define("SUPPORT_EMAIL", 					"help@getcoincafe.com");
 define("EMAIL_ADMIN", 						"admin@getcoincafe.com");
 define("SERVER_IPADDRESS",					"5.153.60.162");
@@ -42,8 +43,8 @@ switch ($strServer){ // Server SiteWide Vars
 	define("WEBSITEFULLURL", 			"http://" . WEBSITEURL);
 	define("WEBSITEFULLURLHTTPS",		"https://".WEBSITEURL);
 	define("DB_SERVER", 				"localhost");
-	define("DB_USER", 					"ccapi");
-	define("DB_PASS", 					"m4m4b34r");
+	define("DB_USER", 					"root");
+	define("DB_PASS", 					"3dFs7vRTj3U2");
 	define("DB_NAME", 					"ccapi"); //
 	break;
 	
