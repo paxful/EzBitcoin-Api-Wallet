@@ -1,0 +1,108 @@
+/*** These are not needed */
+	html {
+		width:100%;
+		height:100%;
+		overflow-y:scroll;
+	}
+	body {
+		position:relative;
+		width:100%;
+		height:100%;
+		padding:0;
+		margin:0;
+		background:#ededed;
+		font-family:"Trebuchet MS","Arial", Helvetica, sans-serif;
+		font-weight:normal;
+		font-style:normal;
+		line-height:1;
+	}
+	div { position:relative; }
+	
+	hr { display:block;float:none;clear:both;margin:1em auto;color:#ccc;border:solid #ccc;border-width:1px 0 0;height:0;padding:0; }
+	h2 {
+		text-rendering: optimizeLegibility;
+		font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+		font-weight: normal;
+		font-style: normal;
+		font-size: 1.6875em;
+		color: #222222;
+		margin-top: 0.2em;
+		margin-bottom: 0.5em;
+		line-height: 1.2125em;}	
+
+
+	
+	
+/**** IMPORTANT THESE ARE NEEDED ****/	
+	#container {
+	  float:none;
+	  background: #ffffff;
+	  padding: 0;
+	  margin:0 auto;
+	  margin-bottom:30px;
+	  /* optional */
+	  -webkit-border-radius: 5px;
+	  -moz-border-radius: 5px;
+	  border-radius: 5px;
+	  /* content-box is NEEDED. if border-box is enabled
+	     then it when Masonry calculates the height and width
+		 of the container it counts incorrectly and the result
+		 images running to the edge of the container on the right
+		 and bottom sides. Only apply content-box to the container. */
+	  -webkit-box-sizing:content-box;
+	  -moz-box-sizing:content-box;
+	  box-sizing:content-box;
+	}
+	
+	.box {
+	  margin: 5px;
+	  float: left;
+	  /* optional */
+	  -webkit-border-radius: 5px;
+	  -moz-border-radius: 5px;
+	  border-radius: 5px;
+	}
+	.box img, { display: block; width: 100%; }
+	
+	/* unfortunately masonry needs hard pxs for images */
+	.col1 { width: 80px; }
+	.col2 { width: 180px; }
+	.col3 { width: 280px; }
+	.col4 { width: 380px; }
+	.col5 { width: 480px; }
+	.col1 img { max-width: 80px; }
+	.col2 img { max-width: 180px; }
+	.col3 img { max-width: 280px; }
+	.col4 img { max-width: 380px; }
+	.col5 img { max-width: 480px; }
+	
+	/* animations for the transition/reordering */
+	.transitions-enabled.masonry,
+	.transitions-enabled.masonry .masonry-brick {
+	  -webkit-transition-duration: 0.7s;
+	  -moz-transition-duration: 0.7s;
+	  -ms-transition-duration: 0.7s;
+	  -o-transition-duration: 0.7s;
+	  transition-duration: 0.7s;
+	}
+	.transitions-enabled.masonry {
+	  -webkit-transition-property: height, width;
+	  -moz-transition-property: height, width;
+	  -ms-transition-property: height, width;
+	  -o-transition-property: height, width;
+	  transition-property: height, width;
+	}
+	.transitions-enabled.masonry  .masonry-brick {
+	  -webkit-transition-property: left, right, top;
+	  -moz-transition-property: left, right, top;
+	  -ms-transition-property: left, right, top;
+	  -o-transition-property: left, right, top;
+	  transition-property: left, right, top;
+	}
+
+
+
+/**** Clearfix ****/
+	.clearfix:before, .clearfix:after { content: ""; display: table; }
+	.clearfix:after { clear: both; }
+	.clearfix { zoom: 1; }

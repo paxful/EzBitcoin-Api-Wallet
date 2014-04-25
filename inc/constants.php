@@ -14,15 +14,18 @@ define("EMAIL_ADMIN", 						"admin@getcoincafe.com");
 define("SERVER_IPADDRESS",					"5.153.60.162");
 define("PASSWORD_ENCRYPT", 					""); //bcrypt 1
 define("__ROOT__", 							$_SERVER['DOCUMENT_ROOT']); 
+define("LOADCONTENT",						"/inc/loadcontent.php");
 //##############################
 
 
 
 //##############################
 //Server Settings
-include $_SERVER['DOCUMENT_ROOT']."/server.php"; //for server specific data $strServer value
+include $_SERVER['DOCUMENT_ROOT']."/inc/server.php"; //for server specific data $strServer value
 define("SERVERTAG", 				$strServer); //from above
 switch ($strServer){ // Server SiteWide Vars
+
+
 	case "dev":
 	define("MODE_UPGRADE", 				0);
 	define("DEBUGMODE", 				1);
@@ -33,6 +36,8 @@ switch ($strServer){ // Server SiteWide Vars
 	define("DB_USER", 					"root");
 	define("DB_PASS", 					"littles");
 	define("DB_NAME", 					"coincafe_api");
+	define("JQUERYSRC",					'/js/jquery.min.js'); //latest jquery
+	define("JQUERYUISRC",				'/js/jqueryui.min.1.9.2.js'); //1.9.2 doesn't break blueimp upload and still allows drag and resize
 	break;
 
 	
@@ -40,12 +45,14 @@ switch ($strServer){ // Server SiteWide Vars
 	define("MODE_UPGRADE", 				0);
 	define("DEBUGMODE", 				0);
 	define("WEBSITEURL", 				"coincafe.co");
-	define("WEBSITEFULLURL", 			"http://" . WEBSITEURL);
+	define("WEBSITEFULLURL", 			"http://".WEBSITEURL);
 	define("WEBSITEFULLURLHTTPS",		"https://".WEBSITEURL);
 	define("DB_SERVER", 				"localhost");
 	define("DB_USER", 					"root");
 	define("DB_PASS", 					"3dFs7vRTj3U2");
 	define("DB_NAME", 					"ccapi"); //
+	define("JQUERYSRC",					'//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
+	define("JQUERYUISRC",				'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js');//must upgrade to latest blueimp to use latest jqueryiu	
 	break;
 	
 
@@ -53,13 +60,15 @@ switch ($strServer){ // Server SiteWide Vars
 //##############################
 
 
-
-
-
 //##############################
 // Database settings
 //##############################
 $DB_LINK = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME) or die("Problem connecting: ".mysqli_error());
+//Main content tables
+define("TBL_USERS",  						"tbl_api_users");					//
+define("TBL_WALLET_ADDRESSES",				"tbl_api_addresses");		//
+define("TBL_TRANSACTIONS",  				"tbl_api_transactions");			// 
+define("TBL_LOGS",  						"tbl_api_logs");			// 
 //##############################
 
 
