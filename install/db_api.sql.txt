@@ -1,0 +1,120 @@
+-- phpMyAdmin SQL Dump
+-- version 3.4.3.2
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Jun 07, 2014 at 05:17 PM
+-- Server version: 5.6.2
+-- PHP Version: 5.4.24
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `easybitz_api`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_api_addresses`
+--
+
+CREATE TABLE IF NOT EXISTS `tbl_api_addresses` (
+  `address` varchar(48) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `crypto_balance` decimal(14,8) DEFAULT NULL,
+  `crypto_type` varchar(8) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `user_name` varchar(100) DEFAULT NULL,
+  `label` varchar(1000) DEFAULT NULL,
+  `label2` varchar(100) DEFAULT NULL,
+  `label3` varchar(100) DEFAULT NULL,
+  `crypto_totalreceived` decimal(14,8) DEFAULT NULL,
+  `crypto_previousbalance` decimal(14,8) DEFAULT NULL,
+  `server` varchar(24) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_api_logs`
+--
+
+CREATE TABLE IF NOT EXISTS `tbl_api_logs` (
+  `user_id` int(11) DEFAULT NULL,
+  `user_loginid` varchar(48) DEFAULT NULL,
+  `method` varchar(24) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `ipaddress` varchar(48) DEFAULT NULL,
+  `querystring` varchar(2000) DEFAULT NULL,
+  `referrer` varchar(2000) DEFAULT NULL,
+  `response` varchar(100) DEFAULT NULL,
+  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `server` varchar(24) DEFAULT NULL,
+  PRIMARY KEY (`log_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=199 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_api_transactions`
+--
+
+CREATE TABLE IF NOT EXISTS `tbl_api_transactions` (
+  `transaction_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `txid` varchar(100) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `address_to` varchar(48) DEFAULT NULL,
+  `address_from` varchar(48) DEFAULT NULL,
+  `account_to` varchar(100) NOT NULL,
+  `account_from` varchar(100) NOT NULL,
+  `crypto_amount` decimal(14,8) DEFAULT NULL,
+  `crypto_type` varchar(12) DEFAULT NULL,
+  `confirmations` smallint(6) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_updated` datetime DEFAULT NULL,
+  `method` varchar(12) DEFAULT NULL,
+  `ipaddress` varchar(48) DEFAULT NULL,
+  `response` varchar(1000) DEFAULT NULL,
+  `response_callback` varchar(1000) DEFAULT NULL,
+  `callback_status` tinyint(1) DEFAULT NULL,
+  `block_hash` varchar(1000) DEFAULT NULL,
+  `block_index` smallint(11) DEFAULT NULL,
+  `block_time` int(11) DEFAULT NULL,
+  `tx_time` int(11) DEFAULT NULL,
+  `tx_timereceived` int(11) DEFAULT NULL,
+  `tx_category` varchar(24) DEFAULT NULL,
+  `address_account` varchar(100) DEFAULT NULL,
+  `crypto_balancecurrent` decimal(14,8) DEFAULT NULL,
+  `crypto_previousbalance` decimal(14,8) DEFAULT NULL,
+  `crypto_bitcoindbalance` decimal(14,8) DEFAULT NULL,
+  `credit` decimal(14,8) DEFAULT NULL,
+  `debit` decimal(14,8) DEFAULT NULL,
+  `messagetext` varchar(256) NOT NULL,
+  `label` varchar(100) NOT NULL,
+  `label2` varchar(100) NOT NULL,
+  `label3` varchar(100) NOT NULL,
+  `transaction_type` varchar(12) DEFAULT NULL,
+  `server` varchar(24) DEFAULT NULL,
+  PRIMARY KEY (`transaction_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_api_users`
+--
+
+CREATE TABLE IF NOT EXISTS `tbl_api_users` (
+  `user_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_loginid` varchar(48) DEFAULT NULL,
+  `user_password` varchar(48) DEFAULT NULL,
+  `user_email` varchar(100) DEFAULT NULL,
+  `user_name` varchar(100) DEFAULT NULL,
+  `user_secret` varchar(24) DEFAULT NULL,
+  `callbackurl` varchar(1000) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `date_lastactivity` datetime DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;

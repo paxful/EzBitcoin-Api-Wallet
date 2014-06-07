@@ -1,6 +1,6 @@
 <?php
 //error_reporting(0);//turn off all reporting
-include $_SERVER['DOCUMENT_ROOT']."/inc/phpmailer/class.phpmailer.php"; //for smtp mailing
+include $_SERVER['DOCUMENT_ROOT']."/inc/class.phpmailer.php"; //for smtp mailing
 include $_SERVER['DOCUMENT_ROOT']."/inc/SendGrid.php"; //for sendgrid mailing
 //include $_SERVER['DOCUMENT_ROOT']."/inc/Unirest.php"; //for sendgrid mailing
 //include $_SERVER['DOCUMENT_ROOT']."/inc/Smtpapi.php"; //for sendgrid mailing

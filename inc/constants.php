@@ -7,11 +7,11 @@
 
 //##############################
 // Settings
-define("JSONRPC_CONNECTIONSTRING_CC",		"https://A7sC5sYk1q4ef3XBoaqXYNq:9VnBT373isI1S3cA0cLqabs@5.153.60.162:8332"); //CoinCafe Custom RPC server at Softlayer
+//define("JSONRPC_CONNECTIONSTRING_CC",		"https://A7sC5sYk1q4ef3XBoaqXYNq:9VnBT373isI1S3cA0cLqabs@5.153.60.162:8332"); //CoinCafe Custom RPC server at Softlayer
 define("RETURN_OUTPUTTYPE", 				"json");
 define("SUPPORT_EMAIL", 					"help@getcoincafe.com");
 define("EMAIL_ADMIN", 						"admin@getcoincafe.com");
-define("SERVER_IPADDRESS",					"5.153.60.162");
+define("SERVER_IPADDRESS",					"37.58.86.163"); // internal 10.68.9.140 / ext 37.58.86.163
 define("PASSWORD_ENCRYPT", 					""); //bcrypt 1
 define("__ROOT__", 							$_SERVER['DOCUMENT_ROOT']); 
 define("LOADCONTENT",						"/inc/loadcontent.php");
@@ -21,36 +21,37 @@ define("LOADCONTENT",						"/inc/loadcontent.php");
 
 //##############################
 //Server Settings
-include $_SERVER['DOCUMENT_ROOT']."/inc/server.php"; //for server specific data $strServer value
+
 define("SERVERTAG", 				$strServer); //from above
 switch ($strServer){ // Server SiteWide Vars
-
 
 	case "dev":
 	define("MODE_UPGRADE", 				0);
 	define("DEBUGMODE", 				1);
-	define("WEBSITEURL", 				"local.ccapi");
+	define("WEBSITEURL", 				"local.apieasybitz");
 	define("WEBSITEFULLURL", 			"http://".WEBSITEURL); //"http://".WEBSITEURL ;
 	define("WEBSITEFULLURLHTTPS",		"http://".WEBSITEURL); //"https://".WEBSITEURL ;
 	define("DB_SERVER", 				"localhost");
 	define("DB_USER", 					"root");
 	define("DB_PASS", 					"littles");
-	define("DB_NAME", 					"coincafe_api");
+	define("DB_NAME", 					"easybitz_api");
+	define("JSONRPC_CONNECTIONSTRING_CC","https://61141261cRe2Epu0qOFU:L2iFnU14rf0r3v3r832W@37.58.86.163:8332"); //CoinCafe Custom RPC server at Softlayer
 	define("JQUERYSRC",					'/js/jquery.min.js'); //latest jquery
 	define("JQUERYUISRC",				'/js/jqueryui.min.1.9.2.js'); //1.9.2 doesn't break blueimp upload and still allows drag and resize
 	break;
 
 	
-	case "sl": //HostGator - awesome support, DMCA assholes
+	case "sl": //
 	define("MODE_UPGRADE", 				0);
 	define("DEBUGMODE", 				0);
-	define("WEBSITEURL", 				"coincafe.co");
+	define("WEBSITEURL", 				"37.58.86.163");
 	define("WEBSITEFULLURL", 			"http://".WEBSITEURL);
 	define("WEBSITEFULLURLHTTPS",		"https://".WEBSITEURL);
-	define("DB_SERVER", 				"localhost");
+	define("DB_SERVER", 				"localhost"); //10.68.9.138
 	define("DB_USER", 					"root");
-	define("DB_PASS", 					"3dFs7vRTj3U2");
-	define("DB_NAME", 					"ccapi"); //
+	define("DB_PASS", 					"2Epu0qOFUlLrJD832");
+	define("DB_NAME", 					"api"); //
+	define("JSONRPC_CONNECTIONSTRING_CC","http://61141261cRe2Epu0qOFU:L2iFnU14rf0r3v3r832W@127.0.0.1:8332"); //CoinCafe Custom RPC server at Softlayer
 	define("JQUERYSRC",					'//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');
 	define("JQUERYUISRC",				'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js');//must upgrade to latest blueimp to use latest jqueryiu	
 	break;
@@ -63,6 +64,7 @@ switch ($strServer){ // Server SiteWide Vars
 //##############################
 // Database settings
 //##############################
+//echo $strServer." ".DB_SERVER." ".DB_USER." ".DB_PASS." ".DB_NAME ;
 $DB_LINK = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME) or die("Problem connecting: ".mysqli_error());
 //Main content tables
 define("TBL_USERS",  						"tbl_api_users");					//

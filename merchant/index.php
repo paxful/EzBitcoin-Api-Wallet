@@ -7,12 +7,18 @@ getbalance of wallet/user ?
 
 ob_start(); //so we can redirect even after headers are sent
 
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+
+include $_SERVER['DOCUMENT_ROOT']."/inc/server.php"; //for server specific data $strServer value dev, production etc.. doesn't change
+include $_SERVER['DOCUMENT_ROOT']."/inc/constants.php"; //calls server.php within .. updated often
+include $_SERVER['DOCUMENT_ROOT']."/inc/functStrings.php"; //holds all custom string formatting functions
+include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //connect to RPC server as a client
+include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functions * use as needed
+
 
 error_reporting(0);//turn off all reporting
 //if(DEBUGMODE>0){
-	ini_set('display_errors',1);
-	error_reporting(E_ERROR | E_PARSE);
+	//ini_set('display_errors',1);
+	//error_reporting(E_ERROR | E_PARSE);
 //}
 
 //$strOutPutType= "json"; //text json
@@ -38,7 +44,9 @@ $strERRORPage = 		"merchantapi";
 
 //Get Common QueryString Variables security against mysql injection and xss attacks
 $strDebug = 			funct_GetandCleanVariables($_GET['debug']);
-$strLocal = 			funct_GetandCleanVariables($_GET['local']); //n00nez indicates local call from walletnotify
+$strLocal = 			funct_GetandCleanVariables($_GET['local']); //n00nez indicates local call from walletnotify.sh
+if($strIPaddress=="10.68.9.140" || $strIPaddress=="127.0.0.1" || $strIPaddress=="208.105.10.78" ){$strLocal=1;}else{$strLocal=0;}
+
 
 $strMethod = 			funct_GetandCleanVariables($_GET['do']);
 $strLoginName = 		funct_GetandCleanVariables($_GET['loginname']);
@@ -52,66 +60,68 @@ if(!$strLoginName){ $strError_Login='nouser';}
 if(!$strLoginPassword){ $strError_Login='nopassword';}
 //echo "3";
 
-
+//!Log All calls
 //add login attempts to log table... for flood hacking protection how do we prevent flood attacks ?
 $query = "INSERT INTO ".$tbl_Logs.
 " ( user_loginid, 	method,			ipaddress,		querystring,		referrer,	 	response, 			date_created ) VALUES ".
 " ('$strUserIDcode','$strMethod',	'$strIPaddress','$strQueryString',	'$strReferrer',	'$strError_Login',	NOW() ) " ;
-if($strDebug){ echo "Insert into user Table - SQL STMNT = " . $query .  "<br>"; }
+if($strDebug){ echo "Insert into user Table - SQL STMNT = " . $query .  "<br><br>"; }
 $strERRORUserMessage="Database insert logs Error. Admin has been informed ".$strError_send; $strERRORMessageAdmin="$strError_send \n SQL statement failed - $query "; 
 mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage)  ;
 //CATCH ERROR AND EMAIL
 $intNewLogID = mysqli_insert_id($DB_LINK);
 
 
-//kill script if no login
-if($strError_Login){ die($strError_Login);}
+if(!$strLocal){ //coming from outside then authenticate
+	//############################################################################################
+	//!Being Authentication of users
+	//kill script if no login
+	if($strError_Login){ die($strError_Login);}
+	
+	//authenticate the user by looking into the database
+	$query="SELECT * FROM ".$tbl_Users." WHERE user_loginid='".$strLoginName."'" ;
+	if($strDebug){ echo "SQL STMNT = " . $query .  "<br><br>"; }
+	$strERRORUserMessage="Looking up user record failed. Admin has been informed "; $strERRORMessageAdmin=" \n SQL statement failed - $query "; 
+	$rs = mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage)  ;
+	//CATCH ERROR AND EMAIL
+	$row=mysqli_fetch_array($rs) ;
+	$intUserID=			$row["user_id"];
+	$strUserIDcode=		$row["user_loginid"];
+	$strUserName=		$row["user_name"];
+	$strPassword_DB=	$row["user_password"];
+	$strEmail=			$row["user_email"];
+	$strCallbackURL=	$row["callbackurl"];
+	$intLastLogin=		$row["date_updated"];
+	$strSecret=			$row["user_secret"];
+	
+	if(!$intUserID){$strError_Login="nouser" ;}
+	if(PASSWORD_ENCRYPT){
+		if(!password_verify($strLoginPassword, $strPassword_DB)){ $strError_Login = "fail"; } //check hashed password match
+	}else{
+		if($strPassword_DB!=$strLoginPassword){ $strError_Login="fail" ;} //check non hashed password match
+	}
+	if($strError_Login=="fail"){ $strError_Login_msg= "error: wrong username or password"; }
+	if($strError_Login=="nouser"){ $strError_Login_msg= "error: no such user"; }
+	
+	//echo "p_db: $strPassword_DB - p: $strLoginPassword - error: $strError_Login ";
+	
+	//update log record
+	$query="UPDATE " . $tbl_Logs . " SET ".
+	" user_id= '".$intUserID."' , ".
+	" response= '".$strError_Login."' ".
+	" WHERE log_id=".$intNewLogID ;
+	if($strDebug){ echo "SQL STMNT = " . $query .  "<br><br>"; }
+	mysqli_query($DB_LINK, $query) or die(mysqli_error($DB_LINK));
+	
+	if($strError_Login){
+		echo $strError_Login_msg ;
+		die ;
+	}
+	//############### End Authentication #################################################
+} //end if not local
 
-//authenticate the user by looking into the database
-$query="SELECT * FROM ".$tbl_Users." WHERE user_loginid='".$strLoginName."'" ;
-if($strDebug){ echo "SQL STMNT = " . $query .  "<br>"; }
-$strERRORUserMessage="Looking up user record failed. Admin has been informed "; $strERRORMessageAdmin=" \n SQL statement failed - $query "; 
-$rs = mysqli_query($DB_LINK, $query) or funct_die_and_Report(mysqli_error($DB_LINK), $strERRORUserMessage, $strERRORMessageAdmin, $strERRORPage)  ;
-//CATCH ERROR AND EMAIL
-$row=mysqli_fetch_array($rs) ;
-$intUserID=			$row["user_id"];
-$strUserIDcode=		$row["user_loginid"];
-$strUserName=		$row["user_name"];
-$strPassword_DB=	$row["user_password"];
-$strEmail=			$row["user_email"];
-$strCallbackURL=	$row["callbackurl"];
-$intLastLogin=		$row["date_updated"];
-$strSecret=			$row["user_secret"];
 
-
-
-if(!$intUserID){$strError_Login="nouser" ;}
-if(PASSWORD_ENCRYPT){
-	if(!password_verify($strLoginPassword, $strPassword_DB)){ $strError_Login = "fail"; } //check hashed password match
-}else{
-	if($strPassword_DB!=$strLoginPassword){ $strError_Login="fail" ;} //check non hashed password match
-}
-if($strError_Login=="fail"){ $strError_Login_msg= "error: wrong username or password"; }
-if($strError_Login=="nouser"){ $strError_Login_msg= "error: no such user"; }
-
-//echo "p_db: $strPassword_DB - p: $strLoginPassword - error: $strError_Login ";
-
-//update log record
-$query="UPDATE " . $tbl_Logs . " SET ".
-" user_id= '".$intUserID."' , ".
-" response= '".$strError_Login."' ".
-" WHERE log_id=".$intNewLogID ;
-if($strDebug){ echo "SQL STMNT = " . $query .  "<br>"; }
-mysqli_query($DB_LINK, $query) or die(mysqli_error($DB_LINK));
-
-
-
-if($strError_Login){
-	echo $strError_Login_msg ;
-	die ;
-}
-
-
+//! Begin Methods Switch
 
 //echo "strDo= " . $strDo;
 switch ($strMethod){
@@ -384,14 +394,14 @@ switch ($strMethod){
 		//echo "amt= ".$intAmount."<br>";
 		
 		//RPC call to the bitcoin server 
-        //$mybtc = new jsonRPCClient(JSONRPC_CONNECTIONSTRING_CC) ; //our own bitcoind rpc server
+        $mybtc = new jsonRPCClient(JSONRPC_CONNECTIONSTRING_CC) ; //our own bitcoind rpc server
 		//if(!$strWalletAddressForward){$strWalletAddressForward='*';}
 		
 		try{
 			if($strFrom){ //use send from function
-				//$strReturnError = $mybtc->sendfrom( $strFromAccount, $strAddress , $intAmount , $strComment , $strCommentTo );
+				$strReturnError = $mybtc->sendfrom( $strFromAccount, $strAddress , $intAmount , $strComment , $strCommentTo );
 			}else{ //send from any availabe balance
-		  		//$strReturnError = $mybtc->sendtoaddress( $strAddress , $intAmount , $strComment , $strCommentTo );
+		  		$strReturnError = $mybtc->sendtoaddress( $strAddress , $intAmount , $strComment , $strCommentTo );
 		  	}
 		  	//return $strReturnError ;
 		  	//should return transaction id if it works
@@ -542,6 +552,15 @@ switch ($strMethod){
 		//get their userid
 		$intUserID = $row["user_id"];
 		
+		
+		
+		//if no user is found then then recieve is to an orpahned address
+		// script should die here ? 
+		//before that create a transaction  and log the recieve address and amount? 
+		
+		//if userid = 0 then right here the script dies
+		if(!$intUserID){$intUserID=1;} //instead we always set it to coincafe
+		
 		//get their user info
 		$query="SELECT * FROM ".$tbl_Users." WHERE user_id='".$intUserID."'" ;
 		if($strDebug){ echo "SQL STMNT = " . $query .  "<br>"; }
@@ -611,14 +630,14 @@ switch ($strMethod){
 			}// end if records found
 			
 			
-			//
+			//!Callback-send_callback_to_remote_server
 		
 			
 			//convert $intAmount to satoshi as our script is setup to handle that... blockchain.info does it.. legacy
 			$intAmount = $intAmount * 100000000; //bitcoind never passes more than 8 decimal places thus value will always be a whole number.. satoshi
 			
 			// secret transaction_hash input_address value confirmations
-			if(!$strCallbackURL){$strCallbackURL="http://coincafe.com/mods/processorder.php";}
+			if(!$strCallbackURL){$strCallbackURL="http://easybitz.com/mods/processorder.php";}
 			//call processorder script
 			$json_url = $strCallbackURL."?secret=$strSecret&transaction_hash=$strTransactionID&address=$strAddress&input_address=$strAddress&userid=$strLabel2&value=$intAmount&confirms=$intConfirmations&server=amsterdam";
 			//echo "<br>url: $json_url";
