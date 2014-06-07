@@ -34,7 +34,7 @@
             <li><a href="install/readme_securebitcoind.txt">How to Secure your BitcoinD server Guide</a></li>
             <li><a href="install/db_api.sql.txt">API Database sql install</a></li>
             <li><a href="install/db_wallet.sql.txt">Wallet Database sql install</a></li>
-            <li><a href="/merchant/">Merchant API</a> - <a href="/cp/">Control Panel</a></li>
+            <li><a href="/merchant/">Merchant API</a> -<a href="/merchant/test.php">test</a> - <a href="/cp/">Control Panel</a></li>
             <li><a href="/wallet/">Wallet</a></li>
 
         </ul>

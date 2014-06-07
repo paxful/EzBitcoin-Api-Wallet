@@ -2,28 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/css/foundation.css" afterPath="$PROJECT_DIR$/wallet/css/foundation.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/css/foundation.min.css" afterPath="$PROJECT_DIR$/wallet/css/foundation.min.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/css/normalize.css" afterPath="$PROJECT_DIR$/wallet/css/normalize.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/wallet/css/style.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/css/web.css" afterPath="$PROJECT_DIR$/wallet/css/web.css" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/foundation.min.js" afterPath="$PROJECT_DIR$/wallet/js/foundation.min.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/foundation/foundation.js" afterPath="$PROJECT_DIR$/wallet/js/foundation/foundation.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/jquery.masonry.js" afterPath="$PROJECT_DIR$/wallet/js/jquery.masonry.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/jquery.min.js" afterPath="$PROJECT_DIR$/wallet/js/jquery.min.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/modernizr-transitions.js" afterPath="$PROJECT_DIR$/wallet/js/modernizr-transitions.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/fastclick.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/fastclick.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/jquery.cookie.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/jquery.cookie.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/jquery.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/jquery.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/modernizr.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/modernizr.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/placeholder.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/placeholder.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/dashboard.php" afterPath="$PROJECT_DIR$/cp/dashboard.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/index.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/constants.php" afterPath="$PROJECT_DIR$/merchant/constants.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/functStrings.php" afterPath="$PROJECT_DIR$/wallet/functStrings.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/server.php" afterPath="$PROJECT_DIR$/merchant/server.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/index.php" afterPath="$PROJECT_DIR$/cp/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/index.php" afterPath="$PROJECT_DIR$/wallet/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/list_transactions.php" afterPath="$PROJECT_DIR$/cp/list_transactions.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/loadcontent.php" afterPath="$PROJECT_DIR$/cp/loadcontent.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/loadcontent.php" afterPath="$PROJECT_DIR$/wallet/loadcontent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/merchant/index.php" afterPath="$PROJECT_DIR$/merchant/index.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
@@ -47,28 +31,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="constants.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/inc/constants.php">
+      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="40" selection-start="468" selection-end="468" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1335">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="functStrings.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="46" selection-start="563" selection-end="563" vertical-scroll-proportion="-9.375" vertical-offset="0" max-vertical-offset="3630">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/merchant/test.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="1" selection-start="322" selection-end="322" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1200">
+            <state line="42" column="36" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-26.25" vertical-offset="0" max-vertical-offset="870">
               <folding />
             </state>
           </provider>
@@ -77,7 +43,25 @@
       <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/merchant/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="48" selection-start="710" selection-end="710" vertical-scroll-proportion="0.20519836" vertical-offset="0" max-vertical-offset="10425">
+            <state line="12" column="95" selection-start="567" selection-end="567" vertical-scroll-proportion="0.16415869" vertical-offset="0" max-vertical-offset="10425">
+              <folding>
+                <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
+                <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/merchant/test.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="0" selection-start="3" selection-end="3" vertical-scroll-proportion="-0.625" vertical-offset="0" max-vertical-offset="1185">
               <folding />
             </state>
           </provider>
@@ -105,18 +89,20 @@
         <option value="$PROJECT_DIR$/inc/functdatabase.php" />
         <option value="$PROJECT_DIR$/inc/functStrings.php" />
         <option value="$PROJECT_DIR$/inc/functBilling.php" />
-        <option value="$PROJECT_DIR$/merchant/index.php" />
-        <option value="$PROJECT_DIR$/inc/constants.php" />
         <option value="$PROJECT_DIR$/wallet/constants.php" />
         <option value="$PROJECT_DIR$/wallet/do.php" />
+        <option value="$PROJECT_DIR$/merchant/test.php" />
+        <option value="$PROJECT_DIR$/inc/constants.php" />
+        <option value="$PROJECT_DIR$/merchant/functStrings.php" />
+        <option value="$PROJECT_DIR$/merchant/index.php" />
         <option value="$PROJECT_DIR$/index.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="196" />
-    <option name="y" value="125" />
+    <option name="x" value="97" />
+    <option name="y" value="120" />
     <option name="width" value="1454" />
     <option name="height" value="869" />
   </component>
@@ -161,20 +147,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="inc" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -238,24 +210,30 @@
       <created>1402096425639</created>
       <updated>1402096425639</updated>
     </task>
+    <task id="LOCAL-00001" summary="from phpstorm">
+      <created>1402167884790</created>
+      <updated>1402167884790</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="196" y="125" width="1454" height="869" extended-state="0" />
+    <frame x="97" y="120" width="1454" height="869" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22971115" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -276,12 +254,14 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
+    <MESSAGE value="from phpstorm" />
+    <option name="LAST_COMMIT_MESSAGE" value="from phpstorm" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
+    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="36" column="40" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1410">
           <folding />
@@ -291,7 +271,16 @@
     <entry file="file://$PROJECT_DIR$/merchant/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="50" column="11" selection-start="1870" selection-end="1870" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="10335">
-          <folding />
+          <folding>
+            <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -330,7 +319,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
+    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="28" selection-start="737" selection-end="737" vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1350">
           <folding />
@@ -340,7 +329,16 @@
     <entry file="file://$PROJECT_DIR$/merchant/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="23" selection-start="304" selection-end="304" vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="10395">
-          <folding />
+          <folding>
+            <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -389,13 +387,6 @@
     <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functmail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="55" selection-start="1343" selection-end="1343" vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="2280">
           <folding />
         </state>
       </provider>
@@ -421,13 +412,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/inc/funct_jsonrpc.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="46" selection-start="248" selection-end="248" vertical-scroll-proportion="0.14112903" vertical-offset="0" max-vertical-offset="1995">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/functBilling.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="41" selection-start="587" selection-end="587" vertical-scroll-proportion="0.24623802" vertical-offset="0" max-vertical-offset="6135">
@@ -444,43 +428,82 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/constants.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="23" selection-start="1068" selection-end="1068" vertical-scroll-proportion="0.18467852" vertical-offset="105" max-vertical-offset="3435">
+        <state line="214" column="30" selection-start="11970" selection-end="11970" vertical-scroll-proportion="0.6101231" vertical-offset="2704" max-vertical-offset="3435">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
+    <entry file="file://$PROJECT_DIR$/wallet/session.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="40" selection-start="468" selection-end="468" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1335">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3990">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="13" selection-start="1448" selection-end="1448" vertical-scroll-proportion="0.77975374" vertical-offset="0" max-vertical-offset="1335">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/inc/funct_jsonrpc.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="46" selection-start="248" selection-end="248" vertical-scroll-proportion="0.14112903" vertical-offset="0" max-vertical-offset="1995">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/functStrings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="0" selection-start="56" selection-end="56" vertical-scroll-proportion="0.02016129" vertical-offset="15" max-vertical-offset="3630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/inc/functmail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="55" selection-start="1343" selection-end="1343" vertical-scroll-proportion="0.020519836" vertical-offset="495" max-vertical-offset="2280">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="18" selection-start="940" selection-end="940" vertical-scroll-proportion="0.5846774" vertical-offset="0" max-vertical-offset="870">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="46" selection-start="563" selection-end="563" vertical-scroll-proportion="-9.375" vertical-offset="0" max-vertical-offset="3630">
+        <state line="42" column="36" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-26.25" vertical-offset="0" max-vertical-offset="870">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/merchant/test.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="1" selection-start="322" selection-end="322" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1200">
+        <state line="1" column="0" selection-start="3" selection-end="3" vertical-scroll-proportion="-0.625" vertical-offset="0" max-vertical-offset="1185">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/functStrings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="48" selection-start="289" selection-end="289" vertical-scroll-proportion="0.2016129" vertical-offset="0" max-vertical-offset="744">
+          <folding>
+            <element signature="e#6#55#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/merchant/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="48" selection-start="710" selection-end="710" vertical-scroll-proportion="0.20519836" vertical-offset="0" max-vertical-offset="10425">
-          <folding />
+        <state line="12" column="95" selection-start="567" selection-end="567" vertical-scroll-proportion="0.16415869" vertical-offset="0" max-vertical-offset="10425">
+          <folding>
+            <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

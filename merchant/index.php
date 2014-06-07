@@ -7,12 +7,12 @@ getbalance of wallet/user ?
 
 ob_start(); //so we can redirect even after headers are sent
 
-
-include $_SERVER['DOCUMENT_ROOT']."/inc/server.php"; //for server specific data $strServer value dev, production etc.. doesn't change
-include $_SERVER['DOCUMENT_ROOT']."/inc/constants.php"; //calls server.php within .. updated often
-include $_SERVER['DOCUMENT_ROOT']."/inc/functStrings.php"; //holds all custom string formatting functions
+require "server.php"; //for server specific data $strServer value dev, production etc.. doesn't change
+require "constants.php"; //calls server.php within .. updated often
+require "functStrings.php"; //holds all custom string formatting functions
 include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //connect to RPC server as a client
 include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functions * use as needed
+
 
 
 error_reporting(0);//turn off all reporting
