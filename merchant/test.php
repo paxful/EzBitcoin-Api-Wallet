@@ -1,5 +1,4 @@
 <?
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
 
 // test calls to RPC server
 

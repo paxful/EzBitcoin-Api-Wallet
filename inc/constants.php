@@ -40,7 +40,7 @@ switch ($strServer){ // Server SiteWide Vars
 	break;
 
 	
-	case "arthur": //
+	case "artur": //
 	define("MODE_UPGRADE", 				0);
 	define("DEBUGMODE", 				0);
 	define("WEBSITEURL", 				"127.0.0.1");
