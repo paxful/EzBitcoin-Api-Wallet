@@ -118,7 +118,7 @@ define("RECEIPTSTHUMBPATH",                 "/media/thumb_receipts/"); //not use
 
 //##############################
 //Server Settings
-include $_SERVER['DOCUMENT_ROOT']."/inc/server.php"; //for server specific data $strServer value
+require "server.php"; //for server specific data $strServer value
 define("SERVERTAG",                 $strServer); //from above
 switch ($strServer){ // Server SiteWide Vars
     case "dev":
@@ -133,8 +133,8 @@ switch ($strServer){ // Server SiteWide Vars
     define("DB_USER",                   "root");
     define("DB_PASS",                   "littles");
     define("DB_NAME",                   "cc_to");
-    define("JQUERYSRC",                 '/js/jquery.min.js'); //latest jquery
-    define("JQUERYUISRC",               '/js/jqueryui.min.1.9.2.js'); //1.9.2 doesn't break blueimp upload and still allows drag and resize
+    define("JQUERYSRC",                 'js/jquery.min.js'); //latest jquery
+    define("JQUERYUISRC",               'js/jqueryui.min.1.9.2.js'); //1.9.2 doesn't break blueimp upload and still allows drag and resize
     break;
 
 
@@ -169,18 +169,18 @@ define("TBL_CURRENCY",                      "tbl_currency_fiat");           //
 
 //##############################
 // Static Pages
-define("PAGE_HOME",                         "/index.php");
-define("PAGE_SIGNIN",                       "/signin.php");
-define("PAGE_SIGNUP",                       "/signup.php");
-define("PAGE_WALLET",                       "/wallet.php");
-define("PAGE_SETTINGS",                     "/settings.php");
-define("PAGE_ERROR",                        "/error.php");
-define("PAGE_VERIFY",                       "/verify.php");
-define("CODE_DO",                           "/mods/do.php");
-define("CODE_DOAJAX",                       "/mods/ajax_do.php");
-define("CODE_PROCESSORDER",                 "/mods/processorder2.php");
-define("MOD_SENDCRYPTO",                    "/mods/sendcrypto.php");
-define("MOD_LOADCONTENT",                   "/mods/loadcontent.php");
+define("PAGE_HOME",                         "/wallet/");
+define("PAGE_SIGNIN",                       "signin.php");
+define("PAGE_SIGNUP",                       "signup.php");
+define("PAGE_WALLET",                       "index.php");
+define("PAGE_SETTINGS",                     "settings.php");
+define("PAGE_ERROR",                        "error.php");
+define("PAGE_VERIFY",                       "verify.php");
+define("CODE_DO",                           "do.php");
+define("CODE_DOAJAX",                       "ajax_do.php");
+define("CODE_PROCESSORDER",                 "processorder2.php");
+define("MOD_SENDCRYPTO",                    "sendcrypto.php");
+define("MOD_LOADCONTENT",                   "loadcontent.php");
 //##############################
 
 

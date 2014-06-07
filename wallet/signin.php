@@ -1,14 +1,14 @@
 <?php 
 error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
 
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
 
 //$strErrorMSG = 			trim($_GET["msg"]); //set error msg manually in query
-$strErrorMSG = 			(funct_ScrubVars($_GET["msg"])); //set error msg manually in query
-$strEmail = 			(funct_ScrubVars($_GET['email']));
-$strError = 			(funct_ScrubVars($_GET['error']));
-$strError_forgot = 		(funct_ScrubVars($_GET['error_forgot']));
+$strErrorMSG = 			(funct_GetandCleanVariables($_GET["msg"])); //set error msg manually in query
+$strEmail = 			(funct_GetandCleanVariables($_GET['email']));
+$strError = 			(funct_GetandCleanVariables($_GET['error']));
+$strError_forgot = 		(funct_GetandCleanVariables($_GET['error_forgot']));
 
 
 $_SESSION['last_post'] = time();
@@ -27,13 +27,10 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 	<meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width">
-
    
 	<? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
 
-    <link rel="stylesheet" href="/wallet/css/foundation.css" />
-<link rel="stylesheet" href="/wallet/css/custom.css" />
-    <link rel="stylesheet" href="webicons-master/webicons.css" />
+    <link rel="stylesheet" href="css/foundation.css" />
     <script src="js/modernizr.js"></script>
 	
 <SCRIPT LANGUAGE="JavaScript">
@@ -84,7 +81,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
 <body onload="<?=$strOnBodyLoadJS?>">
 
-<?php include __ROOT__."/inc/hud.php"; ?>
+<?php require "hud.php"; ?>
 
 <p></p>
 
@@ -97,7 +94,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 		<h3>Sign in to <?=WEBSITENAME?></h3>
 		<h4><?=$strError?></h4>
 		
-		<form name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=login&page=/signin.php">
+		<form name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=login&page=signin.php">
             <div class="row">
                 <div class="small-8 medium-6 columns">
                     <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
@@ -113,7 +110,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
                     <button type="submit" onClick="return jsfunct_join();">Sign In </button>
                     <strong style="color:#FFF;"><?=$strError?></strong>
-                    <br><small>Don't have an account? <a href="/signup.php">Sign up</a></small>
+                    <br><small>Don't have an account? <a href="signup.php">Sign up</a></small>
                 </div>
                 <div class="small-4 medium-6 columns">
                 </div>
@@ -128,7 +125,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
 		<h4>Forgot Password ?</h4>
 
-             <form action="<?=CODE_DO."?do=forgotpassword"?>&page=/signin.php" method="POST" name="forgot" id="forgot">
+             <form action="<?=CODE_DO."?do=forgotpassword"?>&page=signin.php" method="POST" name="forgot" id="forgot">
                 
                  <div class="row">
 				    <div class="large-6 columns">
@@ -153,7 +150,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 	
     <!--SIDEBAR AREA-->
 	<div class="small-12 medium-4 columns">
-		<?php include __ROOT__."/panel_side_contact.php"; ?>
+		<?php //include __ROOT__."/panel_side_contact.php"; ?>
 	</div>
     <!--END SIDEBAR AREA-->
 	
@@ -163,7 +160,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
 
 
-<script src="js/jquery.js"></script>
+<script src="js/jquery.min.js"></script>
 <script src="js/foundation.min.js"></script>
 <script src="js/foundation/foundation.abide.js"></script>
 <script>

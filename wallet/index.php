@@ -12,7 +12,8 @@ $strIPAddress = 		$_SERVER['REMOTE_ADDR'];
 
 
 $intUserID1=funct_GetandCleanVariables(DETECT_USERID); //id of user logged in
-//echo "intUserID1=$intUserID1 <br>"; echo "DETECT_USERID=".DETECT_USERID." <br>"; echo "intUserID_fromcode=".$intUserID_fromcode." <br>";
+echo "intUserID1=$intUserID1 <br>"; echo "DETECT_USERID=".DETECT_USERID." <br>"; echo "intUserID_fromcode=".$intUserID_fromcode." <br>";
+
 if(!$intUserID1){ header( 'Location: '.PAGE_SIGNIN."?error=Please Sign In to Access your Wallet" ); die(); }
 
 $strDO = 						funct_GetandCleanVariables($_GET["do"]);
@@ -437,7 +438,6 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <?php require "hud.php"; ?>
 
 <!--MAIN CONTENT AREA-->
-<!--<a href="javascript:debug_getnew();">load</a>-->
 
 <div class="row" style="">
 

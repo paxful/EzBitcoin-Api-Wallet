@@ -18,7 +18,6 @@ if ($_SERVER['HTTP_ACUNETIX_PRODUCT'] ||
 } 
 
 session_start(); //Start Session before Constants.php to allow defining of session varibles names
-require "server.php"; //for server specific data $strServer value
 require "constants.php"; //calls server.php within
 require "functStrings.php"; //holds all custom string formatting functions
 require "functBilling.php"; //holds billing functions * should really only use as needed
@@ -29,8 +28,21 @@ include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functi
 //include $_SERVER['DOCUMENT_ROOT']."/inc/functApps.php"; //holds all application shell call functions * BUG cmp3.php which is included in this writes out to the headers and disables writing of cookies.
 
 
+$intUserID_fromcode = funct_GetUserIDfromUserCode(); //legacy fix to replace int with 48 char hash from cookie
+
+// track user in log
+error_log("{".SERVERTAG."} ==== [$intUserID_fromcode @ ".$_SERVER['REMOTE_ADDR']."] (".$_SERVER['REQUEST_URI'].")");
+
+
+//echo "useridcode in sessions.php = $intUserID_fromcode <br>" ;
+if($intUserID_fromcode){ //if value is returned then define detect userid with internal int
+    define("DETECT_USERID", $intUserID_fromcode); //echo "redefining DETECT_USERID ";
+}else{
+    define("DETECT_USERID", "");
+}
+
 //they are browsing the site , not coming to a content link from the outside
-$_SESSION['visitedIndex'] = TRUE;	
+$_SESSION['visitedIndex'] = TRUE;
 
 
 //########################################################################################################################################
