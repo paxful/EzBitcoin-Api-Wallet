@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/index.html" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/constants.php" afterPath="$PROJECT_DIR$/merchant/constants.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/functStrings.php" afterPath="$PROJECT_DIR$/wallet/functStrings.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/inc/server.php" afterPath="$PROJECT_DIR$/merchant/server.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/merchant/index.php" afterPath="$PROJECT_DIR$/merchant/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/merchant/test.php" afterPath="$PROJECT_DIR$/merchant/test.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
@@ -30,44 +25,7 @@
     <favorites_list name="QuikBitAPI.com" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="36" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-26.25" vertical-offset="0" max-vertical-offset="870">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/merchant/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="95" selection-start="567" selection-end="567" vertical-scroll-proportion="0.16415869" vertical-offset="0" max-vertical-offset="10425">
-              <folding>
-                <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
-                <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/merchant/test.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="0" selection-start="3" selection-end="3" vertical-scroll-proportion="-0.625" vertical-offset="0" max-vertical-offset="1185">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -91,11 +49,11 @@
         <option value="$PROJECT_DIR$/inc/functBilling.php" />
         <option value="$PROJECT_DIR$/wallet/constants.php" />
         <option value="$PROJECT_DIR$/wallet/do.php" />
-        <option value="$PROJECT_DIR$/merchant/test.php" />
         <option value="$PROJECT_DIR$/inc/constants.php" />
         <option value="$PROJECT_DIR$/merchant/functStrings.php" />
         <option value="$PROJECT_DIR$/merchant/index.php" />
         <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/merchant/test.php" />
       </list>
     </option>
   </component>
@@ -147,6 +105,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="EzAPI.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QuikBitAPI.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EzAPI.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wallet" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -214,7 +186,11 @@
       <created>1402167884790</created>
       <updated>1402167884790</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="more cleaning">
+      <created>1402169008797</created>
+      <updated>1402169008797</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -255,7 +231,8 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="from phpstorm" />
-    <option name="LAST_COMMIT_MESSAGE" value="from phpstorm" />
+    <MESSAGE value="more cleaning" />
+    <option name="LAST_COMMIT_MESSAGE" value="more cleaning" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -272,14 +249,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="50" column="11" selection-start="1870" selection-end="1870" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="10335">
           <folding>
-            <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -330,14 +307,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="23" selection-start="304" selection-end="304" vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="10395">
           <folding>
-            <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -468,20 +445,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="36" selection-start="1605" selection-end="1605" vertical-scroll-proportion="-26.25" vertical-offset="0" max-vertical-offset="870">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="3" selection-end="3" vertical-scroll-proportion="-0.625" vertical-offset="0" max-vertical-offset="1185">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/merchant/functStrings.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="48" selection-start="289" selection-end="289" vertical-scroll-proportion="0.2016129" vertical-offset="0" max-vertical-offset="744">
@@ -495,15 +458,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="12" column="95" selection-start="567" selection-end="567" vertical-scroll-proportion="0.16415869" vertical-offset="0" max-vertical-offset="10425">
           <folding>
-            <marker date="1402168771000" expanded="true" signature="14612:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14621:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14658:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14742:14764" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14817:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14836:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14845:15189" placeholder="..." />
-            <marker date="1402168771000" expanded="true" signature="14894:15189" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1402168771000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="155" selection-end="155" vertical-scroll-proportion="0.18467852" vertical-offset="0" max-vertical-offset="810">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="36" selection-start="1605" selection-end="1605" vertical-scroll-proportion="0.8467742" vertical-offset="0" max-vertical-offset="870">
+          <folding />
         </state>
       </provider>
     </entry>

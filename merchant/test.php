@@ -2,40 +2,15 @@
 
 // test calls to RPC server
 
-//http://5.153.60.162/merchant ?do=
-//login: coincafe p:coincafe
-//this file is called  on each receive and then does  callback to a remote url
-//this file can also be called to generate new addresses, send btc, 
-//later getbalance, 
- 
-	//get list of all addresses bitcoind listreceivedbyaddress 0 true
-	//coincafe address 1GQ3cstjtPrhf9yJwp9332QjDaQoSpyb82
-	//10c724bdfe52f95b482949101cc1bb3657c9f92d7f61d469a309eacbb6782d$
-	//curl http://localhost/merchant/?do=callback&txid=transactionhash=%s
-	
-	//has .0002 1GQ3cstjtPrhf9yJwp9332QjDaQoSpyb82  coin cafe
-	// .0 19LgQ83sFkudy9qmA5Ub9zbG1SVDYVmqsK  ray
-	
-
-//test callback
-//e6e99864a6887a9508e158a9a96b8f0b2178efcd7509c73d871a0023cce23941
-
-//test make address
-
-//test send
-//txid
-//f82ef544e215a357d88995b4e590488c5f8e543992010c44d37007add59cf659
-
 if($strServer=="dev"){
-	$strAuth = "&loginname=d4sd6ejmyiCwEM7UMb&password=u7hQ7IzP9o6sOCrJr&debug=1";
+	$strAuth = "&loginname=&password=&debug=1";
 }else{
-	$strAuth = "&loginname=rmiharjyfaexdiqu79v9p7xujztsvv8htejytwm8&password=wqruua9c197unz4sjta7wdtrna1keu5epzd23ahf&debug=1";
+	$strAuth = "&loginname=&password=&debug=1";
 }
 
 $strAddress = "1FTJXv8FjqyQ1HUTx7HeLxVaZTnc8E3muW" ; //local. blockchain.info
 
 $strTXID = "aed28fbcbb8404a7010f0b5bcbfd643bbdee63a91ea4fe55660304556868a2fa";
-// "a6eb6a8c2a66dbdfeb87faf820492222a80c2db3422706bdc1eb3bff0dbe8ab1";
 
 ?>
 <h1>testing blockchain api via bitcoind rpc</h1><br>
@@ -54,12 +29,12 @@ make new address</a><br><br>
 
 <?
 $intAmount = "0.0002";
-$strAddressSend = "1GmEVipzfyBGQDWDije9FhvySSKHz1RjXL"; //ray@easybitz.com production 16dPhqxEiVhK38ctJRp6mj6oQqhJSJeNG7  // keychests BCI 1GmEVipzfyBGQDWDije9FhvySSKHz1RjXL
+$strAddressSend = "1GmEVipzfyBGQDWDije9FhvySSKHz1RjXL";
 $strLabel = "test send";
 ?>
 <a href="/merchant/?do=sendtoaddress&address=<?=$strAddressSend?>&amount=<?=$intAmount?>&comment=<?=$strLabel?>&commentto=to test<?=$strAuth?>" target="_blank">
 send</a><br><br>
-<a href="/merchant/?do=sendfromaddress&address=19LgQ83sFkudy9qmA5Ub9zbG1SVDYVmqsK&amount=200&from=1GQ3cstjtPrhf9yJwp9332QjDaQoSpyb82&comment=from coincafe&commentto=toray<?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=sendfromaddress&address=19LgQ83sFkudy9qmA5Ub9zbG1SVDYVmqsK&amount=200&from=1GQ3cstjtPrhf9yJwp9332QjDaQoSpyb82&comment=from&commentto=toray<?=$strAuth?>" target="_blank">
 send from</a><br><br>
 
 
