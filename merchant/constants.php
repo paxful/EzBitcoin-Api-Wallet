@@ -34,7 +34,7 @@ switch ($strServer){ // Server SiteWide Vars
 	define("DB_USER", 					"root");
 	define("DB_PASS", 					"littles");
 	define("DB_NAME", 					"easybitz_api");
-	define("JSONRPC_CONNECTIONSTRING_CC","https://user:pass@37.58.86.163:8332"); //
+	define("JSONRPC_CONNECTIONSTRING_CC","http://61141261cRe2Epu0qOFU:L2iFnU14rf0r3v3r832W@37.58.86.163:8332"); //61141261cRe2Epu0qOFU / L2iFnU14rf0r3v3r832W 37.58.86.163
 	define("JQUERYSRC",					'/js/jquery.min.js'); //latest jquery
 	define("JQUERYUISRC",				'/js/jqueryui.min.1.9.2.js'); //1.9.2 doesn't break blueimp upload and still allows drag and resize
 	break;

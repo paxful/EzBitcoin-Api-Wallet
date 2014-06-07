@@ -21,6 +21,9 @@ pico bitcoin.conf
 
 
 ###add settings to file bitcoin.conf
+rpcallowip=10.1.*.* #by default 128.0.0.1 is always allowed. add other ips as needed
+# rpcssl=1 # this forces bitcoind to always use ssl
+rpcport 8832
 server=1
 daemon=1
 rpcuser=usernamegoeshere

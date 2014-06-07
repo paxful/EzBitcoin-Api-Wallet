@@ -1,16 +1,26 @@
 <?
+require "server.php"; //for server specific data $strServer value dev, production etc.. doesn't change
+require "constants.php"; //calls server.php within .. updated often
+
 
 // test calls to RPC server
 
 if($strServer=="dev"){
-	$strAuth = "&loginname=&password=&debug=1";
+	$strAuth = "&loginname=&password=&debug=0";
 }else{
 	$strAuth = "&loginname=&password=&debug=1";
 }
 
-$strAddress = "1FTJXv8FjqyQ1HUTx7HeLxVaZTnc8E3muW" ; //local. blockchain.info
+//$strAddress = "1FTJXv8FjqyQ1HUTx7HeLxVaZTnc8E3muW" ; //local. blockchain.info
+//$strTXID = "aed28fbcbb8404a7010f0b5bcbfd643bbdee63a91ea4fe55660304556868a2fa";
 
-$strTXID = "aed28fbcbb8404a7010f0b5bcbfd643bbdee63a91ea4fe55660304556868a2fa";
+
+//#######################################################################
+//call process script
+$URL = WEBSITEFULLURL."/merchant/?do=getbalance&account=".$strAuth ;
+$intBalance = file_get_contents($URL);
+echo "Balance= $intBalance <br>";
+//#######################################################################
 
 ?>
 <h1>testing blockchain api via bitcoind rpc</h1><br>

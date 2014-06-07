@@ -18,13 +18,14 @@ if ($_SERVER['HTTP_ACUNETIX_PRODUCT'] ||
 } 
 
 session_start(); //Start Session before Constants.php to allow defining of session varibles names
-include $_SERVER['DOCUMENT_ROOT']."/inc/server.php"; //for server specific data $strServer value
-include $_SERVER['DOCUMENT_ROOT']."/inc/constants.php"; //calls server.php within
-include $_SERVER['DOCUMENT_ROOT']."/inc/functStrings.php"; //holds all custom string formatting functions
-include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //holds all custom string formatting functions
-//include $_SERVER['DOCUMENT_ROOT']."/inc/functdatabase.php"; //holds database functions, largely useless for now ?
+require "server.php"; //for server specific data $strServer value
+require "constants.php"; //calls server.php within
+require "functStrings.php"; //holds all custom string formatting functions
+require "functBilling.php"; //holds billing functions * should really only use as needed
 include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functions * use as needed
-//include $_SERVER['DOCUMENT_ROOT']."/inc/functBilling.php"; //holds billing functions * should really only use as needed
+
+//include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //holds all custom string formatting functions
+//include $_SERVER['DOCUMENT_ROOT']."/inc/functdatabase.php"; //holds database functions, largely useless for now ?
 //include $_SERVER['DOCUMENT_ROOT']."/inc/functApps.php"; //holds all application shell call functions * BUG cmp3.php which is included in this writes out to the headers and disables writing of cookies.
 
 
