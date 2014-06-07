@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/QuikBitAPI.com.iml" afterPath="$PROJECT_DIR$/.idea/QuikBitAPI.com.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/deployment.xml" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/constants.php" afterPath="$PROJECT_DIR$/wallet/constants.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.js" afterPath="$PROJECT_DIR$/wallet/js/foundation/foundation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/hud.php" afterPath="$PROJECT_DIR$/wallet/hud.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/index.php" afterPath="$PROJECT_DIR$/wallet/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/session.php" afterPath="$PROJECT_DIR$/wallet/session.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/signin.php" afterPath="$PROJECT_DIR$/wallet/signin.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,56 +31,78 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="readme_installbitcoind.txt" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/install/readme_installbitcoind.txt">
+      <file leaf-file-name="constants.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/merchant/constants.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2482">
+            <state line="35" column="54" selection-start="1116" selection-end="1157" vertical-scroll-proportion="0.33333334" vertical-offset="270" max-vertical-offset="1335">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/codeigniter/application/config/config.php">
+      <file leaf-file-name="constants.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/constants.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="226" column="89" selection-start="7600" selection-end="7600" vertical-scroll-proportion="-14.307693" vertical-offset="3470" max-vertical-offset="6256">
+            <state line="151" column="69" selection-start="8566" selection-end="8566" vertical-scroll-proportion="-5.0" vertical-offset="2085" max-vertical-offset="3435">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="functStrings.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/functStrings.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="15" column="0" selection-start="432" selection-end="432" vertical-scroll-proportion="-6.875" vertical-offset="15" max-vertical-offset="3630">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="signin.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/signin.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="103" column="21" selection-start="2919" selection-end="2919" vertical-scroll-proportion="-6.875" vertical-offset="1380" max-vertical-offset="2850">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="session.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/session.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="31" selection-start="1424" selection-end="1424" vertical-scroll-proportion="-5.5" vertical-offset="318" max-vertical-offset="4185">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/codeigniter/index.php">
+        <entry file="file://$PROJECT_DIR$/wallet/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="201" column="45" selection-start="6295" selection-end="6295" vertical-scroll-proportion="-70.11539" vertical-offset="1594" max-vertical-offset="3570">
+            <state line="14" column="0" selection-start="431" selection-end="431" vertical-scroll-proportion="-8.75" vertical-offset="0" max-vertical-offset="15645">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/merchant/index.php">
+      <file leaf-file-name="hud.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/hud.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="18" selection-start="826" selection-end="826" vertical-scroll-proportion="-9.115385" vertical-offset="1" max-vertical-offset="11815">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="579">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="loadcontent.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/merchant/loadcontent.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="48" selection-start="852" selection-end="852" vertical-scroll-proportion="-15.038462" vertical-offset="0" max-vertical-offset="5355">
-              <folding />
+            <state line="22" column="25" selection-start="672" selection-end="672" vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="1395">
+              <folding>
+                <element signature="n#style#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#ul#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#h1#0;n#li#0;n#ul#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#2;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#4;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#5;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#6;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#8;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#9;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -99,29 +125,32 @@
         <option value="$PROJECT_DIR$/readme_securebitcoind.html" />
         <option value="$PROJECT_DIR$/install/db_api.sql" />
         <option value="$PROJECT_DIR$/install/db_wallet.sql" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/inc/session.php" />
         <option value="$PROJECT_DIR$/inc/functdatabase.php" />
         <option value="$PROJECT_DIR$/inc/functStrings.php" />
         <option value="$PROJECT_DIR$/inc/functBilling.php" />
+        <option value="$PROJECT_DIR$/wallet/do.php" />
+        <option value="$PROJECT_DIR$/inc/constants.php" />
+        <option value="$PROJECT_DIR$/merchant/functStrings.php" />
+        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/merchant/index.php" />
-        <option value="$PROJECT_DIR$/codeigniter/application/config/config.php" />
-        <option value="$PROJECT_DIR$/codeigniter/index.php" />
-        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/install/readme_installbitcoind.txt" />
+        <option value="$PROJECT_DIR$/merchant/constants.php" />
+        <option value="$PROJECT_DIR$/merchant/test.php" />
+        <option value="$PROJECT_DIR$/wallet/index.php" />
+        <option value="$PROJECT_DIR$/wallet/session.php" />
+        <option value="$PROJECT_DIR$/wallet/constants.php" />
+        <option value="$PROJECT_DIR$/wallet/hud.php" />
+        <option value="$PROJECT_DIR$/wallet/signin.php" />
       </list>
     </option>
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true">
-    <include_path>
-      <path value="." />
-      <path value="C:\xampp\php\PEAR" />
-    </include_path>
-  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="y" value="-9" />
-    <option name="width" value="1938" />
-    <option name="height" value="1064" />
+    <option name="x" value="21" />
+    <option name="y" value="211" />
+    <option name="width" value="1441" />
+    <option name="height" value="750" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -163,7 +192,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="bitcoin-api-wallet" />
+              <option name="myItemId" value="EzAPI.com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -173,25 +202,25 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="bitcoin-api-wallet" />
+              <option name="myItemId" value="EzAPI.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="wallet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QuikBitAPI.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EzAPI.com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="merchant" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitcoin-api-wallet" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="codeigniter" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -202,7 +231,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="Configurable.PHP.FrameworkIntegration" />
+    <property name="options.lastSelected" value="appearance" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -255,36 +284,48 @@
       <created>1402096425639</created>
       <updated>1402096425639</updated>
     </task>
-    <task id="LOCAL-00001" summary="gitignore added">
-      <created>1402172300323</created>
-      <updated>1402172300323</updated>
+    <task id="LOCAL-00001" summary="from phpstorm">
+      <created>1402167884790</created>
+      <updated>1402167884790</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="more cleaning">
+      <created>1402169008797</created>
+      <updated>1402169008797</updated>
+    </task>
+    <task id="LOCAL-00003" summary=" done cleaning merchant">
+      <created>1402169178302</created>
+      <updated>1402169178302</updated>
+    </task>
+    <task id="LOCAL-00004" summary="tested merchant api with remote bitcoind server">
+      <created>1402175940164</created>
+      <updated>1402175940164</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1064" extended-state="6" />
+    <frame x="21" y="211" width="1441" height="750" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32968238" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23286937" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18806385" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -299,42 +340,17 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="gitignore added" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore added" />
+    <MESSAGE value="from phpstorm" />
+    <MESSAGE value="more cleaning" />
+    <MESSAGE value=" done cleaning merchant" />
+    <MESSAGE value="tested merchant api with remote bitcoind server" />
+    <option name="LAST_COMMIT_MESSAGE" value="tested merchant api with remote bitcoind server" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="40" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1598">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="169" column="5" selection-start="5167" selection-end="5167" vertical-scroll-proportion="0.0" vertical-offset="2873" max-vertical-offset="4114">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="0" selection-start="1749" selection-end="1749" vertical-scroll-proportion="0.0" vertical-offset="884" max-vertical-offset="1360">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="98" selection-start="459" selection-end="459" vertical-scroll-proportion="0.0" vertical-offset="187" max-vertical-offset="11883">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
+    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="36" column="40" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1410">
           <folding />
@@ -350,30 +366,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/ajax_do.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="714" selection-end="714" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5070" />
+        <state line="13" column="0" selection-start="714" selection-end="714" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5070">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="357" column="29" selection-start="13636" selection-end="13636" vertical-scroll-proportion="0.0" vertical-offset="3975" max-vertical-offset="15660" />
+        <state line="357" column="29" selection-start="13636" selection-end="13636" vertical-scroll-proportion="0.0" vertical-offset="3975" max-vertical-offset="15660">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
+    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="16" column="28" selection-start="737" selection-end="737" vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1350">
           <folding />
@@ -389,142 +415,220 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/ajax_do.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="714" selection-end="714" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5070" />
+        <state line="13" column="0" selection-start="714" selection-end="714" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5070">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="357" column="29" selection-start="13636" selection-end="13636" vertical-scroll-proportion="0.0" vertical-offset="3975" max-vertical-offset="15660" />
+        <state line="357" column="29" selection-start="13636" selection-end="13636" vertical-scroll-proportion="0.0" vertical-offset="3975" max-vertical-offset="15660">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="0" selection-start="714" selection-end="714" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5070" />
+        <state line="13" column="0" selection-start="714" selection-end="714" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5070">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functmail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="55" selection-start="1343" selection-end="1343" vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="2280" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1020" column="4" selection-start="38924" selection-end="38924" vertical-scroll-proportion="-9.333333" vertical-offset="15076" max-vertical-offset="15660" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/ajax_do.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/funct_jsonrpc.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="46" selection-start="248" selection-end="248" vertical-scroll-proportion="0.14112903" vertical-offset="0" max-vertical-offset="1995" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="40" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="1598">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/functBilling.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="41" selection-start="587" selection-end="587" vertical-scroll-proportion="0.24623802" vertical-offset="0" max-vertical-offset="6135" />
+        <state line="12" column="41" selection-start="587" selection-end="587" vertical-scroll-proportion="0.24623802" vertical-offset="0" max-vertical-offset="6135">
+          <folding />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
+    <entry file="file://$PROJECT_DIR$/wallet/do.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="195" column="30" selection-start="5684" selection-end="5684" vertical-scroll-proportion="-125.53846" vertical-offset="0" max-vertical-offset="4114">
+        <state line="6" column="35" selection-start="159" selection-end="159" vertical-scroll-proportion="0.12311901" vertical-offset="0" max-vertical-offset="10635">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/inc/funct_jsonrpc.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="46" selection-start="248" selection-end="248" vertical-scroll-proportion="0.14112903" vertical-offset="0" max-vertical-offset="1995">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/inc/functmail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="55" selection-start="1343" selection-end="1343" vertical-scroll-proportion="0.020519836" vertical-offset="495" max-vertical-offset="2280">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/functStrings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="48" selection-start="289" selection-end="289" vertical-scroll-proportion="0.2016129" vertical-offset="0" max-vertical-offset="744">
+          <folding>
+            <element signature="e#6#55#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="0" selection-start="1749" selection-end="1749" vertical-scroll-proportion="0.44262296" vertical-offset="506" max-vertical-offset="1360">
+        <state line="42" column="36" selection-start="1605" selection-end="1605" vertical-scroll-proportion="0.8467742" vertical-offset="0" max-vertical-offset="870">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/codeigniter/application/index.html">
+    <entry file="file://$PROJECT_DIR$/merchant/server.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="7" selection-start="114" selection-end="114" vertical-scroll-proportion="0.17915691" vertical-offset="0" max-vertical-offset="854">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/codeigniter/application/.htaccess">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="880">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="611">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/install/readme_installbitcoind.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2482">
+        <state line="25" column="12" selection-start="894" selection-end="894" vertical-scroll-proportion="0.43441227" vertical-offset="120" max-vertical-offset="2235">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/codeigniter/application/config/config.php">
+    <entry file="file://$PROJECT_DIR$/wallet/processorder.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="226" column="89" selection-start="7600" selection-end="7600" vertical-scroll-proportion="-14.307693" vertical-offset="3470" max-vertical-offset="6256">
+        <state line="91" column="51" selection-start="4734" selection-end="4734" vertical-scroll-proportion="-12.708333" vertical-offset="1060" max-vertical-offset="1815">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/codeigniter/index.php">
+    <entry file="file://$PROJECT_DIR$/merchant/test.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="201" column="45" selection-start="6295" selection-end="6295" vertical-scroll-proportion="-70.11539" vertical-offset="1594" max-vertical-offset="3570">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/loadcontent.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="48" selection-start="852" selection-end="852" vertical-scroll-proportion="-15.038462" vertical-offset="0" max-vertical-offset="5355">
-          <folding />
+        <state line="16" column="0" selection-start="490" selection-end="490" vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="1860">
+          <folding>
+            <element signature="e#2083#5036#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/merchant/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="18" selection-start="826" selection-end="826" vertical-scroll-proportion="-9.115385" vertical-offset="1" max-vertical-offset="11815">
+        <state line="85" column="27" selection-start="4030" selection-end="4030" vertical-scroll-proportion="0.48305085" vertical-offset="930" max-vertical-offset="10425">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/wallet/server.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="880">
+        <state line="6" column="0" selection-start="147" selection-end="147" vertical-scroll-proportion="0.096" vertical-offset="0" max-vertical-offset="625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="431" selection-end="431" vertical-scroll-proportion="-8.75" vertical-offset="0" max-vertical-offset="15645">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/session.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="31" selection-start="1424" selection-end="1424" vertical-scroll-proportion="-5.5" vertical-offset="318" max-vertical-offset="4185">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/functStrings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="0" selection-start="432" selection-end="432" vertical-scroll-proportion="-6.875" vertical-offset="15" max-vertical-offset="3630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/signup.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2580">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="151" column="69" selection-start="8566" selection-end="8566" vertical-scroll-proportion="-5.0" vertical-offset="2085" max-vertical-offset="3435">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/hud.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="25" selection-start="672" selection-end="672" vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="1395">
+          <folding>
+            <element signature="n#style#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#ul#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#h1#0;n#li#0;n#ul#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#2;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#4;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#5;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#6;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#8;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#9;n#ul#0;n#section#0;n#nav#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/signin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="103" column="21" selection-start="2919" selection-end="2919" vertical-scroll-proportion="-6.875" vertical-offset="1380" max-vertical-offset="2850">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="54" selection-start="1116" selection-end="1157" vertical-scroll-proportion="0.33333334" vertical-offset="270" max-vertical-offset="1335">
           <folding />
         </state>
       </provider>

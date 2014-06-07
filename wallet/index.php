@@ -3,7 +3,7 @@ ob_start(); //so we can redirect even after headers are sent
 
 error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
 //echo get_current_user();
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
 error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',2);
 $strERRORPage = 		"wallpet.php";
@@ -11,22 +11,23 @@ $intTime = 				time();
 $strIPAddress = 		$_SERVER['REMOTE_ADDR'];
 
 
-$intUserID1=funct_ScrubVars(DETECT_USERID); //id of user logged in
-//echo "intUserID1=$intUserID1 <br>"; echo "DETECT_USERID=".DETECT_USERID." <br>"; echo "intUserID_fromcode=".$intUserID_fromcode." <br>";
+$intUserID1=funct_GetandCleanVariables(DETECT_USERID); //id of user logged in
+echo "intUserID1=$intUserID1 <br>"; echo "DETECT_USERID=".DETECT_USERID." <br>"; echo "intUserID_fromcode=".$intUserID_fromcode." <br>";
+
 if(!$intUserID1){ header( 'Location: '.PAGE_SIGNIN."?error=Please Sign In to Access your Wallet" ); die(); }
 
-$strDO = 						funct_ScrubVars($_GET["do"]);
-$strError_send = 				funct_ScrubVars($_GET["error_send"]); 
-$strWallet_Address_preload = 	funct_ScrubVars($_GET["code"]);
-$strWallet_Address_preload2 = 	funct_ScrubVars($_GET["qr"]);
+$strDO = 						funct_GetandCleanVariables($_GET["do"]);
+$strError_send = 				funct_GetandCleanVariables($_GET["error_send"]);
+$strWallet_Address_preload = 	funct_GetandCleanVariables($_GET["code"]);
+$strWallet_Address_preload2 = 	funct_GetandCleanVariables($_GET["qr"]);
 
 if($strWallet_Address_preload2){ $strWallet_Address_preload = $strWallet_Address_preload2 ;}
 //$strWallet_Address_preload = "bitcoin:1Hwau6DA1dAfjhMtakhpkf6jgVmTSfTx5a?amount=0.008003&label=Pizza and Pint";
 
 //get preloaded values for 
-if(!$strWallet_Address_preload){ $strWallet_Address_preload =funct_ScrubVars($_POST["wallet_hash_preload"]);  }
-if(!$intWallet_Crypto_Amt_preload){ $intWallet_Crypto_Amt_preload =funct_ScrubVars($_POST["wallet_crypto_amt_preload"]);  }
-if(!$intWallet_Label_preload){ $intWallet_Label_preload =funct_ScrubVars($_POST["wallet_label_preload"]); }
+if(!$strWallet_Address_preload){ $strWallet_Address_preload =funct_GetandCleanVariables($_POST["wallet_hash_preload"]);  }
+if(!$intWallet_Crypto_Amt_preload){ $intWallet_Crypto_Amt_preload =funct_GetandCleanVariables($_POST["wallet_crypto_amt_preload"]);  }
+if(!$intWallet_Label_preload){ $intWallet_Label_preload =funct_GetandCleanVariables($_POST["wallet_label_preload"]); }
 //echo "address= ".$strWallet_Address_preload = $strAddress."<br>";
 //echo "amount= ".$amount."<br>" ;  // value
 //echo "label= ". $label."<br><br>" ; // foo bar
@@ -266,17 +267,16 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <meta name="viewport" content="width=device-width">
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" href="/img/favicon.png" />
+<link rel="icon" type="image/png" href="img/favicon.png" />
 
-<link rel="stylesheet" href="/css/web.css" />
-<link rel="stylesheet" href="/css/foundation.css" />
-<link rel="stylesheet" href="/css/custom.css" />
-<link rel="stylesheet" href="/webicons-master/webicons.css" />
-<script src="/js/modernizr.js"></script>
-<script src="/js/web.js"></script>
+<link rel="stylesheet" href="css/web.css" />
+<link rel="stylesheet" href="css/foundation.css" />
+<link rel="stylesheet" href="css/custom.css" />
+<script src="js/modernizr.js"></script>
+<script src="js/web.js"></script>
 
 <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-<? $intJquerySoundManager=1;?><script src="/js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = '/js/soundmanager2.swf'; soundManager.onready(function() {});</script>
+<? $intJquerySoundManager=1;?><script src="js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = 'js/soundmanager2.swf'; soundManager.onready(function() {});</script>
 
 <script>
 
@@ -435,10 +435,9 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 <body>
 
-<?php include __ROOT__."/inc/hud.php"; ?>
+<?php require "hud.php"; ?>
 
 <!--MAIN CONTENT AREA-->
-<!--<a href="javascript:debug_getnew();">load</a>-->
 
 <div class="row" style="">
 
@@ -1014,10 +1013,10 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 	</div>
 	
 	
-	<script src="/js/jquery.js"></script>
-	<script src="/js/foundation.min.js"></script>
-	<script src="/js/foundation/foundation.abide.js"></script>
-	<script src="/js/foundation/foundation.reveal.js"></script>
+	<script src="js/jquery.js"></script>
+	<script src="js/foundation.min.js"></script>
+	<script src="js/foundation/foundation.abide.js"></script>
+	<script src="js/foundation/foundation.reveal.js"></script>
 	
 	<script>
 	  $(document)

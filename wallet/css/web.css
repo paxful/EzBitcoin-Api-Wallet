@@ -21,9 +21,32 @@
 .loader_anim {
 	position:relative; width:100px; height:100px; text-align:center; opacity:1.0; z-index:4;
 	padding:10px; text-align:center;
-	background-color:#fff;background-size: 100% 100%;background-image:url('/img/hypnopillar_white.gif'); 
+	background-color:#fff;background-size: 100% 100%;background-image:url('/img/anim_gear.gif'); 
 	border-style:normal;border-color:#666;border-width:2px;border-radius:16px;-webkit-border-radius:16px;-moz-border-radius:16px;
 }	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -180,6 +203,18 @@
 	
 	
 	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
 
 
 .headlines_holder2 {
@@ -1019,3 +1054,4 @@
 	-moz-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.75);
 	-webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.75);
 }
+
