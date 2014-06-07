@@ -25,8 +25,8 @@ if($strDo=="ajax" || $strDo=="iframe"){
 	$intUserID_viewer = 	funct_ScrubVars($_GET["viewer"]); //userid of user currently viewing the content	
 	
 	if($strDo=="iframe"){ ?>
-		<link href="/css/web.css" media="screen" rel="stylesheet" type="text/css">
-        <script src="/js/web.js" type="text/javascript"></script>
+		<link href="/wallet/css/web.css" media="screen" rel="stylesheet" type="text/css">
+        <script src="/wallet/js/web.js" type="text/javascript"></script>
 	<? }
 
 }else{ //file is being included and values are preset 

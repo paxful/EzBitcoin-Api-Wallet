@@ -2,53 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/merchant/loadcontent.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/custom.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/datepicker.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/datepicker3.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/foundation-datepicker.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/foundation.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/foundation.min.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/jquery-ui.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/normalize.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/css/web.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/bootstrap-datepicker.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation-datepicker.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.abide.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.accordion.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.alert.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.clearing.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.dropdown.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.interchange.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.joyride.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.magellan.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.offcanvas.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.orbit.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.reveal.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.tab.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.tooltip.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/foundation/foundation.topbar.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/jquery-ui.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/jquery.watermark.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/jqueryui.min.1.9.2.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/masonry.pkgd.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/modernizr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/soundmanager.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/soundmanager2-nodebug-jsmin.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/soundmanager2.swf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/vendor/custom.modernizr.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/vendor/fastclick.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/vendor/jquery.autocomplete.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/vendor/jquery.cookie.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/vendor/jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/vendor/placeholder.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/web copy.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/js/web.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/inc/constants.php" afterPath="$PROJECT_DIR$/inc/constants.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/css/foundation.css" afterPath="$PROJECT_DIR$/wallet/css/foundation.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/css/foundation.min.css" afterPath="$PROJECT_DIR$/wallet/css/foundation.min.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/css/normalize.css" afterPath="$PROJECT_DIR$/wallet/css/normalize.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/css/style.css" afterPath="$PROJECT_DIR$/wallet/css/style.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/css/web.css" afterPath="$PROJECT_DIR$/wallet/css/web.css" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/foundation.min.js" afterPath="$PROJECT_DIR$/wallet/js/foundation.min.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/foundation/foundation.js" afterPath="$PROJECT_DIR$/wallet/js/foundation/foundation.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/jquery.masonry.js" afterPath="$PROJECT_DIR$/wallet/js/jquery.masonry.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/jquery.min.js" afterPath="$PROJECT_DIR$/wallet/js/jquery.min.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/modernizr-transitions.js" afterPath="$PROJECT_DIR$/wallet/js/modernizr-transitions.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/fastclick.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/fastclick.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/jquery.cookie.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/jquery.cookie.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/jquery.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/jquery.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/modernizr.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/modernizr.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/js/vendor/placeholder.js" afterPath="$PROJECT_DIR$/wallet/js/vendor/placeholder.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/dashboard.php" afterPath="$PROJECT_DIR$/cp/dashboard.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/index.php" afterPath="$PROJECT_DIR$/cp/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/index.php" afterPath="$PROJECT_DIR$/wallet/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/list_transactions.php" afterPath="$PROJECT_DIR$/cp/list_transactions.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cp/loadcontent.php" afterPath="$PROJECT_DIR$/cp/loadcontent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/loadcontent.php" afterPath="$PROJECT_DIR$/wallet/loadcontent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -71,10 +47,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="constants.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="constants.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/inc/constants.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="49" selection-start="530" selection-end="530" vertical-scroll-proportion="0.2257182" vertical-offset="0" max-vertical-offset="1335">
+            <state line="14" column="40" selection-start="468" selection-end="468" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1335">
               <folding />
             </state>
           </provider>
@@ -83,25 +59,25 @@
       <file leaf-file-name="functStrings.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="151" column="4" selection-start="4689" selection-end="4689" vertical-scroll-proportion="-92.5" vertical-offset="0" max-vertical-offset="3630">
+            <state line="18" column="46" selection-start="563" selection-end="563" vertical-scroll-proportion="-9.375" vertical-offset="0" max-vertical-offset="3630">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.php">
+      <file leaf-file-name="test.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/merchant/test.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="0" selection-start="1749" selection-end="1749" vertical-scroll-proportion="-13.5" vertical-offset="456" max-vertical-offset="1200">
+            <state line="10" column="1" selection-start="322" selection-end="322" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1200">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/merchant/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="98" selection-start="459" selection-end="459" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="10425">
+            <state line="14" column="48" selection-start="710" selection-end="710" vertical-scroll-proportion="0.20519836" vertical-offset="0" max-vertical-offset="10425">
               <folding />
             </state>
           </provider>
@@ -125,13 +101,15 @@
         <option value="$PROJECT_DIR$/readme_securebitcoind.html" />
         <option value="$PROJECT_DIR$/install/db_api.sql" />
         <option value="$PROJECT_DIR$/install/db_wallet.sql" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/inc/session.php" />
         <option value="$PROJECT_DIR$/inc/functdatabase.php" />
         <option value="$PROJECT_DIR$/inc/functStrings.php" />
         <option value="$PROJECT_DIR$/inc/functBilling.php" />
         <option value="$PROJECT_DIR$/merchant/index.php" />
         <option value="$PROJECT_DIR$/inc/constants.php" />
+        <option value="$PROJECT_DIR$/wallet/constants.php" />
+        <option value="$PROJECT_DIR$/wallet/do.php" />
+        <option value="$PROJECT_DIR$/index.php" />
       </list>
     </option>
   </component>
@@ -183,34 +161,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wallet" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="merchant" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -292,7 +242,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="196" y="125" width="1454" height="869" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -300,7 +250,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22971115" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22971115" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -485,30 +435,51 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
+    <entry file="file://$PROJECT_DIR$/wallet/do.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="0" selection-start="1749" selection-end="1749" vertical-scroll-proportion="-13.5" vertical-offset="456" max-vertical-offset="1200">
+        <state line="6" column="35" selection-start="159" selection-end="159" vertical-scroll-proportion="0.12311901" vertical-offset="0" max-vertical-offset="10635">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/index.php">
+    <entry file="file://$PROJECT_DIR$/wallet/constants.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="98" selection-start="459" selection-end="459" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="10425">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="4" selection-start="4689" selection-end="4689" vertical-scroll-proportion="-92.5" vertical-offset="0" max-vertical-offset="3630">
+        <state line="20" column="23" selection-start="1068" selection-end="1068" vertical-scroll-proportion="0.18467852" vertical-offset="105" max-vertical-offset="3435">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/inc/constants.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="49" selection-start="530" selection-end="530" vertical-scroll-proportion="0.2257182" vertical-offset="0" max-vertical-offset="1335">
+        <state line="14" column="40" selection-start="468" selection-end="468" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1335">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="18" selection-start="940" selection-end="940" vertical-scroll-proportion="0.5846774" vertical-offset="0" max-vertical-offset="870">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/inc/functStrings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="46" selection-start="563" selection-end="563" vertical-scroll-proportion="-9.375" vertical-offset="0" max-vertical-offset="3630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/test.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="1" selection-start="322" selection-end="322" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1200">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merchant/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="48" selection-start="710" selection-end="710" vertical-scroll-proportion="0.20519836" vertical-offset="0" max-vertical-offset="10425">
           <folding />
         </state>
       </provider>

@@ -268,15 +268,15 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon.png" />
 
-<link rel="stylesheet" href="/css/web.css" />
-<link rel="stylesheet" href="/css/foundation.css" />
-<link rel="stylesheet" href="/css/custom.css" />
+<link rel="stylesheet" href="/wallet/css/web.css" />
+<link rel="stylesheet" href="/wallet/css/foundation.css" />
+<link rel="stylesheet" href="/wallet/css/custom.css" />
 <link rel="stylesheet" href="/webicons-master/webicons.css" />
-<script src="/js/modernizr.js"></script>
-<script src="/js/web.js"></script>
+<script src="/wallet/js/modernizr.js"></script>
+<script src="/wallet/js/web.js"></script>
 
 <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-<? $intJquerySoundManager=1;?><script src="/js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = '/js/soundmanager2.swf'; soundManager.onready(function() {});</script>
+<? $intJquerySoundManager=1;?><script src="/wallet/js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = '/js/soundmanager2.swf'; soundManager.onready(function() {});</script>
 
 <script>
 
@@ -1014,10 +1014,10 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 	</div>
 	
 	
-	<script src="/js/jquery.js"></script>
-	<script src="/js/foundation.min.js"></script>
-	<script src="/js/foundation/foundation.abide.js"></script>
-	<script src="/js/foundation/foundation.reveal.js"></script>
+	<script src="/wallet/js/jquery.js"></script>
+	<script src="/wallet/js/foundation.min.js"></script>
+	<script src="/wallet/js/foundation/foundation.abide.js"></script>
+	<script src="/wallet/js/foundation/foundation.reveal.js"></script>
 	
 	<script>
 	  $(document)

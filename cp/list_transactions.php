@@ -72,11 +72,11 @@ if($strDO=="update"){
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="/img/favicon.png" />
 
-<link rel="stylesheet" href="/css/foundation.css" />
-<script src="/js/modernizr.js"></script>
+<link rel="stylesheet" href="/wallet/css/foundation.css" />
+<script src="/wallet/js/modernizr.js"></script>
 
 <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-<link rel="stylesheet" href="/css/web.css" />
+<link rel="stylesheet" href="/wallet/css/web.css" />
 
 
 
@@ -271,8 +271,8 @@ if($strDO=="update"){
 	</div>
 
 
-    <script src="/js/jquery.js"></script>
-    <script src="/js/foundation.min.js"></script>
+    <script src="/wallet/js/jquery.js"></script>
+    <script src="/wallet/js/foundation.min.js"></script>
     <script>
       $(document).foundation();
     </script>
