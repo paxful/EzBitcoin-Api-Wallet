@@ -9,21 +9,21 @@ if($strDo){
 
 	error_reporting(E_ALL & ~E_NOTICE);
 
-	include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
-	$intUserID = 			funct_ScrubVars(DETECT_USERID) ;
+	require "session.php";
+	$intUserID = 			funct_GetandCleanVariables(DETECT_USERID) ;
 }
 
-$strERRORPage="/mods/sendcrypto.php"; //for errors die with grace
+$strERRORPage="sendcrypto.php"; //for errors die with grace
 
 
 //!$strDo sendcheckpassword
 //we need this to simply return "ok" or "wrong" etc...
 if($strDo=="sendcheckpassword"){
 
-	$strPassword = 		funct_ScrubVars($_POST["password"]);
-	$strPassword = 		funct_ScrubVars( $strPassword);
-	$intUserID = 		funct_ScrubVars( DETECT_USERID);
-	$strUserIDcode = 	funct_ScrubVars( DETECT_USERIDCODE);
+	$strPassword = 		funct_GetandCleanVariables($_POST["password"]);
+	$strPassword = 		funct_GetandCleanVariables( $strPassword);
+	$intUserID = 		funct_GetandCleanVariables( DETECT_USERID);
+	$strUserIDcode = 	funct_GetandCleanVariables( DETECT_USERIDCODE);
 
 	//get their userid, or useridcode
 
@@ -69,28 +69,28 @@ if($strDo=="sendcrypto"){
 		die('Sending temporarily disabled.');
 	}
 
-	$Form_PageFrom = 		funct_ScrubVars($_POST['page']);
-	$intBTCamt = 			funct_ScrubVars($_POST['send_amount_crypto']);
-	$intUSDamt = 			funct_ScrubVars($_POST['send_amount_fiat']);
-	$strWalletHash = 		funct_ScrubVars($_POST['send_address']); //hackable
-	$strPassword = 			funct_ScrubVars($_POST['password']); //hackable
-	$strLabel = 			funct_ScrubVars($_POST['label']); //hackable
-	$strCrypto = 			funct_ScrubVars($_POST['crypto']);
-	$strFiat = 				funct_ScrubVars($_POST['fiat']);
+	$Form_PageFrom = 		funct_GetandCleanVariables($_POST['page']);
+	$intBTCamt = 			funct_GetandCleanVariables($_POST['send_amount_crypto']);
+	$intUSDamt = 			funct_GetandCleanVariables($_POST['send_amount_fiat']);
+	$strWalletHash = 		funct_GetandCleanVariables($_POST['send_address']); //hackable
+	$strPassword = 			funct_GetandCleanVariables($_POST['password']); //hackable
+	$strLabel = 			funct_GetandCleanVariables($_POST['label']); //hackable
+	$strCrypto = 			funct_GetandCleanVariables($_POST['crypto']);
+	$strFiat = 				funct_GetandCleanVariables($_POST['fiat']);
 
 	/*
 	//why do we allow get here??? for testing.... easier to hack get
-	$strMethod = 			funct_ScrubVars($_GET['get']);
+	$strMethod = 			funct_GetandCleanVariables($_GET['get']);
 	if($strMethod){
 		// /mods/sendcrypto.php?do=sendcrypto&send_amount_crypto=.01&send_address=1FTJXv8FjqyQ1HUTx7HeLxVaZTnc8E3muW&label=testing
-		$Form_PageFrom = 		funct_ScrubVars($_GET['page']);
-		$intBTCamt = 			funct_ScrubVars($_GET['send_amount_crypto']);
-		$intUSDamt = 			funct_ScrubVars($_GET['send_amount_fiat']);
-		$strWalletHash = 		funct_ScrubVars($_GET['send_address']);
-		$strPassword = 			funct_ScrubVars($_GET['password']);
-		$strLabel = 			funct_ScrubVars($_GET['label']);
-		$strCrypto = 			funct_ScrubVars($_GET['crypto']);
-		$strFiat = 				funct_ScrubVars($_GET['fiat']);
+		$Form_PageFrom = 		funct_GetandCleanVariables($_GET['page']);
+		$intBTCamt = 			funct_GetandCleanVariables($_GET['send_amount_crypto']);
+		$intUSDamt = 			funct_GetandCleanVariables($_GET['send_amount_fiat']);
+		$strWalletHash = 		funct_GetandCleanVariables($_GET['send_address']);
+		$strPassword = 			funct_GetandCleanVariables($_GET['password']);
+		$strLabel = 			funct_GetandCleanVariables($_GET['label']);
+		$strCrypto = 			funct_GetandCleanVariables($_GET['crypto']);
+		$strFiat = 				funct_GetandCleanVariables($_GET['fiat']);
 	}
 	*/
 

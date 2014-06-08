@@ -10,9 +10,9 @@
 define("WIRE_BANK_ID",                      5); // 5= FARGO 6=AMALGAMTED 3=BOA
 
 define("CC_CUT_FAST",                       1); //percentage to take from fast transactions, deposit, check, wire, meet in person
-define("CC_FEE",                            0.06); //Coin Cafe Fee
+define("CC_FEE",                            0.06); // Fee
 define("RATE_HIKE_LUMP",                    0); //hike rate of crypto by this lump
-define("RATE_HIKE_PERCENT",                 0.06132); //hike crypto rate by percentage 0.1= 10%
+define("RATE_HIKE_PERCENT",                 0.0); //hike crypto rate by percentage 0.1= 10%
 define("RATE_MINIMUM_SELL",                 0); //rate never falls below
 define("RATE_RANDOMIZER_MAX",               0); // ex 800 - 0-24 800-824
 define("CRYPTO_PERCENT_HIKE",               8); //percentage to charge cryptolocker peeps
@@ -30,19 +30,13 @@ define("SEND_ACTIVE",                       true); // to turn off send athorizat
 define("SEND_THROUGH_WHICH_SYSTEM",         "amsterdam"); // blockchain.info , amsterdam
 define("WALLET_NEWADDRESS_HOST",            "amsterdam"); //amsterdam, blockchain.info
 
-
 //we don't need to have this here now as we only speak to it via the webapi
 define("JSONRPC_CONNECTIONSTRING_CC",       "https://A7sC5sYk1q4ef3XBoaqXYNq:9VnBT373isI1S3cA0cLqabs@5.153.60.162:8332"); //CoinCafe Custom RPC server at Softlayer   COMPROMISED!! -John
-
-//we do need the  username and password though for api
-define("COINCAFE_API_LOGIN",                ""); //in users tbl
-define("COINCAFE_API_PASSWORD",             ""); //
-//define("COINCAFE_API_LOGIN",              ""); //
-//define("COINCAFE_API_PASSWORD",           ""); //
-define("COINCAFE_API_MERCHANT_URL",         "https://5.153.60.162/merchant/"); //
-define("COINCAFE_API_SECRET",               "n00n3z");
-//define("COINCAFE_API_SECRET",             "n00n3z"); //
-
+define("JSONRPC_API_LOGIN",                ""); //in users tbl
+define("JSONRPC_API_PASSWORD",             ""); //
+define("JSONRPC_API_MERCHANT_URL",         "https://5.153.60.162/merchant/"); //
+define("JSONRPC_API_SECRET",               "n00n3z");
+define("JSONRPC_API_SECRET",               ""); //
 //##############################
 
 
@@ -134,7 +128,6 @@ switch ($strServer){ // Server SiteWide Vars
     define("DB_PASS",                   "littles");
     define("DB_NAME",                   "cc_to");
     define("JQUERYSRC",                 'js/jquery.min.js'); //latest jquery
-    define("JQUERYUISRC",               'js/jqueryui.min.1.9.2.js'); //1.9.2 doesn't break blueimp upload and still allows drag and resize
     break;
 
 
