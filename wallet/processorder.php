@@ -1,18 +1,18 @@
 <?php 
 //error_reporting(E_ERROR | E_PARSE);
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
 //get values from query string 
-$real_secret = 				funct_ScrubVars($_GET['secret']); //this I entered into the blockchain wallet form
-$transaction_hash = 		funct_ScrubVars($_GET['transaction_hash']); //The transaction hash.
-$input_address = 			funct_ScrubVars($_GET['input_address']); //The bitcoin address that received the transaction
-$input_address2 = 			funct_ScrubVars($_GET['address']); //The bitcoin address that received the transaction.
+$real_secret = 				funct_GetandCleanVariables($_GET['secret']); //this I entered into the blockchain wallet form
+$transaction_hash = 		funct_GetandCleanVariables($_GET['transaction_hash']); //The transaction hash.
+$input_address = 			funct_GetandCleanVariables($_GET['input_address']); //The bitcoin address that received the transaction
+$input_address2 = 			funct_GetandCleanVariables($_GET['address']); //The bitcoin address that received the transaction.
 //if(!$input_address){$input_address=$input_address2;}//not sure which it sends..
-$value_in_satoshi = 		funct_ScrubVars($_GET['value']);
+$value_in_satoshi = 		funct_GetandCleanVariables($_GET['value']);
 
 //coincafe.info gives confirmations & userid (label2 in amsterdam)
-$confirmations = 			funct_ScrubVars($_GET['confirms']); //The bitcoin address that received the transaction
-$intUserID = 				funct_ScrubVars($_GET['userid']);
+$confirmations = 			funct_GetandCleanVariables($_GET['confirms']); //The bitcoin address that received the transaction
+$intUserID = 				funct_GetandCleanVariables($_GET['userid']);
 
 //test this page with string
 //http://getcoincafe.com/mods/processorder.php?secret=n00n3z&transaction_hash=a6eb6a8c2a66dbdfeb87faf820492222a80c2db3422706bdc1eb3bff0dbe8ab1&address=1DP1NWLQ11VDTBkjunwxJJzLDJYKLw44Jt&input_address=1DP1NWLQ11VDTBkjunwxJJzLDJYKLw44Jt&value=200000&confirms=3

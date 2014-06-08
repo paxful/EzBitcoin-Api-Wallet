@@ -9,24 +9,24 @@ $strDo = 				trim($_GET['do']);
 
 if($strDo=="ajax" || $strDo=="iframe"){
 	
-	require_once $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+	require_once "session.php";
 
 	//calling file via ajax so get values from query string
-	$intNewstID = 			funct_ScrubVars($_GET['newest_msg_id']); 
-	$intLastMSGID = 		funct_ScrubVars($_GET['last_msg_id']); 
-	$intMaxRecords = 		funct_ScrubVars($_GET['maxrecords']);
-	$intType = 				funct_ScrubVars($_GET["type"]); //1=songs, 2=pics, 3=ringtones, 7=albums, 9=people
-	$intUserID2 = 			funct_ScrubVars($_GET["user2"]); //for me.php , comments
-	$sortby = 				funct_ScrubVars($_GET["sort"]);
-	$intFilter = 			funct_ScrubVars($_GET["f"]); if(!$intFilter){$intFilter=0;}//show all types
+	$intNewstID = 			funct_GetandCleanVariables($_GET['newest_msg_id']); 
+	$intLastMSGID = 		funct_GetandCleanVariables($_GET['last_msg_id']); 
+	$intMaxRecords = 		funct_GetandCleanVariables($_GET['maxrecords']);
+	$intType = 				funct_GetandCleanVariables($_GET["type"]); //1=songs, 2=pics, 3=ringtones, 7=albums, 9=people
+	$intUserID2 = 			funct_GetandCleanVariables($_GET["user2"]); //for me.php , comments
+	$sortby = 				funct_GetandCleanVariables($_GET["sort"]);
+	$intFilter = 			funct_GetandCleanVariables($_GET["f"]); if(!$intFilter){$intFilter=0;}//show all types
 	//$strSearchTXT = 		functCleanSQLText(trim($_GET["searchtxt"]));
-	$intMod =				funct_ScrubVars($_GET["m"]); //is this user a moderator?
-	$intRecID = 			funct_ScrubVars($_GET["recid"]); //to return single cell of record just uploaded	
-	$intUserID_viewer = 	funct_ScrubVars($_GET["viewer"]); //userid of user currently viewing the content	
+	$intMod =				funct_GetandCleanVariables($_GET["m"]); //is this user a moderator?
+	$intRecID = 			funct_GetandCleanVariables($_GET["recid"]); //to return single cell of record just uploaded	
+	$intUserID_viewer = 	funct_GetandCleanVariables($_GET["viewer"]); //userid of user currently viewing the content	
 	
 	if($strDo=="iframe"){ ?>
-		<link href="/wallet/css/web.css" media="screen" rel="stylesheet" type="text/css">
-        <script src="/wallet/js/web.js" type="text/javascript"></script>
+		<link href="css/web.css" media="screen" rel="stylesheet" type="text/css">
+        <script src="js/web.js" type="text/javascript"></script>
 	<? }
 
 }else{ //file is being included and values are preset 
@@ -305,144 +305,6 @@ switch ($intType){
 
 	break;
 	
-	
-	
-	//!CASE ORDERS
-	case "orders": //orders
-
-	@ $rpp;        	//Records Per Page
-    @ $cps;        	//Current Page Starting row number
-    @ $lps;        	//Last Page Starting row number
-    @ $a;        	//will be used to print the starting row number that is shown in the page
-    @ $b;        	//will be used to print the ending row number that is shown in the page
-	$rpp = 			$intMaxRecords ;
-	$cps = 			$intLastMSGID ;
-    $a =			$cps + 1 ;
-	$b = 			$intLastMSGID ;//this is to fix the iframe src call javascript error on the homepage
-    $lps = 			$cps - $rpp ; //Calculating the starting row number for previous page
-
-	$strWhereSTMT =""; //reset this just incase loadcontent was called as an include before
-	if($intUserID_viewer){ $strWhereSTMT = $strWhereSTMT. " AND from_id=$intUserID_viewer " ;}
-	//if($intRecID){ $strWhereSTMT =" AND transaction_id=$intRecID " ;} //return single record	
-	//if($sortby=="top"){ $strOrderBySTMT =" crypto_amt DESC " ;}
-	//if($sortby=="new"){ $strWhereSTMT = $strWhereSTMT. " AND orderid>$intNewstID " ; $strOrderBySTMT =" crypto_amt DESC " ;}
-	//if($strSearchTXT){ $strWhereSTMT = $strWhereSTMT. " AND private<1 " ;}
-	$strOrderBySTMT = " date DESC " ;
-    $intLastMSGID = 0 ; 
-	$intMaxRecords = 10 ;
-	
-    $query="SELECT * ".
-	" FROM ".TBL_ORDERS." ".
-	" WHERE orderid>0 $strWhereSTMT ".
-	" ORDER BY $strOrderBySTMT LIMIT $intLastMSGID,$intMaxRecords " ;
-	//echo "SQLstmt=$query<br>";
-	$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
-	$nr = mysqli_num_rows($rs); //Number of rows found with LIMIT in action
-	$query0 = "Select FOUND_ROWS()";
-    $rs0 = mysqli_query($DB_LINK, $query0) or die(mysqli_error());
-    $row0 =	mysqli_fetch_array($rs0);
-    $nr0 = $row0["FOUND_ROWS()"]; //Number of rows found without LIMIT in action
-    if (($nr0 < 10) || ($nr < 10)){$b = $nr0;}else{$b = ($cps) + $rpp;}
-	$intRowCount=0;
-	while($row = mysqli_fetch_assoc($rs)){
-
-	    $intOrderID=					$row["orderid"];
-		if($intRowCount==0){ $intNewstID=$intOrderID;}
-		$intRowCount=					$intRowCount + 1;
-		$strOrderCode=					$row["ordercode"];
-	
-		$strType=						$row["type"];
-		$intStatus=						$row["status"];
-		
-		$strCryptoType=					$row["cryptotype"];
-		$strCryptoAmt=					$row["amt_btc"];
-		$strCryptoRate_usd=				$row["btc_rate"];		
-		$intFiatValue = $strCryptoAmt * $strCryptoRate_usd ;
-		$FiatToConvert =				$row["fiat_to_convert"];		
-
-		$strTransactionHash=			$row["hash_transaction"];
-		//if "coincade" then it is an internal transaction
-		
-		$intUserGive=					$row["user_id"];
-		$intUserRecieve=				$row["user_id_sentto"];
-		
-		$strLabel=						$row["label"];
-		
-		$intDateTime= 					$row["time"];
-		$strDate= 						$row["date"];
-		$strDate_formatted = date("Y-m-d H:i", strtotime($strDate));
-		$strDate_formatted_nice = functNiceTimeDif_int($intDateTime);
-    ?>
-	    <tr>
-			<td align="left"><medium><?=$strDate_formatted_nice?></medium><br><?=$strDate_formatted?></td>
-			<td align="left"><a href="<?=PAGE_RECEIPT?>?c=<?=$strOrderCode?>" style="font-size:24px;"><?=$intOrderID?></a><br><?=$strLabel?></td>
-<!-- 			COMMENTING THIS OUT TO HIDE THE USD VALUE IN THE TRANSACTIONS LIST -John -->
-<!-- 			<td align="left"><strong><?=rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong> <br> $<?=money_format('%i', $intFiatValue) ?></td> -->
-			<td align="left"><strong><?=rtrim(number_format($strCryptoAmt,8),0)?></strong></td>
-	    </tr>
-	<?
-	
-	}// while loop end
-
-	break;
-	
-	
-	//!CASE UPLOADS
-	case "uploads": //uploads
-
-	@ $rpp;        	//Records Per Page
-    @ $cps;        	//Current Page Starting row number
-    @ $lps;        	//Last Page Starting row number
-    @ $a;        	//will be used to print the starting row number that is shown in the page
-    @ $b;        	//will be used to print the ending row number that is shown in the page
-	$rpp = 			$intMaxRecords ;
-	$cps = 			$intLastMSGID ;
-    $a =			$cps + 1 ;
-	$b = 			$intLastMSGID ;//this is to fix the iframe src call javascript error on the homepage
-    $lps = 			$cps - $rpp ; //Calculating the starting row number for previous page
-
-	$strWhereSTMT =""; //reset this just incase loadcontent was called as an include before
-	if($intUserID_viewer){ $strWhereSTMT = $strWhereSTMT. " AND usernameid=$intUserID_viewer " ;}
-	if($intRecID){ $strWhereSTMT =" AND uploadid=$intRecID " ;} //return single record	
-	//if($sortby=="top"){ $strOrderBySTMT =" crypto_amt DESC " ;}
-	//if($sortby=="new"){ $strWhereSTMT = $strWhereSTMT. " AND orderid>$intNewstID " ; $strOrderBySTMT =" crypto_amt DESC " ;}
-	//if($strSearchTXT){ $strWhereSTMT = $strWhereSTMT. " AND private<1 " ;}
-	$strOrderBySTMT = " date_added DESC " ;
-    $intLastMSGID = 0 ; 
-	$intMaxRecords = 10 ;
-	
-    $query="SELECT * ".
-	" FROM ".TBL_UPLOADS." ".
-	" WHERE uploadid>0 $strWhereSTMT ".
-	" ORDER BY $strOrderBySTMT LIMIT $intLastMSGID,$intMaxRecords " ;
-	//echo "SQLstmt=$query<br>";
-	$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
-	$nr = mysqli_num_rows($rs); //Number of rows found with LIMIT in action
-	$query0 = "Select FOUND_ROWS()";
-    $rs0 = mysqli_query($DB_LINK, $query0) or die(mysqli_error());
-    $row0 =	mysqli_fetch_array($rs0);
-    $nr0 = $row0["FOUND_ROWS()"]; //Number of rows found without LIMIT in action
-    if (($nr0 < 10) || ($nr < 10)){$b = $nr0;}else{$b = ($cps) + $rpp;}
-	$intRowCount=0;
-	while($row = mysqli_fetch_assoc($rs)){
-
-	    $intOrderID=					$row["orderid"];
-		if($intRowCount==0){ $intNewstID=$intOrderID;}
-		$intRowCount=					$intRowCount + 1;
-		$strOrderCode=					$row["keylink"];
-		$strExt=					$row["ext"];
-		
-		//we show the users the thumbnails only as the full images are for admins only
-		$strImgPath=PICTURETHUMBPATH.$strOrderCode.".jpg" ;
-		
-		
-    ?>
-	    <img src="<?=$strImgPath?>" width="100" height="100" />
-	<?
-	
-	}// while loop end
-
-	break;
 
 
 } //switch end

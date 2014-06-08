@@ -23,7 +23,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
 	<meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width">

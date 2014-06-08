@@ -1,16 +1,14 @@
 <?php 
 error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
 
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
-$strError = 			(funct_ScrubVars($_GET["error"])); //set error msg manually in query
-$strEmail = 			(funct_ScrubVars($_GET["email"])); //set error msg manually in query
-$strPhone = 			(funct_ScrubVars($_GET["phonenumber"])); //set error msg manually in query
-$strFirst = 			(funct_ScrubVars($_GET["firstname"])); //set error msg manually in query
-$strLast = 				(funct_ScrubVars($_GET["lastname"])); //set error msg manually in query
-$strAddress = 			(funct_ScrubVars($_GET["address"])); //set error msg manually in query
-
-
+$strError = 			(funct_GetandCleanVariables($_GET["error"])); //set error msg manually in query
+$strEmail = 			(funct_GetandCleanVariables($_GET["email"])); //set error msg manually in query
+$strPhone = 			(funct_GetandCleanVariables($_GET["phonenumber"])); //set error msg manually in query
+$strFirst = 			(funct_GetandCleanVariables($_GET["firstname"])); //set error msg manually in query
+$strLast = 				(funct_GetandCleanVariables($_GET["lastname"])); //set error msg manually in query
+$strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg manually in query
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -24,9 +22,7 @@ $strAddress = 			(funct_ScrubVars($_GET["address"])); //set error msg manually i
    
 	<? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
 
-    <link rel="stylesheet" href="/wallet/css/foundation.css" />
-<link rel="stylesheet" href="/wallet/css/custom.css" />
-    <link rel="stylesheet" href="webicons-master/webicons.css" />
+    <link rel="stylesheet" href="css/foundation.css" />
     <script src="js/modernizr.js"></script>
 	
 <SCRIPT LANGUAGE="JavaScript">
@@ -86,7 +82,7 @@ $strAddress = 			(funct_ScrubVars($_GET["address"])); //set error msg manually i
 
 <body onload="<?=$strOnBodyLoadJS?>">
 
-<?php include __ROOT__."/inc/hud.php"; ?>
+<?php require "hud.php"; ?>
 
 <p></p>	
 
@@ -135,7 +131,7 @@ $strAddress = 			(funct_ScrubVars($_GET["address"])); //set error msg manually i
 	
 <!--SIDEBAR AREA-->        
 	<div class="small-12 medium-4 columns">
-		<?php include __ROOT__."/panel_side_contact.php"; ?>
+		<?php //include __ROOT__."/panel_side_contact.php"; ?>
 	</div>
 	
 	

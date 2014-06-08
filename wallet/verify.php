@@ -5,19 +5,19 @@ error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
 include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
 
 //Define Page Values
-$strThisPage = 		funct_ScrubVars(PAGE_WELCOME);
-$intUserID = 		funct_ScrubVars(DETECT_USERID);
-$strDo = 			funct_ScrubVars($_GET['do']);
+$strThisPage = 		funct_GetandCleanVariables(PAGE_WELCOME);
+$intUserID = 		funct_GetandCleanVariables(DETECT_USERID);
+$strDo = 			funct_GetandCleanVariables($_GET['do']);
 //echo "do= " .$strDo. "<br>" ;
 if(!$strDo){$strDo="confirmemail";}
 
-$strType = 			funct_ScrubVars($_GET['type']);
+$strType = 			funct_GetandCleanVariables($_GET['type']);
 
-$strError = 				(funct_ScrubVars($_GET['error']));
-$strError_passwordupdate = 	(funct_ScrubVars($_GET['error_password']));
-$strError_testphone = 		(funct_ScrubVars($_GET['error_testphone']));
-$strError_confirmphone = 	(funct_ScrubVars($_GET['error_confirmphone']));
-$strError_confirmemail = 	(funct_ScrubVars($_GET['error_confirmemail']));
+$strError = 				(funct_GetandCleanVariables($_GET['error']));
+$strError_passwordupdate = 	(funct_GetandCleanVariables($_GET['error_password']));
+$strError_testphone = 		(funct_GetandCleanVariables($_GET['error_testphone']));
+$strError_confirmphone = 	(funct_GetandCleanVariables($_GET['error_confirmphone']));
+$strError_confirmemail = 	(funct_GetandCleanVariables($_GET['error_confirmemail']));
 
 
 
@@ -62,8 +62,8 @@ switch ($strDo){
 
 
 		//update password
-		$strPassword = funct_ScrubVars($_POST['password']);
-		$strPassword2 = funct_ScrubVars($_POST['password2']);
+		$strPassword = funct_GetandCleanVariables($_POST['password']);
+		$strPassword2 = funct_GetandCleanVariables($_POST['password2']);
 		if($strPassword AND $strPassword2){
 			
 			if($strPassword2!=$strPassword){ 
@@ -114,9 +114,9 @@ switch ($strDo){
 	//!CASE confirmemailcode
 	case "confirmemailcode": 
 		//get code from form
-		$strCode = 					funct_ScrubVars($_GET['emailcode']);
-		$strEmail = 				funct_ScrubVars($_GET['email']);
-		$intUserID = 				funct_ScrubVars($_GET['id']);
+		$strCode = 					funct_GetandCleanVariables($_GET['emailcode']);
+		$strEmail = 				funct_GetandCleanVariables($_GET['email']);
+		$intUserID = 				funct_GetandCleanVariables($_GET['id']);
 
 		if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 		if( $stmt = $DB_MYSQLI->prepare("SELECT id,emailcode,verification_level,verification_email FROM " . TBL_USERS . " WHERE emailcode = ? ") ) { 
@@ -180,7 +180,7 @@ switch ($strDo){
 	//!CASE sendphonecode
 	case "sendphonecode": //send phone code via sms
 
-		$strNumber = funct_ScrubVars($_POST["phone"]);
+		$strNumber = funct_GetandCleanVariables($_POST["phone"]);
 		$strError = funct_SendPhoneCode($intUserID,$strNumber);
 		
 		//redirect to settings page
@@ -192,7 +192,7 @@ switch ($strDo){
 	case "confirmphonecode": //confirm phone code via sms
 
 		//get code from form
-		$strCode = 				funct_ScrubVars($_POST['phonecode']);
+		$strCode = 				funct_GetandCleanVariables($_POST['phonecode']);
 		
 		//get code in db
 		$query="SELECT * FROM " . TBL_USERS . " WHERE id = $intUserID ";
@@ -306,43 +306,20 @@ if($intUserID=="") {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="/img/favicon.png" />
-	<link rel="stylesheet" href="/wallet/css/web.css" />
-	<link rel="stylesheet" href="/wallet/css/foundation.css" />
-<link rel="stylesheet" href="/wallet/css/custom.css" />
-	<link rel="stylesheet" href="/foundation-icons/foundation-icons.css" />
-	<link rel="stylesheet" href="webicons-master/webicons.css" />
-	<script src="/wallet/js/modernizr.js"></script>
-	<script src="/wallet/js/web.js"></script>
+	<link rel="icon" type="image/png" href="img/favicon.png" />
+	<link rel="stylesheet" href="css/foundation.css" />
+	<script src="js/modernizr.js"></script>
+	<script src="js/web.js"></script>
 	<script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-	<? $intJquerySoundManager=1;?><script src="/wallet/js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = '/js/soundmanager2.swf'; soundManager.onready(function() {});</script>
-	
-	
-	<!-- UPLOAD CSS -->
-		<!-- jQuery UI styles -->
-		<link rel="stylesheet" href="upload/css/jquery-ui.css" id="theme">
-		<!-- CSS to style the file input field as button and adjust the jQuery UI progress bars -->
-		<link rel="stylesheet" href="upload/css/jquery.fileupload-ui.css">
-		<!-- Generic page styles -->
-		<link rel="stylesheet" href="upload/css/style.css">
-		<!-- Shim to make HTML5 elements usable in older Internet Explorer versions -->
-		<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-		<style>.scrolly{overflow-y: auto; overflow-x: hidden; padding:7px;}</style>
-	
+	<? $intJquerySoundManager=1;?><script src="js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = 'js/soundmanager2.swf'; soundManager.onready(function() {});</script>
 
-	<script language="javaScript">
-
-
-
-
-	</script>
 
 </head>
 
 
 <body onLoad="<?=$strOnBodyLoadJS?>">
 
-<?php include __ROOT__."/inc/hud.php"; ?>
+<?php require "hud.php"; ?>
 
 <p></p>
 <!-- Main Body Area 8 columns wide -->

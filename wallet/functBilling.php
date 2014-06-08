@@ -2,26 +2,23 @@
 //error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
 include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //calls server.php within
 include $_SERVER['DOCUMENT_ROOT']."/inc/funct_jsonrpc.php"; //calls server.php within
-//include $_SERVER['DOCUMENT_ROOT']."/inc/lib_bitstamp.php"; //bitstamp api class
-//include $_SERVER['DOCUMENT_ROOT']."/inc/lib_anx-gox-api.php"; //anx api class
-
 
 function funct_Billing_GetBalance($strAccount){ 
 
-	$guid=urlencode(COINCAFE_API_LOGIN);
-	$firstpassword=urlencode(COINCAFE_API_PASSWORD);
+	$guid=urlencode(JSONRPC_API_LOGIN);
+	$firstpassword=urlencode(JSONRPC_API_PASSWORD);
 	$strAccount = urlencode($strAccount);
-	$json_url = COINCAFE_API_MERCHANT_URL."?do=getbalance&loginname=$guid&password=$firstpassword&account=$strAccount";
+	$json_url = JSONRPC_API_MERCHANT_URL."?do=getbalance&loginname=$guid&password=$firstpassword&account=$strAccount";
 	$strReturnError = file_get_contents($json_url);
 	return $strReturnError ;
 }
 
 function funct_Billing_ValidateTransactionHash($strTransactionHash){ 
 
-	$guid=urlencode(COINCAFE_API_LOGIN);
-	$firstpassword=urlencode(COINCAFE_API_PASSWORD);
+	$guid=urlencode(JSONRPC_API_LOGIN);
+	$firstpassword=urlencode(JSONRPC_API_PASSWORD);
 	$strAddress = urlencode($strAddress);
-	$json_url = COINCAFE_API_MERCHANT_URL."?do=validate_transaction&loginname=$guid&password=$firstpassword&txid=$strTransactionHash";
+	$json_url = JSONRPC_API_MERCHANT_URL."?do=validate_transaction&loginname=$guid&password=$firstpassword&txid=$strTransactionHash";
 	$strReturnError = file_get_contents($json_url);
 	
 	//echo "url: $json_url" ;
@@ -39,10 +36,10 @@ function funct_Billing_ValidateAddress($strAddress){
 //get our account balance - restricted to getcoincafe.com server ip address 162.144.93.87
 //called by /mods/sendcrypto.php /mods/processorder2.php
 	
-	$guid=urlencode(COINCAFE_API_LOGIN);
-	$firstpassword=urlencode(COINCAFE_API_PASSWORD);
+	$guid=urlencode(JSONRPC_API_LOGIN);
+	$firstpassword=urlencode(JSONRPC_API_PASSWORD);
 	$strAddress = urlencode($strAddress);
-	$json_url = COINCAFE_API_MERCHANT_URL."?do=validate_address&loginname=$guid&password=$firstpassword&address=$strAddress";
+	$json_url = JSONRPC_API_MERCHANT_URL."?do=validate_address&loginname=$guid&password=$firstpassword&address=$strAddress";
 	
 	//echo "url: $json_url" ;
 	//site just spits our normal code now not json...
@@ -79,16 +76,16 @@ function funct_Billing_ValidateAddress($strAddress){
 
 //################### WALLET FUNCTIONS BEGIN #######################################
 
-function funct_Billing_NewWalletAddress_Amsterdam($strLabel,$strLabel2,$strLabel3){ //create a new wallet address, returns address as lone string
+function funct_Billing_NewWalletAddress($strLabel,$strLabel2,$strLabel3){ //create a new wallet address, returns address as lone string
 	//creates a new address via webapi 
 	// now using coincafe.co merchant api, Allah be praised! 
 	//http://5.153.60.162/merchant/?do=new_address&address=&label=testing%20public%20note&label2=testing%20note2&label3=testingnote3&loginname=coincafe&password=coincafe
-	$guid=urlencode(COINCAFE_API_LOGIN);
-	$firstpassword=urlencode(COINCAFE_API_PASSWORD);
+	$guid=urlencode(JSONRPC_API_LOGIN);
+	$firstpassword=urlencode(JSONRPC_API_PASSWORD);
 	$strLabel = urlencode($strLabel);
 	$strLabel2 = urlencode($strLabel2);
 	$strLabel3 = urlencode($strLabel3);
-	$json_url = COINCAFE_API_MERCHANT_URL."?do=new_address&loginname=$guid&password=$firstpassword&label=$strLabel&label2=$strLabel2&label3=$strLabel3";
+	$json_url = JSONRPC_API_MERCHANT_URL."?do=new_address&loginname=$guid&password=$firstpassword&label=$strLabel&label2=$strLabel2&label3=$strLabel3";
 	
 	//site just spits our normal code now not json...
 	$json_data = file_get_contents($json_url);
@@ -99,61 +96,10 @@ function funct_Billing_NewWalletAddress_Amsterdam($strLabel,$strLabel2,$strLabel
 	return $address ;
 }
 
-function funct_Billing_NewWalletAddress($strLabel){ //create a new wallet address, returns address as lone string
-	//creates a new address via webapi 
-	// was first using blockchain.info
-	$login=BLOCKCHAIN_GUID;$pass=BLOCKCHAIN_PASSWORD1;$pass2=BLOCKCHAIN_PASSWORD2;
-	// now using coincafe.co merchant api, Allah be praised! 
-	$guid=urlencode($login);
-	$firstpassword=urlencode($pass);
-	$secondpassword=urlencode($pass2);
-	
-	$strLabel = urlencode($strLabel);
-	$json_url = "http://blockchain.info/merchant/$guid/new_address?password=$firstpassword&second_password=$secondpassword&label=$strLabel";
-	$json_data = file_get_contents($json_url);
-	$json_feed = json_decode($json_data);
-	$address = $json_feed->address;
-	$label = $json_feed->label;
-	$error = $json_feed->error;
-	return $address ;
-}
 
-function funct_Billing_SendBTC($strToAddress, $intToAmount, $strNote, $intMiningFee, $strFrom ){
-
-	$guid=urlencode(BLOCKCHAIN_GUID);
-	$main_password=urlencode(BLOCKCHAIN_PASSWORD1);
-	$second_password=urlencode(BLOCKCHAIN_PASSWORD2);
-	
-	if(!$intMiningFee){$intMiningFee = MININGFEE_NORMAL;}
-	
-	//convert to satoshi
-	$intToAmount = $intToAmount * 100000000 ;
-	$intMiningFee = $intMiningFee * 100000000 ;
-	
-	$strNote = urlencode(alphanumericAndSpace($strNote));
-	$intMiningFee = urlencode($intMiningFee);
-	
-	//if we specify from address then they must be on blockchain!
-	if(SECURITY_ON_BLOCKCHAIN_ALLOWED<1 AND !$strFrom){ $strFrom=BLOCKCHAIN_SENDFROMADDRESS ;} //if onblockchain not allowed then set from to nothing
-	//BUG - if any from address is set at all then we get a "no available imputs" errors
-	//$strFromSQL = "&from=".$strFrom ;	
-
-	//send many code
-	$recipients = urlencode('{"'.$strToAddress.'":'.$intToAmount.'}');
-	//http://blockchain.info/merchant/59108185-b56a-4a26-b5a7-f877d085c96f/sendmany?password=l1ttl3s7781&second_password=m8m8b38r&recipients=%7B%221GmEVipzfyBGQDWDije9FhvySSKHz1RjXL%22%3A+0.001%7D
-	$json_url = "http://blockchain.info/merchant/$guid/sendmany?password=$main_password&second_password=$second_password".$strFromSQL."&recipients=$recipients&fee=$intMiningFee&note=$strNote";
-	//echo "url=".$json_url."<br>";
-	$json_data = file_get_contents($json_url);
-	$json_feed = json_decode($json_data);
-	$message = $json_feed->message;
-	$txid = $json_feed->tx_hash;
-	$error = $json_feed->error;
-	
-	return $message."|".$error."|".$txid ; //
-}
 
 //!Send BTC CoinCafe
-function funct_Billing_SendBTC_CoinCafe($strToAddress, $intToAmount, $strNote, $intMiningFee, $strFrom, $strLabel,$strLabel2,$strLabel3 ){
+function funct_Billing_SendBTC($strToAddress, $intToAmount, $strNote, $intMiningFee, $strFrom, $strLabel,$strLabel2,$strLabel3 ){
 
 	//logic
 	if(!$intMiningFee){$intMiningFee = MININGFEE_NORMAL;}
@@ -166,9 +112,9 @@ function funct_Billing_SendBTC_CoinCafe($strToAddress, $intToAmount, $strNote, $
 	//$strFromSQL = "&from=".$strFrom ;	
 	
 	//send code
-	$guid=urlencode(COINCAFE_API_LOGIN); 
-	$main_password=urlencode(COINCAFE_API_PASSWORD); 
-	$secret=urlencode(COINCAFE_API_SECRET); 
+	$guid=urlencode(JSONRPC_API_LOGIN); 
+	$main_password=urlencode(JSONRPC_API_PASSWORD); 
+	$secret=urlencode(JSONRPC_API_SECRET); 
 	$strToAddress = urlencode($strToAddress); 
 	$intToAmount = urlencode($intToAmount);
 	$intMiningFee = urlencode($intMiningFee); 
@@ -178,7 +124,7 @@ function funct_Billing_SendBTC_CoinCafe($strToAddress, $intToAmount, $strNote, $
 	$strLabel2 = urlencode($strLabel2); 
 	$strLabel3 = urlencode($strLabel3); 
 	//http://local.ccapi/merchant/?do=sendtoaddress&address=1GmEVipzfyBGQDWDije9FhvySSKHz1RjXL&amount=0.0002&comment=test%20send&commentto=to%20test&loginname=d4sd6ejmyiCwEM7UMb&password=u7hQ7IzP9o6sOCrJr&debug=1
-	$json_url = COINCAFE_API_MERCHANT_URL."?do=sendtoaddress".
+	$json_url = JSONRPC_API_MERCHANT_URL."?do=sendtoaddress".
 	"&address=$strToAddress&amount=$intToAmount&fee=$intMiningFee&comment=$strNote&commentto=$strNote&label=$strLabel&label2=$strLabel2&label3=$strLabel3".
 	"&loginname=$guid&password=$main_password&secret=$secret";
 	//echo "url=".$json_url."<br>";

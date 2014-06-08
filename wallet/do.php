@@ -2,14 +2,14 @@
 
 ob_start(); //so we can redirect even after headers are sent
 
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
 error_reporting(E_ALL & ~E_NOTICE);
 
 //Get Fresh Page QueryString Variables
 $strDo = 			trim($_GET['do']);
 
-$intUserID = 		funct_ScrubVars(DETECT_USERID);
+$intUserID = 		funct_GetandCleanVariables(DETECT_USERID);
 //$strChestKey = DETECT_CHESTKEY ;
 
 //echo "strDo= " . $strDo;
@@ -18,8 +18,8 @@ switch ($strDo){
 	//!CASE claimcoins
 	case "claimcoins":
 	//let them claim their coins
-		$strEmail = 	funct_ScrubVars($_POST['email']);
-		$strCode = 		funct_ScrubVars($_POST['code']);
+		$strEmail = 	funct_GetandCleanVariables($_POST['email']);
+		$strCode = 		funct_GetandCleanVariables($_POST['code']);
 
 		if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 		if( $stmt = $DB_MYSQLI->prepare("SELECT user_id,user_email,address_email,status_id,status_msg,label,transaction_id_send,transaction_id_get FROM ".TBL_ESCROW." WHERE verify_code = ? ") ) {
@@ -78,7 +78,7 @@ switch ($strDo){
 		//!CASE newpublickey
 		case "newpublickey": //send email confirm code
 
-			$intUserID = funct_ScrubVars($_POST["userid"]);
+			$intUserID = funct_GetandCleanVariables($_POST["userid"]);
 
 			if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 			if( $stmt = $DB_MYSQLI->prepare("SELECT id,email,cellphone,name,wallet_btc FROM ".TBL_USERS." WHERE id = ? ") ) {
@@ -137,28 +137,28 @@ switch ($strDo){
 		case "update":
 
 			//Get all post values, ckeck & clean them
-			$strPassword = 				funct_ScrubVars($_POST['password']);
-			$strEmail = 				funct_ScrubVars($_POST['email']);
-			$intCountryID = 			funct_ScrubVars($_POST['country']);
-			$intCurrencyID = 			funct_ScrubVars($_POST['currency']);
-			$strNameFirst = 			funct_ScrubVars($_POST['namefirst']);
-			$strNameLast = 				funct_ScrubVars($_POST['namelast']);
-			$strAddress = 				funct_ScrubVars($_POST['address']);
-			$strAddress2 = 				funct_ScrubVars($_POST['address2']);
-			$strCity = 					funct_ScrubVars($_POST['cityname']);
-			$strState = 				funct_ScrubVars($_POST['state']);
-			$strPostal = 				funct_ScrubVars($_POST['postal']);
-			$intFiatConvertPercent = 	funct_ScrubVars($_POST['fiatconvertpercent']);
-			$strCellPhone = 			funct_ScrubVars($_POST['cellphone']);
-			$strCellPhone_code = 		funct_ScrubVars($_POST['cellphone_countrycode']);
-			//$intCityID = 				funct_ScrubVars($_POST['repcity']);
-			$strPayPalEmail = 			funct_ScrubVars($_POST['paypalemail']);
-			$strBTCaddress = 			funct_ScrubVars($_POST['btcaddress']);
-			$intMiningFee = 			funct_ScrubVars($_POST['miningfee']);
+			$strPassword = 				funct_GetandCleanVariables($_POST['password']);
+			$strEmail = 				funct_GetandCleanVariables($_POST['email']);
+			$intCountryID = 			funct_GetandCleanVariables($_POST['country']);
+			$intCurrencyID = 			funct_GetandCleanVariables($_POST['currency']);
+			$strNameFirst = 			funct_GetandCleanVariables($_POST['namefirst']);
+			$strNameLast = 				funct_GetandCleanVariables($_POST['namelast']);
+			$strAddress = 				funct_GetandCleanVariables($_POST['address']);
+			$strAddress2 = 				funct_GetandCleanVariables($_POST['address2']);
+			$strCity = 					funct_GetandCleanVariables($_POST['cityname']);
+			$strState = 				funct_GetandCleanVariables($_POST['state']);
+			$strPostal = 				funct_GetandCleanVariables($_POST['postal']);
+			$intFiatConvertPercent = 	funct_GetandCleanVariables($_POST['fiatconvertpercent']);
+			$strCellPhone = 			funct_GetandCleanVariables($_POST['cellphone']);
+			$strCellPhone_code = 		funct_GetandCleanVariables($_POST['cellphone_countrycode']);
+			//$intCityID = 				funct_GetandCleanVariables($_POST['repcity']);
+			$strPayPalEmail = 			funct_GetandCleanVariables($_POST['paypalemail']);
+			$strBTCaddress = 			funct_GetandCleanVariables($_POST['btcaddress']);
+			$intMiningFee = 			funct_GetandCleanVariables($_POST['miningfee']);
 
-			$strLTCaddress = 			funct_ScrubVars($_POST['ltcaddress']);
-			$strBankaccount = 			funct_ScrubVars($_POST['bankaccount']);
-			$strBankrouting = 			funct_ScrubVars($_POST['bankrouting']);
+			$strLTCaddress = 			funct_GetandCleanVariables($_POST['ltcaddress']);
+			$strBankaccount = 			funct_GetandCleanVariables($_POST['bankaccount']);
+			$strBankrouting = 			funct_GetandCleanVariables($_POST['bankrouting']);
 
 
 			if($intFiatConvertPercent){ $intFiatConvertPercent=0; }
@@ -168,46 +168,6 @@ switch ($strDo){
 			if($intCurrencyID<1){ $intCurrencyID=0 ;}
 			if(!$intMiningFee){ $intMiningFee=MININGFEE_NORMAL; }
 
-/*
-			if($intCityID>0){ //Get name of city
-				$query= "SELECT * FROM ".TBL_CITIES." WHERE cityid = " .$intCityID ;
-				//echo "SQL.getcityinfo = " . $query .  "<br>";
-				$rs = mysqli_query($DB_LINK, $query) ;
-				$row = mysqli_fetch_array($rs) ;
-				$strCityName =			$row["cityname"];
-				$intCityCountryID =		$row["countryid"];
-				$intCityRegionID =		$row["regionid"];
-				}else{
-				$intCityCountryID = 0 ;
-			}else{ $intCityID=0 ; }
-*/
-
-/*
-			//Update Database mysql hackable update,... fucked up.
-			$query = "UPDATE ".TBL_USERS." SET " .
-			//"password='$strPassword', ".
-			//"email='$strEmail', ".
-			"cellphone='$strCellPhone', ".
-			"country_phonecode='$strCellPhone_code', ".
-			"first_name='$strNameFirst', ".
-			"last_name='$strNameLast', ".
-			"address='$strAddress', ".
-			"address2='$strAddress2', ".
-			"cityname='$strCity', ".
-			"state='$strState', ".
-			"postal='$strPostal', ".
-			"country_id=$intCountryID, ".
-			"currency_id=$intCurrencyID, ".
-			"paypalemail='$strPayPalEmail', ".
-			"btc_address='$strBTCaddress', ".
-			"crypto_miner_fee=$intMiningFee, ".
-			"bank_account='$strBankaccount', ".
-			"bank_routing='$strBankrouting', ".
-			"lastlogin=NOW() ".
-			"WHERE id = $intUserID " ;
-			//echo "SQL STMNT = " . $query . "<br>"; //"cityid=$intCityID, ". //"city='$strCityName', ". //"regionid=$intCityRegionID, ".
-			//$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
-*/
 
 			if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 			if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET cellphone = ?, country_phonecode = ?, first_name = ?, last_name = ?, address = ?, address2 = ?, cityname = ?, state = ?, postal = ?, country_id = ?, currency_id = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
@@ -225,9 +185,9 @@ switch ($strDo){
 			case "updatepassword":
 
 				//Get all post values
-				$strPassword_old = 			funct_ScrubVars($_POST['passwordold']);
-				$strPassword = 				funct_ScrubVars($_POST['password']);
-				$strPassword2 = 			funct_ScrubVars($_POST['password2']);
+				$strPassword_old = 			funct_GetandCleanVariables($_POST['passwordold']);
+				$strPassword = 				funct_GetandCleanVariables($_POST['password']);
+				$strPassword2 = 			funct_GetandCleanVariables($_POST['password2']);
 
 				if(!$intUserID){ header( 'Location: '.PAGE_ERROR."?error=you are not logged in" ); }
 
@@ -291,7 +251,7 @@ switch ($strDo){
 				//!CASE debitpassword
 				case "debitpassword":
 
-					$FormRegpassword = (funct_ScrubVars($_POST["password"]));
+					$FormRegpassword = (funct_GetandCleanVariables($_POST["password"]));
 
 					if($FormRegpassword=="zoe5" OR $FormRegpassword=="ronybtc" OR $FormRegpassword=="t3he8uxj") {
 
@@ -313,12 +273,12 @@ switch ($strDo){
 	case "join": //Register User BEGIN ----------------------------------------------------------------------------------------------------
 
 		//Get Form Post Data - auto protect against xss and sql injection
-		$FormRegEmail = 		funct_ScrubVars($_POST["email"]);
-		$FormRegPhone = 		funct_ScrubVars($_POST["phonenumber"]);
-		$FormRegFirstName = 	funct_ScrubVars($_POST["firstname"]);
-		$FormRegLastName = 		funct_ScrubVars($_POST["lastname"]);
-		$FormRegAddress = 		funct_ScrubVars($_POST["address"]);
-		$FormRegpassword = 		funct_ScrubVars($_POST["password"]);
+		$FormRegEmail = 		funct_GetandCleanVariables($_POST["email"]);
+		$FormRegPhone = 		funct_GetandCleanVariables($_POST["phonenumber"]);
+		$FormRegFirstName = 	funct_GetandCleanVariables($_POST["firstname"]);
+		$FormRegLastName = 		funct_GetandCleanVariables($_POST["lastname"]);
+		$FormRegAddress = 		funct_GetandCleanVariables($_POST["address"]);
+		$FormRegpassword = 		funct_GetandCleanVariables($_POST["password"]);
 		//echo "form vars: $FormRegEmail , $FormRegPhone , $FormRegFirstName , $FormRegLastName , $FormRegAddress <br/><br/>";
 		//echo "request: ".$_REQUEST["email"]." , get: ".$_GET["email"]." , post: ".$_POST["email"]."<br>";
 
@@ -463,7 +423,7 @@ switch ($strDo){
 	//!CASE usernamecheck
 	case "usernamecheck";
 
-		$user_name = (funct_ScrubVars($_POST['user_name']));
+		$user_name = (funct_GetandCleanVariables($_POST['user_name']));
 
 		if($user_name){ //Get username
 
@@ -504,9 +464,9 @@ switch ($strDo){
 		if(isset($_SESSION['ip']) && $_SESSION['last_post'] + SECURITY_LOGIN_WAIT_SECONDS > time()) die('slow down.... wait '.$intTime.' more seconds please.');
 
 		//Get Form Post Data
-		$username = 			funct_ScrubVars($_POST['email']);
-		$password = 			funct_ScrubVars($_POST['password']);
-		$strReturnURL = 		funct_ScrubVars($_POST["returnurl"]);
+		$username = 			funct_GetandCleanVariables($_POST['email']);
+		$password = 			funct_GetandCleanVariables($_POST['password']);
+		$strReturnURL = 		funct_GetandCleanVariables($_POST["returnurl"]);
 
 		//$remember = 			stripslashes($_POST["remember"]);
 		//echo "username = " . $username . "<br>"; echo "password = " . $password . "<br>";
@@ -549,8 +509,8 @@ switch ($strDo){
 		if(SECURITY_CAPCHACHECK){
 			//capcha google
 			include __ROOT__.'/inc/capcha/recaptchalib.php' ;
-			$strChallenge = 		funct_ScrubVars($_POST["recaptcha_challenge_field"]);
-	        $strResponse = 			funct_ScrubVars($_POST["recaptcha_response_field"]);
+			$strChallenge = 		funct_GetandCleanVariables($_POST["recaptcha_challenge_field"]);
+	        $strResponse = 			funct_GetandCleanVariables($_POST["recaptcha_response_field"]);
 			$strServer = 			$_SERVER["REMOTE_ADDR"] ;
 			$privatekey = 			SECURITY_CAPCHA_PRIVATEKEY ;
 
@@ -612,7 +572,7 @@ switch ($strDo){
 		//echo "strDo= " . $strDo;
 
 		//Get Form Post Data
-		$strEmailForgotForm = (funct_ScrubVars($_POST["forgot_email"]));
+		$strEmailForgotForm = (funct_GetandCleanVariables($_POST["forgot_email"]));
 
 		if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 		if( $stmt = $DB_MYSQLI->prepare("SELECT id FROM ".TBL_USERS." WHERE email = ? ") ) {

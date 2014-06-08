@@ -1,29 +1,29 @@
 <?php 
 error_reporting(E_ERROR | E_PARSE);
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
 //process incoming orders. each time bitcoin is sent to a merchant this url will be accessed.
 //this page will be called everytime the account Ghaleon gets btc so only use it for easybitz
-$intDebugFlag = funct_ScrubVars($_GET['debug']); //this I entered into the blockchain wallet form
+$intDebugFlag = funct_GetandCleanVariables($_GET['debug']); //this I entered into the blockchain wallet form
 //$intDebugFlag = 1;
-$strERRORPage = "/mods/processorder2.php";
+$strERRORPage = "processorder2.php";
 
 /* 
 http://getcoincafe.com/mods/processorder2.php?secret=n00n3z&transaction_hash=a6eb6a8c2a66dbdfeb87faf820492222a80c2db3422706bdc1eb3bff0dbe8ab1&address=1DP1NWLQ11VDTBkjunwxJJzLDJYKLw44Jt&input_address=1DP1NWLQ11VDTBkjunwxJJzLDJYKLw44Jt&value=200000&confirms=3
 */
 
 //get values from query string 
-$real_secret = 				funct_ScrubVars($_GET['secret']); //this I entered into the blockchain wallet form
-$transaction_hash = 		funct_ScrubVars($_GET['transaction_hash']); //The transaction hash.
-$input_address = 			funct_ScrubVars($_GET['input_address']); //The bitcoin address that received the transaction
-$value_in_satoshi = 		funct_ScrubVars($_GET['value']);
-$intNewCallBackID = 		funct_ScrubVars($_GET['callbackid']); //callback id of script that called it.. so we can amtch the callback log to the transaction when it updates
+$real_secret = 				funct_GetandCleanVariables($_GET['secret']); //this I entered into the blockchain wallet form
+$transaction_hash = 		funct_GetandCleanVariables($_GET['transaction_hash']); //The transaction hash.
+$input_address = 			funct_GetandCleanVariables($_GET['input_address']); //The bitcoin address that received the transaction
+$value_in_satoshi = 		funct_GetandCleanVariables($_GET['value']);
+$intNewCallBackID = 		funct_GetandCleanVariables($_GET['callbackid']); //callback id of script that called it.. so we can amtch the callback log to the transaction when it updates
 
 
 //coincafe.co amsterdam sends confirms as well so we need to be able to handle updates
-$confirmations = 			funct_ScrubVars($_GET['confirms']); //The bitcoin address that received the transaction
-$intUserID = 				funct_ScrubVars($_GET['userid']);
-$strServer = 				funct_ScrubVars($_GET['server']);
+$confirmations = 			funct_GetandCleanVariables($_GET['confirms']); //The bitcoin address that received the transaction
+$intUserID = 				funct_GetandCleanVariables($_GET['userid']);
+$strServer = 				funct_GetandCleanVariables($_GET['server']);
 
 
 
@@ -44,7 +44,7 @@ if($input_address==BLOCKCHAIN_SENDFROMADDRESS){ echo "ignore" ; die; }
 //verify that the transaction is real ... call our bitcoind for LIVE only
 $strValidTransaction = funct_Billing_ValidateTransactionHash($transaction_hash);
 if($strValidTransaction!="good"){ echo "transactionnotinbitcoind"; die; } //transaction is not valid
-	
+
 //this is only for our own bitcoind server on amsterdam
 if($confirmations OR $strServer){	
 	//verify that the address is real and ( exists on our bitcoind server Live Only )
