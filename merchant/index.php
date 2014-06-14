@@ -13,8 +13,6 @@ require "functStrings.php"; //holds all custom string formatting functions
 include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //connect to RPC server as a client
 include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functions * use as needed
 
-
-
 error_reporting(0);//turn off all reporting
 //if(DEBUGMODE>0){
 	//ini_set('display_errors',1);
@@ -119,6 +117,13 @@ if(!$strLocal){ //coming from outside then authenticate
 	}
 	//############### End Authentication #################################################
 } //end if not local
+
+
+//construct connectionstring based on crypto type
+
+
+
+
 
 
 //! Begin Methods Switch

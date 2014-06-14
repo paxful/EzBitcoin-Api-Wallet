@@ -2,7 +2,7 @@
 ob_start(); //so we can redirect even after headers are sent
 
 error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
-include $_SERVER['DOCUMENT_ROOT']."/inc/session.php";
+require "session.php";
 
 //Define Page Values
 $strThisPage = 		funct_GetandCleanVariables(PAGE_WELCOME);

@@ -22,6 +22,7 @@ require "constants.php"; //calls server.php within
 require "functStrings.php"; //holds all custom string formatting functions
 require "functBilling.php"; //holds billing functions * should really only use as needed
 include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functions * use as needed
+include $_SERVER['DOCUMENT_ROOT']."/inc/password.php"; //holds all email functions * use as needed
 
 //include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //holds all custom string formatting functions
 //include $_SERVER['DOCUMENT_ROOT']."/inc/functdatabase.php"; //holds database functions, largely useless for now ?
@@ -100,7 +101,6 @@ function functLoginUser($intUserID, $strRememberFlag, $strPasswordHash){
 	//echo "SQL STMNT = " . $query .  "<br>";
 	$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
 	$row=mysqli_fetch_array($rs) ;
-	
 	$intUserID=			$row["id"];
 	$strUserIDcode=		$row["id_code"];
 	$strPassword=		$row["password"];

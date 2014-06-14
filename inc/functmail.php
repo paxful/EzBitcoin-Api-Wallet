@@ -2,9 +2,7 @@
 //error_reporting(0);//turn off all reporting
 include $_SERVER['DOCUMENT_ROOT']."/inc/class.phpmailer.php"; //for smtp mailing
 include $_SERVER['DOCUMENT_ROOT']."/inc/SendGrid.php"; //for sendgrid mailing
-//include $_SERVER['DOCUMENT_ROOT']."/inc/Unirest.php"; //for sendgrid mailing
-//include $_SERVER['DOCUMENT_ROOT']."/inc/Smtpapi.php"; //for sendgrid mailing
-//require_once 'Unirest.php'; require_once 'SendGrid.php'; require_once 'Smtpapi.php';
+
 
 /**
  * Mailer.php
@@ -19,10 +17,21 @@ function funct_Mail_simple($strEmail, $strSubject, $strBody, $strFromEmail, $str
 
 	if(!$strFromEmail){ $strFromEmail= SUPPORT_EMAIL; }
 	if(!$strReplyEmail){ $strReplyEmail= SUPPORT_EMAIL; }
-	
-	//send using free method since it is coming to us
-	$strReturn = funct_Mail_MX($strEmail, $strSubject, $strBody, $strFromEmail, $strReplyEmail);	
-	//$strReturn = funct_Mail_SendGrid_curl($strEmail, $strSubject, $strBody, $strFromEmail, $strReplyEmail);
+
+    //decide which method to use to send emails EMAIL_METHOD
+    switch ($strDo){
+
+        case "": //send using free method
+            $strReturn = funct_Mail_MX($strEmail, $strSubject, $strBody, $strFromEmail, $strReplyEmail);
+        break;
+
+        case "sendgrid": //send using sendgrid
+            $strReturn = funct_Mail_SendGrid_curl($strEmail, $strSubject, $strBody, $strFromEmail, $strReplyEmail);
+        break;
+
+        //other methods go here, mailgun etc..
+
+    }
 	
 	return $strReturn ;
 }
@@ -142,6 +151,40 @@ function functSendEmail($emailaddr, $strSubject, $strBody, $name, $strFromName, 
 	$mailer->ClearAttachments();
 	
 	return $strErrorString;
+}
+
+
+
+function funct_SendEmailCode($intUserID){
+
+    global $DB_LINK ; //Allows Function to Access variable defined in constants.php ( database link )
+
+    //generate unique code
+    $intCode=createRandomKey_Num(12);
+
+    //update member record
+    $query = "UPDATE ".TBL_USERS." SET emailcode='$intCode' WHERE id = $intUserID " ;
+    //echo "SQL STMNT = " . $query . "<br>";
+    $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
+
+    //get email
+    $query = "SELECT * FROM " . TBL_USERS . " WHERE id = $intUserID ";
+    //echo "SQL STMNT = " . $query . "<br>";
+    $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+    $strEmail=					$row["email"];
+
+    $strEmailLink = WEBSITEFULLURLHTTPS.CODE_DO."?do=confirmemailcode&emailcode=".$intCode ;
+
+    //send email
+    $strSubject= WEBSITENAME." Verification Code ".$intCode ;
+    $strBody="Your ".WEBSITENAME." Verification Code is \n ".$intCode." \n ".$strEmailLink ;
+    funct_Mail_simple($strEmail,$strSubject,$strBody);
+    //$name=EMAIL_FROM_NAME ; $strFromName=WEBSITENAME ; $strFromEmail=EMAIL_FROM_ADDR ;
+    //$strError = functSendEmail($strEmail, $strSubject, $strBody, $name, $strFromName, $strFromEmail);
+
+    return $strError;
+
+
 }
 
 ?>

@@ -10,9 +10,8 @@ $strERRORPage = 		"wallpet.php";
 $intTime = 				time();
 $strIPAddress = 		$_SERVER['REMOTE_ADDR'];
 
-
 $intUserID1=funct_GetandCleanVariables(DETECT_USERID); //id of user logged in
-echo "intUserID1=$intUserID1 <br>"; echo "DETECT_USERID=".DETECT_USERID." <br>"; echo "intUserID_fromcode=".$intUserID_fromcode." <br>";
+//echo "intUserID1=$intUserID1 <br>"; echo "DETECT_USERID=".DETECT_USERID." <br>"; echo "intUserID_fromcode=".$intUserID_fromcode." <br>";
 
 if(!$intUserID1){ header( 'Location: '.PAGE_SIGNIN."?error=Please Sign In to Access your Wallet" ); die(); }
 
@@ -141,7 +140,7 @@ if($intUserID1){
 	//process coin claims claimcode
 
 	//read cookie for claim code
-	$strCode = funct_ScrubVars( $_COOKIE["claimcode"]) ; //clean cookie for db
+	$strCode = funct_GetandCleanVariables( $_COOKIE["claimcode"]) ; //clean cookie for db
 
 	if($strCode){ //cookie found 
 		
@@ -261,7 +260,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>My Wallet<?=TITLE_END?></title>
+<title>Your Wallet - <?=WEBSITENAME?></title>
 <meta charset="utf-8">
 <meta name="description" content="<?=$strPageTitle?>">
 <meta name="viewport" content="width=device-width">
@@ -269,11 +268,19 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="img/favicon.png" />
 
-<link rel="stylesheet" href="css/web.css" />
 <link rel="stylesheet" href="css/foundation.css" />
 <link rel="stylesheet" href="css/custom.css" />
+
+<style type="text/css">
+    .loader_anim {
+        position:relative; width:100px; height:100px; text-align:center; opacity:1.0; z-index:4;
+        padding:10px; text-align:center;
+        background-color:#fff;background-size: 100% 100%;background-image:url('img/rodincoil.gif');
+        border-style:normal;border-color:#666;border-width:2px;border-radius:16px;-webkit-border-radius:16px;-moz-border-radius:16px;
+    }
+</style>
+
 <script src="js/modernizr.js"></script>
-<script src="js/web.js"></script>
 
 <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
 <? $intJquerySoundManager=1;?><script src="js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = 'js/soundmanager2.swf'; soundManager.onready(function() {});</script>
@@ -295,7 +302,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 		<? if($strDO=="emailverified"){ ?>
 
-        	$('#emailverifiedmodal').foundation('reveal', 'open');
+        	//$('#emailverifiedmodal').foundation('reveal', 'open');
 			
 		<? } ?>
 
@@ -448,8 +455,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <!-- 				<br><small id="txtFIATbalance"><small>(approx. $<?=number_format($intBalance_BTC_usd,2)?> USD)</small></small></h3> -->
             </div>
 	</div>
-	
-	
+
 </div>
 
 <div class="row">
@@ -463,18 +469,18 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 				<?php
 				//if email is not verified then show the please verify your email message
 				if($strShowEmailConfirmFlag){
-				?>	
+				?>
 						<!-- BEGIN email verify AREA -->
-						<form data-abide action="<?=PAGE_VERIFY?>?do=confirmemailcode" method="GET">
+						<form data-abide action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
 							<div class="confirm_email">
-							    <h5>To activate your receive wallet address. Please check your email and click the confirmation link. Tip: check your Spam folder.</h5>
+							    <h5>To activate your receive wallet address. Please check your email and click the confirmation link. <br>Tip: check your Spam folder.</h5>
 								<h3><?=$strError?></h3>
-				<!--				    <input name="emailcode" type="text" placeholder="enter your email code">-->
-				<!--				    <input name="do" type="hidden" value="confirmemailcode">-->
-				<!--					<span class="txtError"><?=$strError_confirmemail?></span>-->
-				<!--					<button type="submit">Confirm Email</button><br>-->
-				<!--					<?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>-->
-								<a href="<?=PAGE_VERIFY?>?do=sendemailcode">send code again to your email <?=$strEmail_DB?></a>
+								    <input name="emailcode" type="text" placeholder="enter your email code">
+								    <input name="do" type="hidden" value="confirmemailcode">
+									<span class="txtError"><?=$strError_confirmemail?></span>
+									<button type="submit">Confirm Email</button><br>
+									<?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>
+								<a href="<?=CODE_DO?>?do=sendemailcode">send code again to your email <?=$strEmail_DB?></a>
 							</div>
 						</form>
 						<!-- END email verify AREA -->
@@ -486,60 +492,18 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 				if($strWalletRequestFlag){ 
 				?>
 						<!-- BEGIN email verify AREA -->
-						<form action="<?=PAGE_VERIFY?>?do=activatereceiveaddress" name="passwordupdate" method="POST">
+						<form action="<?=CODE_DO?>?do=activatereceiveaddress" name="passwordupdate" method="POST">
 							<div class="confirm_email">
-							
-								<?
-								$strButtonActivateTxt = "Turn On my Receive Address Now!";
-								if($strDate_PasswordChanged<=0){
-									$strButtonActivateTxt = "Update Password and Turn On my Receive Address Now!";
-								?>
-								<script>
-									function validateForm_passwordupdate() {
-									  var okSoFar=true
 
-										if (document.passwordupdate.password.value=="") {
-											okSoFar=false
-											alert("Please type your new password")
-											document.passwordupdate.password.focus()
-											return false;
-										}
-									
-										if (document.passwordupdate.password2.value=="") {
-											okSoFar=false
-											alert("Please Retype your new password to Confirm it")
-											document.passwordupdate.password2.focus()
-											return false;
-										}
-									
-										if (document.passwordupdate.password.value != document.passwordupdate.password2.value) {
-											alert("Your new password's don't match")
-											return false;
-										} 
-									
-										if (okSoFar==true) {
-											document.passwordupdate.submit()
-										}
-									}
-								</script>
-								
-		                        <div class="small-12 columns">
-							    	<input name="password" type="password" required id="password" placeholder="new password">
-		                        </div>
-		                        <div class="small-12 columns">
-									<input name="password2" type="password" required id="password2" placeholder="confirm new password">
-		                        </div>
-		                        <? }else{ //no password update needed ?>
 		                        <script>
 								function validateForm_passwordupdate() {
 									//just autosubmit it
 									document.passwordupdate.submit();
 									}
 								</script>
-								<? } //end if update password ?>
 								<input name="do" type="hidden" value="activatereceiveaddress">
 								<!--<button type="submit"></button>--><br>
-								<a href="javascript:;" class="button" onClick="validateForm_passwordupdate();"><?=$strButtonActivateTxt?></a><br>
+								<a href="javascript:;" class="button" onClick="validateForm_passwordupdate();">Turn On my Receive Address Now</a><br>
 
 
 							</div>
@@ -584,19 +548,17 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 						
 							//do something with this information 
 							if( $iPod || $iPhone || $iPad ){ //browser reported as an iPhone/iPod touch -- do something here
-								$strScanURL = "pic2shop://scan?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN';
+								$strScanURL = QRSCANAPP_IOS_URINAME. "?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN';
 								//$strScanAhref = "javascript:jsfunct_DetectApp();";
 								$strScanAhref = $strScanURL ;
-								$strAppURL = "https://itunes.apple.com/us/app/pic2shop-barcode-scanner-qr/id308740640?mt=8";
+								$strAppURL = QRSCANAPP_IOS_URL;
 						    ?>
 							<a href="<?=$strAppURL?>">First Download This app to scan.</a><br>
 							<? 
-							}else if($Android){ //browser reported as an Android device -- do something here 
-								//$strScanURL = "zxing://scan/?ret=https://getcoincafe.com/wallet.php?code=%7BCODE%7D&SCAN_FORMATS=UPC_A,EAN_13" ; //%7BCODE%7D
-								//$strAppURL = "https://play.google.com/store/apps/details?id=com.google.zxing.client.android";
-								$strScanURL = "pic2shop://scan?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN' ; //%7BCODE%7D
+							}else if($Android){ //browser reported as an Android device -- do something here
+								$strScanURL = QRSCANAPP_DROID_URINAME."?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN' ; //%7BCODE%7D
 								$strScanAhref = $strScanURL ;
-								$strAppURL = "https://play.google.com/store/apps/details?id=com.visionsmarts.pic2shop&hl=en";
+								$strAppURL = QRSCANAPP_DROID_URL;
 							?>
 							<a href="javascript:;" onClick="jsfunct_DetectApp();">First Download This app to scan.</a><br>  
 							<? } ?>
@@ -1012,8 +974,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		</div></center>
 	</div>
 	
-	
-	<script src="js/jquery.js"></script>
+
 	<script src="js/foundation.min.js"></script>
 	<script src="js/foundation/foundation.abide.js"></script>
 	<script src="js/foundation/foundation.reveal.js"></script>

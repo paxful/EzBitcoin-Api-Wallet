@@ -15,6 +15,169 @@ $intUserID = 		funct_GetandCleanVariables(DETECT_USERID);
 //echo "strDo= " . $strDo;
 switch ($strDo){
 
+    //!CASE activatereceiveaddress
+    case "activatereceiveaddress": //make wallet code
+
+        $query="SELECT * FROM ".TBL_USERS." WHERE id= ".$intUserID ;
+        //echo "SQL STMNT = " . $query . "<br>";
+        $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
+        if(mysqli_num_rows($rs)>0){ $row=mysqli_fetch_array($rs);
+            $FormRegEmail= 					$row["email"];
+            $strWalletBTCaddress= 			$row["wallet_btc"]; //blockchain.info
+            $strWallet_MainAddress_CC=		$row["wallet_address_cc"]; //coincafe.co amsterdam wallet address
+        }
+
+        //if wallet address does not exist then make them a new receiving wallet address
+        if(!$strWalletBTCaddress){
+            //make them a new  address
+            $strWalletBTCaddress = funct_MakeWalletAddressUpdate($intUserID);
+        }
+
+        if($strWalletBTCaddress){
+            $strError = "Receive Address created." ;
+        }else{
+            $strError = "ERROR - Receive Address NOT created. Please try again later.. sorry" ;
+        }
+
+
+        header( 'Location: '. PAGE_WALLET.'?error='.$strError ); die(); //Make sure code after is not executed
+
+    break;
+
+
+    //!CASE sendemailcode
+    case "sendemailcode": //send email confirm code
+
+        //send email
+        funct_SendEmailCode($intUserID);
+
+        //make them a new  address
+        $strWalletBTCaddress = funct_MakeWalletAddressUpdate($intUserID);
+
+
+        $strError = "Email sent!";
+        //redirect to settings page
+        header( 'Location: '. PAGE_WALLET ); die(); //Make sure code after is not executed
+        break;
+
+
+
+    //!CASE confirmemailcode
+    case "confirmemailcode":
+        //get code from form
+        $strCode = 					funct_GetandCleanVariables($_GET['emailcode']);
+        $strEmail = 				funct_GetandCleanVariables($_GET['email']);
+        $intUserID = 				funct_GetandCleanVariables($_GET['id']);
+
+        if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+        if( $stmt = $DB_MYSQLI->prepare("SELECT id,emailcode,verification_level,verification_email FROM " . TBL_USERS . " WHERE emailcode = ? ") ) {
+            $stmt -> bind_param("s", $strCode);
+            $stmt -> execute(); //Execute it
+            //mysqli_stmt_store_result($stmt);
+            //$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
+            $stmt -> bind_result($intUserID_DB,$strCode_DB,$intVerification_level,$intVerification_email); //bind results
+            $stmt -> fetch(); //fetch the value
+            $stmt -> close(); //Close statement
+        }else{
+            echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
+        }
+
+        echo "$intUserID_DB,$strCode_DB,$intVerification_level,$intVerification_email";
+        echo " $strCode_DB == $strCode ";
+
+        //222722444115
+        if($strCode_DB AND ($strCode_DB==$strCode)){
+            //email confirm code matches a record in the database
+
+            //update member record with confirmed email code
+            if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+            if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET verification_level=1, verification_email = 1 WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
+            if(!($stmt->bind_param('i',																$intUserID_DB  ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
+            if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
+
+            if(!DETECT_USERID){ //not logged in
+                $strError = "Email Confirmed! Thank You. Please login with the password in your email.";
+                header( 'Location: '. PAGE_SIGNIN.'?error='.$strError );
+                die(); //Make sure code after is not executed
+
+            }else{ //logged in
+
+                if(DETECT_USERID!=$intUserID_DB){
+                    header( 'Location: '. CODE_DO.'?do=confirmemail&error=Code is not for your account!.' );
+
+                }else{
+
+                    header( 'Location: '. PAGE_WALLET.'?do=emailverified' );
+                    die(); //Make sure code after is not executed
+                }
+
+            }//end if logged in
+
+
+        }else{ //email code does NOT match
+
+            $strDo="confirmemail" ;  //echo $strDo ;
+            //$strError = "Email Code does not match or no such member exists";
+            header( 'Location: '. CODE_DO.'?do=confirmemail&error=Email code incorrect. '." $strCode_DB == $strCode " );
+            die;
+        }
+
+    break;
+
+
+    
+
+    //!CASE sendphonecode
+    case "sendphonecode": //send phone code via sms
+
+        $strNumber = funct_GetandCleanVariables($_POST["phone"]);
+        $strError = funct_SendPhoneCode($intUserID,$strNumber);
+
+        //redirect to settings page
+        header( 'Location: '. PAGE_SETTINGS.'?error_testphone='.$strError ); die(); //Make sure code after is not executed
+
+        break;
+
+    //!CASE confirmphonecode
+    case "confirmphonecode": //confirm phone code via sms
+
+        //get code from form
+        $strCode = 				funct_GetandCleanVariables($_POST['phonecode']);
+
+        //get code in db
+        $query="SELECT * FROM " . TBL_USERS . " WHERE id = $intUserID ";
+        //echo "SQL STMNT = " . $query . "<br>";
+        $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+        $strCode_DB=					$row["phonecode"];
+        $intVerification_level=			$row["verification_level"];
+        $intVerification_phone=			$row["verification_phone"];
+
+
+        if( $strCode_DB==$strCode){ //if it matches and verification level is lower than it will be set to then
+            //if(!$intVerification_level){ $strSQL = "verification_level=1, " ; }
+            //$query = "UPDATE ".TBL_USERS." SET $strSQL verification_phone=1 WHERE id = $intUserID " ;
+            //echo "SQL STMNT = " . $query . "<br>";
+            //$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
+
+            if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+            if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET verification_phone = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
+            if(!($stmt->bind_param('i',														$intUserID  ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
+            if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
+
+
+
+            $strError = "Phone confirmed! Thank you!";
+        }else{
+            $strError = "Phone code wrong...";
+        }
+
+        //redirect to settings page
+        //header( 'Location: '. PAGE_SETTINGS."?error_confirmphone=".$strError ); die(); //Make sure code after is not executed
+        break;
+
+
+
+    //for claiming coins sent via email - not tested
 	//!CASE claimcoins
 	case "claimcoins":
 	//let them claim their coins
@@ -74,7 +237,7 @@ switch ($strDo){
 
 
 
-
+        //making a new address
 		//!CASE newpublickey
 		case "newpublickey": //send email confirm code
 
@@ -325,13 +488,6 @@ switch ($strDo){
 		//echo "userE= $strUserError passE=$strPassError emailE= $strEmailError " ;
 		if( !$strError ) {
 
-			//$query = "INSERT INTO ".TBL_USERS.
-			//" ( password, 			email,		 	cellphone, 		first_name, 		last_name, 			address,			date_joined ) VALUES ".
-			//" ('$FormRegpassword',	'$FormRegEmail','$FormRegPhone','$FormRegFirstName','$FormRegLastName',	'$FormRegAddress',	NOW() 	  ) " ;
-			//echo "Insert into user Table - SQL STMNT = " . $query .  "<br>";
-			//mysqli_query($DB_LINK, $query);
-			//$intNewRecordID = mysqli_insert_id($DB_LINK);
-
 			$strDateTime=date("Y-m-d H:i:s");
 			if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 			if(!($stmt = $DB_MYSQLI->prepare("INSERT INTO ".TBL_USERS."(password, 		email,		 	cellphone, 		first_name, 	last_name, 		address,		date_joined) VALUES (?,?,?,?,?,?,?)") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
@@ -342,7 +498,7 @@ switch ($strDo){
 			if($intNewRecordID > 0 ){ // create new member successful, do other operations
 
 				$intCode=createRandomKey_Num(12); //generate unique code for email confirmation
-				$strEmailLink = WEBSITEFULLURLHTTPS.PAGE_VERIFY."?do=confirmemailcode&emailcode=$intCode&id=$intNewRecordID&email=$FormRegEmail" ;
+				$strEmailLink = WEBSITEFULLURLHTTPS.PAGE_WALLET."?do=confirmemailcode&emailcode=$intCode&id=$intNewRecordID&email=$FormRegEmail" ;
 
 				if(LOGIN_ONJOIN){
 					//Write Session & Cookies to Login User
@@ -368,25 +524,21 @@ switch ($strDo){
 
 				//send them an email
 				$strSubject = "Welcome to ".WEBSITENAME." ".$FormRegFirstName." ".$FormRegLastName;
-				$strBody = "We're so stoked to have you as a Coin Cafe member. \n\n ".
-				"We're doing our part to further the reach of Bitcoin and other cryptocurrencies. Thanks for being a part of the family. We promise to do everything in our power to make buying, selling and using Bitcoins as easy and empowering as possible.".
-/*
-				"Your ".WEBSITENAME.
-                    "\n\nYour $strTemptxt password is: ".$PasswordToEmail.
-*/
+				$strBody = "We're happy to have you as a member. \n\n ".
                     "\n\nPlease verify your email here: ".$strEmailLink.
-				    "\n\n-Thank you \n Coin Cafe  \n ".WEBSITEFULLURLHTTPS ;
+				    "\n\n-Thank you \n ".EMAIL_FROM_NAME."  \n ".WEBSITEFULLURLHTTPS ;
 				funct_Mail_simple($FormRegEmail,$strSubject,$strBody);
 
+                /*
 				//send the admin an email
 				$ipaddress = $_SERVER['REMOTE_ADDR'];
 				$strSubject = "New Member ".$intNewRecordID." ".$FormRegFirstName." ".$FormRegLastName;
 				$strBody = "User ID: $intNewRecordID\nName: $FormRegFirstName $FormRegLastName\nEmail: $FormRegEmail\nPhone: $FormRegPhone\nIP: $ipaddress\n\n".WEBSITEURL ;
 				funct_Mail_simple(SUPPORT_EMAIL,$strSubject,$strBody,'',$FormRegEmail);
-
+                */
 
 				//redirect them to the dashboard with flag to guide them through
-				$strRefreshURL = PAGE_VERIFY."?do=confirmemail" ; //PAGE_LEDGER."?do=joined" ;
+				$strRefreshURL = PAGE_WALLET ; //."?do=confirmemail" ; //PAGE_LEDGER."?do=joined" ;
 
 				//echo "strRefreshURL $strRefreshURL";
 				header( 'Location: '. $strRefreshURL ); die(); //Make sure code after is not executed
@@ -527,7 +679,6 @@ switch ($strDo){
 			}
 		}//end if capchacheck on
 		//________________________________________________________________
-
 
 
 		//If username and password are correct
