@@ -33,7 +33,7 @@ Installing the dependencies using MacPorts is very straightforward.
     sudo port install boost db48@+no_java openssl miniupnpc autoconf pkgconfig automake
 
 Clone the github tree to get the source code and go into the directory.
-    git clone git@github.com:bitcoin/bitcoin.git bitcoin
+    git clone https://github.com/bitcoin/bitcoin.git
     cd bitcoin
 
 Build bitcoind (and Bitcoin-Qt, if configured):

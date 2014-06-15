@@ -138,7 +138,7 @@ define("TBL_COUNTRIES",                     "tbl_countries");               //st
 define("PAGE_HOME",                         "/wallet/");
 define("PAGE_SIGNIN",                       "/wallet/signin.php");
 define("PAGE_SIGNUP",                       "/wallet/signup.php");
-define("PAGE_WALLET",                       "/wallet/index.php");
+define("PAGE_WALLET",                       "/wallet/wallet.php");
 define("PAGE_SETTINGS",                     "/wallet/settings.php");
 define("CODE_DO",                           "/wallet/do.php");
 define("CODE_DOAJAX",                       "/wallet/ajax_do.php");

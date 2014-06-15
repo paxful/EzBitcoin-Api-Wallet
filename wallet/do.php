@@ -232,200 +232,162 @@ switch ($strDo){
 
 		}
 
-
 	break;
 
 
 
-        //making a new address
-		//!CASE newpublickey
-		case "newpublickey": //send email confirm code
+    //making a new address
+    //!CASE newpublickey
+    case "newpublickey": //send email confirm code
 
-			$intUserID = funct_GetandCleanVariables($_POST["userid"]);
+        $intUserID = funct_GetandCleanVariables($_POST["userid"]);
 
-			if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-			if( $stmt = $DB_MYSQLI->prepare("SELECT id,email,cellphone,name,wallet_btc FROM ".TBL_USERS." WHERE id = ? ") ) {
+        if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+        if( $stmt = $DB_MYSQLI->prepare("SELECT id,email,cellphone,name,wallet_btc FROM ".TBL_USERS." WHERE id = ? ") ) {
 
-				$stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
-				$stmt -> execute(); //Execute it
-				$stmt -> bind_result($intUserID_DB,$Email_DB,$Phone_DB,$strName,$strWalletAddress); //bind results
-				$stmt -> fetch(); //fetch the value
-				//mysqli_stmt_store_result($stmt);
-				//$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
-				//echo "totalrows: $intTotalRowsFound <br>";
-				$stmt -> close(); //Close statement
-			}else{
-				echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
-			}
-/*
-			//Get User Data from DataBase
-			$query="SELECT * FROM " . TBL_USERS . " WHERE id = $intUserID ";
-			//echo "SQL STMNT = " . $query .  "<br>";
-			$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
-			$intUserID_DB=					$row["id"];
-			$Email_DB=						$row["email"];
-			$Phone_DB=						$row["cellphone"];
-			$strName=						$row["name"];
-			$strWalletAddress=				$row["wallet_btc"];
-*/
-			$strWalletAddress= trim($strWalletAddress) ;
-			$strWalletLabel = $intUserID_DB."|".$Email_DB."|".$Phone_DB."|".$strName ;
-			//echo "making wallet address for ... ".$strWalletLabel."<br>";
-			$strWalletAddress = funct_Billing_NewWalletAddress($strWalletLabel);
-			if($strWalletAddress){
-				//update database with new wallet hash code
-				//$query="UPDATE " . TBL_USERS . " SET wallet_btc='".$strWalletAddress."' WHERE id=".$intUserID_DB ;
-				//echo "SQL STMNT = " . $query .  "<br>";
-				//mysqli_query($DB_LINK, $query) or die(mysqli_error());
+            $stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
+            $stmt -> execute(); //Execute it
+            $stmt -> bind_result($intUserID_DB,$Email_DB,$Phone_DB,$strName,$strWalletAddress); //bind results
+            $stmt -> fetch(); //fetch the value
+            //mysqli_stmt_store_result($stmt);
+            //$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
+            //echo "totalrows: $intTotalRowsFound <br>";
+            $stmt -> close(); //Close statement
+        }else{
+            echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
+        }
 
-				if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-				if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET wallet_btc = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
-				if(!($stmt->bind_param('si',								$strWalletAddress, $intUserID_DB ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
-				if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
+        $strWalletAddress= trim($strWalletAddress) ;
+        $strWalletLabel = $intUserID_DB."|".$Email_DB."|".$Phone_DB."|".$strName ;
+        //echo "making wallet address for ... ".$strWalletLabel."<br>";
+        $strWalletAddress = funct_Billing_NewWalletAddress($strWalletLabel);
+        if($strWalletAddress){
+            //update database with new wallet hash code
+            //$query="UPDATE " . TBL_USERS . " SET wallet_btc='".$strWalletAddress."' WHERE id=".$intUserID_DB ;
+            //echo "SQL STMNT = " . $query .  "<br>";
+            //mysqli_query($DB_LINK, $query) or die(mysqli_error());
 
-				$strQRcodeIMG = PATH_QRCODES.$intUserID_DB.".png" ;
-				$strError = funct_Billing_GetQRCodeImage($strWalletAddress, $strQRcodeIMG ); //save img to disk
+            if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+            if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET wallet_btc = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
+            if(!($stmt->bind_param('si',								$strWalletAddress, $intUserID_DB ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
+            if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
 
-				$strPostImgPath = PATH_POSTERS.$intUserID_DB.".png" ;
-				funct_CreateQRPoster($strQRcodeIMG, $strPostImgPath, $strWalletAddress); //add easy bits logo to image - simple image, php lib
-			}
+            $strQRcodeIMG = PATH_QRCODES.$intUserID_DB.".png" ;
+            $strError = funct_Billing_GetQRCodeImage($strWalletAddress, $strQRcodeIMG ); //save img to disk
 
-			//redirect to settings page
-			header( 'Location: '. PAGE_SETTINGS.'?error=Code sent to email' ); die(); //Make sure code after is not executed
+            $strPostImgPath = PATH_POSTERS.$intUserID_DB.".png" ;
+            funct_CreateQRPoster($strQRcodeIMG, $strPostImgPath, $strWalletAddress); //add easy bits logo to image - simple image, php lib
+        }
 
-			break;
+        //redirect to settings page
+        header( 'Location: '. PAGE_SETTINGS.'?error=Code sent to email' ); die(); //Make sure code after is not executed
 
-
-		//!CASE update
-		case "update":
-
-			//Get all post values, ckeck & clean them
-			$strPassword = 				funct_GetandCleanVariables($_POST['password']);
-			$strEmail = 				funct_GetandCleanVariables($_POST['email']);
-			$intCountryID = 			funct_GetandCleanVariables($_POST['country']);
-			$intCurrencyID = 			funct_GetandCleanVariables($_POST['currency']);
-			$strNameFirst = 			funct_GetandCleanVariables($_POST['namefirst']);
-			$strNameLast = 				funct_GetandCleanVariables($_POST['namelast']);
-			$strAddress = 				funct_GetandCleanVariables($_POST['address']);
-			$strAddress2 = 				funct_GetandCleanVariables($_POST['address2']);
-			$strCity = 					funct_GetandCleanVariables($_POST['cityname']);
-			$strState = 				funct_GetandCleanVariables($_POST['state']);
-			$strPostal = 				funct_GetandCleanVariables($_POST['postal']);
-			$intFiatConvertPercent = 	funct_GetandCleanVariables($_POST['fiatconvertpercent']);
-			$strCellPhone = 			funct_GetandCleanVariables($_POST['cellphone']);
-			$strCellPhone_code = 		funct_GetandCleanVariables($_POST['cellphone_countrycode']);
-			//$intCityID = 				funct_GetandCleanVariables($_POST['repcity']);
-			$strPayPalEmail = 			funct_GetandCleanVariables($_POST['paypalemail']);
-			$strBTCaddress = 			funct_GetandCleanVariables($_POST['btcaddress']);
-			$intMiningFee = 			funct_GetandCleanVariables($_POST['miningfee']);
-
-			$strLTCaddress = 			funct_GetandCleanVariables($_POST['ltcaddress']);
-			$strBankaccount = 			funct_GetandCleanVariables($_POST['bankaccount']);
-			$strBankrouting = 			funct_GetandCleanVariables($_POST['bankrouting']);
-
-
-			if($intFiatConvertPercent){ $intFiatConvertPercent=0; }
-			//if($intGoalType<1){ $intGoalType=0 ;}
-			//if($intGoalAmount<1){ $intGoalAmount=0 ;}
-			if($intCountryID<1){ $intCountryID=0 ;}
-			if($intCurrencyID<1){ $intCurrencyID=0 ;}
-			if(!$intMiningFee){ $intMiningFee=MININGFEE_NORMAL; }
-
-
-			if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-			if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET cellphone = ?, country_phonecode = ?, first_name = ?, last_name = ?, address = ?, address2 = ?, cityname = ?, state = ?, postal = ?, country_id = ?, currency_id = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
-			if(!($stmt->bind_param('sssssssssddd',					$strCellPhone, $strCellPhone_code, $strNameFirst, $strNameLast, $strAddress, 		$strAddress2, $strCity, $strState, $strPostal, $intCountryID, $intCurrencyID, $intUserID ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
-			if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
-
-			//EMAIL_WALLETSEND
-			header( 'Location: '.PAGE_SETTINGS."?error=Account Updated!" ); die();
-
-			break;
-
-
-
-			//!CASE updatepassword
-			case "updatepassword":
-
-				//Get all post values
-				$strPassword_old = 			funct_GetandCleanVariables($_POST['passwordold']);
-				$strPassword = 				funct_GetandCleanVariables($_POST['password']);
-				$strPassword2 = 			funct_GetandCleanVariables($_POST['password2']);
-
-				if(!$intUserID){ header( 'Location: '.PAGE_ERROR."?error=you are not logged in" ); }
-
-				if($strPassword2!=$strPassword){
-					header( 'Location: '.PAGE_SETTINGS."?error_password=passwords do not match#passwordupdate" );
-				}
-
-				if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-				if( $stmt = $DB_MYSQLI->prepare("SELECT password FROM ".TBL_USERS." WHERE id = ? ") ) {
-
-					$stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
-					$stmt -> execute(); //Execute it
-					$stmt -> bind_result($strPassword_DB); //bind results
-					$stmt -> fetch(); //fetch the value
-					// mysqli_stmt_store_result($stmt);
-					//$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
-					//echo "totalrows: $intTotalRowsFound <br>";
-					$strIsPasswordGood = password_verify($strPassword_old, $strPassword_DB);
-					//echo "password verify $strPassword_old ? db=$strPassword_DB  Good? ( $strIsPasswordGood )<br>";
-					if(!$strIsPasswordGood){ // bad password, current password is wrong
-						header( 'Location: '.PAGE_SETTINGS."?error_password=current password is wrong..." );
-
-					}else{ //password is good.
-
-						//encrypt password
-						$strPassword_hash = password_hash($strPassword, PASSWORD_DEFAULT); //PASSWORD_BCRYPT
-						//echo "hashing password $strPassword .... $strPassword_hash <br>" ;
-						//$strPassword_hash = $strPassword ;
-
-						//Update Database
-						//$query = "UPDATE ".TBL_USERS." SET password='$strPassword_hash' WHERE id = $intUserID " ;
-						//echo "SQL STMNT = " . $query .  "<br>";
-						//$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
-						//echo "SQL.updatesettings = " . $query .  "<br>";
-
-						if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-						// mysqli_report(MYSQLI_REPORT_ALL);
-						$stmt = mysqli_stmt_init($DB_MYSQLI);
-						if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET password = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
-						if(!($stmt->bind_param('si',								$strPassword_hash, $intUserID ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
-						if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
-
-						header( 'Location: '.PAGE_SETTINGS."?error_password=password updated" );
-
-					}
-
-
-					$stmt -> close(); //Close statement
-
-				}else{
-					echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
-				}
-
-
-
-				break;
+    break;
 
 
 
 
-				//!CASE debitpassword
-				case "debitpassword":
+    //called from settingss
+    //!CASE update
+    case "update":
 
-					$FormRegpassword = (funct_GetandCleanVariables($_POST["password"]));
+        //Get all post values, ckeck & clean them
+        $strPassword = 				funct_GetandCleanVariables($_POST['password']);
+        $strEmail = 				funct_GetandCleanVariables($_POST['email']);
+        $intCountryID = 			funct_GetandCleanVariables($_POST['country']);
+        $intCurrencyID = 			funct_GetandCleanVariables($_POST['currency']);
+        $strNameFirst = 			funct_GetandCleanVariables($_POST['namefirst']);
+        $strNameLast = 				funct_GetandCleanVariables($_POST['namelast']);
+        $strAddress = 				funct_GetandCleanVariables($_POST['address']);
+        $strAddress2 = 				funct_GetandCleanVariables($_POST['address2']);
+        $strCity = 					funct_GetandCleanVariables($_POST['cityname']);
+        $strState = 				funct_GetandCleanVariables($_POST['state']);
+        $strPostal = 				funct_GetandCleanVariables($_POST['postal']);
+        $strCellPhone = 			funct_GetandCleanVariables($_POST['cellphone']);
+        $strCellPhone_code = 		funct_GetandCleanVariables($_POST['cellphone_countrycode']);
+        //$intMiningFee = 			funct_GetandCleanVariables($_POST['miningfee']);
 
-					if($FormRegpassword=="zoe5" OR $FormRegpassword=="ronybtc" OR $FormRegpassword=="t3he8uxj") {
+        if($intCountryID<1){ $intCountryID=0 ;}
+        if($intCurrencyID<1){ $intCurrencyID=0 ;}
+        if(!$intMiningFee){ $intMiningFee=MININGFEE_NORMAL; }
 
-						setcookie("debit" , $FormRegpassword , 	COOKIE_EXPIRE,COOKIE_PATH,COOKIE_DOMAIN);
-						header( 'Location: /buybitcoinswithdebit.php' ); die();
-					}else{
 
-						header( 'Location: '. PAGE_ERROR.'?error=debitpassword&msg=wrong password' ); die(); //Make sure code after is not executed
-					}
+        if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+        if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET cellphone = ?, country_phonecode = ?, first_name = ?, last_name = ?, address = ?, address2 = ?, cityname = ?, state = ?, postal = ?, country_id = ?, currency_id = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
+        if(!($stmt->bind_param('sssssssssddd',					$strCellPhone, $strCellPhone_code, $strNameFirst, $strNameLast, $strAddress, 		$strAddress2, $strCity, $strState, $strPostal, $intCountryID, $intCurrencyID, $intUserID ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
+        if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
 
-					break;
+        //EMAIL_WALLETSEND
+        header( 'Location: '.PAGE_SETTINGS."?error=Account Updated!" ); die();
+
+    break;
+
+
+
+
+
+    //called from settings or wallet
+    //!CASE updatepassword
+    case "updatepassword":
+
+        //Get all post values
+        $strPassword_old = 			funct_GetandCleanVariables($_POST['passwordold']);
+        $strPassword = 				funct_GetandCleanVariables($_POST['password']);
+        $strPassword2 = 			funct_GetandCleanVariables($_POST['password2']);
+
+        if(!$intUserID){ header( 'Location: '.PAGE_ERROR."?error=you are not logged in" ); }
+
+        if($strPassword2!=$strPassword){
+            header( 'Location: '.PAGE_SETTINGS."?error_password=passwords do not match#passwordupdate" );
+        }
+
+        if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+        if( $stmt = $DB_MYSQLI->prepare("SELECT password FROM ".TBL_USERS." WHERE id = ? ") ) {
+
+            $stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
+            $stmt -> execute(); //Execute it
+            $stmt -> bind_result($strPassword_DB); //bind results
+            $stmt -> fetch(); //fetch the value
+            // mysqli_stmt_store_result($stmt);
+            //$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
+            //echo "totalrows: $intTotalRowsFound <br>";
+            $strIsPasswordGood = password_verify($strPassword_old, $strPassword_DB);
+            //echo "password verify $strPassword_old ? db=$strPassword_DB  Good? ( $strIsPasswordGood )<br>";
+            if(!$strIsPasswordGood){ // bad password, current password is wrong
+                header( 'Location: '.PAGE_SETTINGS."?error_password=current password is wrong..." );
+
+            }else{ //password is good.
+
+                //encrypt password
+                $strPassword_hash = password_hash($strPassword, PASSWORD_DEFAULT); //PASSWORD_BCRYPT
+                //echo "hashing password $strPassword .... $strPassword_hash <br>" ;
+                //$strPassword_hash = $strPassword ;
+
+                //Update Database
+                //$query = "UPDATE ".TBL_USERS." SET password='$strPassword_hash' WHERE id = $intUserID " ;
+                //echo "SQL STMNT = " . $query .  "<br>";
+                //$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
+                //echo "SQL.updatesettings = " . $query .  "<br>";
+
+                if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+                // mysqli_report(MYSQLI_REPORT_ALL);
+                $stmt = mysqli_stmt_init($DB_MYSQLI);
+                if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET password = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
+                if(!($stmt->bind_param('si',								$strPassword_hash, $intUserID ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
+                if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
+
+                header( 'Location: '.PAGE_SETTINGS."?error_password=password updated" );
+
+            }
+
+            $stmt -> close(); //Close statement
+
+        }else{
+            echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
+        }
+
+    break;
+
 
 
 
@@ -488,6 +450,9 @@ switch ($strDo){
 		//echo "userE= $strUserError passE=$strPassError emailE= $strEmailError " ;
 		if( !$strError ) {
 
+
+            //#######################################################
+            #CREATE NEW USER
 			$strDateTime=date("Y-m-d H:i:s");
 			if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 			if(!($stmt = $DB_MYSQLI->prepare("INSERT INTO ".TBL_USERS."(password, 		email,		 	cellphone, 		first_name, 	last_name, 		address,		date_joined) VALUES (?,?,?,?,?,?,?)") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
@@ -495,11 +460,16 @@ switch ($strDo){
 			if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error; }
 			$intNewRecordID = mysqli_insert_id($DB_MYSQLI);
 
-			if($intNewRecordID > 0 ){ // create new member successful, do other operations
 
-				$intCode=createRandomKey_Num(12); //generate unique code for email confirmation
+
+            // create new member successful, do other operations
+			if($intNewRecordID > 0 ){
+
+                //generate unique code for email confirmation
+				$intCode=createRandomKey_Num(12);
 				$strEmailLink = WEBSITEFULLURLHTTPS.PAGE_WALLET."?do=confirmemailcode&emailcode=$intCode&id=$intNewRecordID&email=$FormRegEmail" ;
 
+                //auto login
 				if(LOGIN_ONJOIN){
 					//Write Session & Cookies to Login User
 					$strRememberFlag = "1" ; //Remember username and password by default
@@ -507,10 +477,13 @@ switch ($strDo){
 					$_SESSION["justjoined"] = time();//set flag for new user
 				}
 
+                //auto create bitcoin address on join
 				if(CREATEADDRESS_ONJOIN){ //create a new wallet address for them
 					$strWalletAddress = funct_MakeWalletAddressUpdate($intUserID);
 				}
 
+
+                //send new email code on join
 				if(LOGIN_SENDEMAILCODE){ //update member record with new confirm code
 					//$query = "UPDATE ".TBL_USERS." SET emailcode='$intCode' WHERE id = $intNewRecordID " ;
 					//echo "SQL STMNT = " . $query . "<br>";
@@ -520,17 +493,20 @@ switch ($strDo){
 					if(!($stmt->bind_param('sd',								$intCode, $intNewRecordID ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
 					if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
 					$strEmailCodeText = "Your ".WEBSITENAME." Verification Code is \n ".$intCode." \n".$strEmailLink ;
+
+
+                    //send them an email
+                    $strSubject = "Welcome to ".WEBSITENAME." ".$FormRegFirstName." ".$FormRegLastName;
+                    $strBody = "We're happy to have you as a member. \n\n ".
+                        "\n\nPlease verify your email here: ".$strEmailLink.
+                        "\n\n-Thank you \n ".EMAIL_FROM_NAME."  \n ".WEBSITEFULLURLHTTPS ;
+                    funct_Mail_simple($FormRegEmail,$strSubject,$strBody);
 				}
 
-				//send them an email
-				$strSubject = "Welcome to ".WEBSITENAME." ".$FormRegFirstName." ".$FormRegLastName;
-				$strBody = "We're happy to have you as a member. \n\n ".
-                    "\n\nPlease verify your email here: ".$strEmailLink.
-				    "\n\n-Thank you \n ".EMAIL_FROM_NAME."  \n ".WEBSITEFULLURLHTTPS ;
-				funct_Mail_simple($FormRegEmail,$strSubject,$strBody);
+
 
                 /*
-				//send the admin an email
+				//send the admin an email on each new user
 				$ipaddress = $_SERVER['REMOTE_ADDR'];
 				$strSubject = "New Member ".$intNewRecordID." ".$FormRegFirstName." ".$FormRegLastName;
 				$strBody = "User ID: $intNewRecordID\nName: $FormRegFirstName $FormRegLastName\nEmail: $FormRegEmail\nPhone: $FormRegPhone\nIP: $ipaddress\n\n".WEBSITEURL ;

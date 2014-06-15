@@ -23,9 +23,8 @@ if($intUserID=="") {
 }
 
 
-
 	if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-	$strSQL = "SELECT id,password,email,cellphone,first_name,last_name,address,address2,cityname,state,postal,country_id,country_phonecode,currency_id,currency_symbol,crypto_miner_fee,verification_level,verification_phone,verification_email,kyc FROM ".TBL_USERS." WHERE id = ? " ;
+	$strSQL = "SELECT id,password,email,cellphone,first_name,last_name,address,address2,cityname,state,postal,country_id,country_phonecode,currency_id,currency_symbol,crypto_miner_fee,verification_level,verification_phone,verification_email FROM ".TBL_USERS." WHERE id = ? " ;
 	//echo "$strSQL <br>";
 	//echo  " $intUserID <br>";
 	if( $stmt = $DB_MYSQLI->prepare($strSQL) ) { 
