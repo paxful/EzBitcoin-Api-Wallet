@@ -288,8 +288,6 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <script>
 
 	$(document).ready(function(){
-	
-
 		
 		<? if($strDO=="justjoined"){ ?>
 			
@@ -457,6 +455,9 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 	</div>
 
 </div>
+
+
+
 
 <div class="row">
 	
