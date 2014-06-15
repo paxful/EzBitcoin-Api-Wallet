@@ -11,7 +11,7 @@ if(DETECT_USERID){
     <nav class="top-bar" style="background-color:#ccc;">
       <ul class="title-area" style="background-color:#ccc;">
         <li class="name">
-          <h1><a href="<?=$strHomeLink?>" style="background-color:#666;">Wallet</a></h1>
+          <h1><a href="<?=$strHomeLink?>" style="background-color:#666;"><?=WEBSITENAME?></a></h1>
         </li>
         <li class="toggle-topbar menu-icon">
           <a href="#"><span>Menu</span></a>
@@ -24,8 +24,8 @@ if(DETECT_USERID){
             <!-- <li><a href="faq.php" style="background-color:#663300;">F.A.Q.</a></li> -->
 
         <?php if(DETECT_USERID){
-        
-        $strUserIDhud = funct_ScrubVars(DETECT_USERID);
+
+        $strUserIDhud = funct_GetandCleanVariables(DETECT_USERID);
         
           //Get User Data from DataBase
           $query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $strUserIDhud ;

@@ -92,7 +92,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 	<div class="small-12 medium-8 columns">
 	
 		<h3>Sign in to <?=WEBSITENAME?></h3>
-		<h4><?=$strError?></h4>
+		<h4 style="color:darkred;"><?=$strError?></h4>
 		
 		<form name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=login&page=signin.php">
             <div class="row">
@@ -110,7 +110,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
                     <button type="submit" onClick="return jsfunct_join();">Sign In </button>
                     <strong style="color:#FFF;"><?=$strError?></strong>
-                    <br><small>Don't have an account? <a href="signup.php">Sign up</a></small>
+                    <br><h3>Don't have an account? <a href="signup.php">Sign up</a></h3>
                 </div>
                 <div class="small-4 medium-6 columns">
                 </div>
@@ -120,7 +120,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 		
 		
 		
-		<p></p><br><p></p><br>
+		<p></p><br><p></p>
 		
 
 		<h4>Forgot Password ?</h4>
@@ -150,7 +150,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 	
     <!--SIDEBAR AREA-->
 	<div class="small-12 medium-4 columns">
-		<?php //include __ROOT__."/panel_side_contact.php"; ?>
+        <a href="signup.php"><img src="img/wallet.png" /></a>
 	</div>
     <!--END SIDEBAR AREA-->
 	

@@ -85,8 +85,6 @@ function funct_Billing_JSONRPC_ListTransactions($strWalletAddress){
 }
 
 
-
-
 function funct_Billing_JSONRPC_Move($strWalletAddressFrom,$strWalletAddress,$intAmount){
 //send to an address from an address
 	$mybtc = new jsonRPCClient(JSONRPC_CONNECTIONSTRING); //- ** requires second password

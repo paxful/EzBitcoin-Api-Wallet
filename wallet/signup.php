@@ -90,39 +90,45 @@ $strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg
 	<div class="small-12 medium-8 columns">
 	
 		<h3>Sign Up for <?=WEBSITENAME?></h3>
-		<h4><?=$strError?></h4>
+        <h4 style="color:darkred;"><?=$strError?></h4>
 
-        <form data-abide name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=join&page=/signup.php">
+        <form data-abide name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=join&page=signup.php">
 			<div class="row">
 			    <div class="small-8 medium-6 columns">
-            <div class="firstname-field">
-              <input name="firstname" type="text" required id="firstname" placeholder="first name (must match your ID)" value="<?=$strFirst?>">
-              <small class="error">Enter first name</small>
-            </div>
-            <div class="lastname-field">
-              <input name="lastname" type="text" required id="lastname" placeholder="last name (must match your ID)" value="<?=$strLast?>">
-              <small class="error">Enter last name</small>
-            </div>
-            <div class="phone-field">
-              <input name="phonenumber" type="text" required id="phonenumber" placeholder="mobile phone number" value="<?=$strPhone?>">
-              <small class="error">Enter valid phone</small>
-            </div>
-            <!--<input name="address" type="text" required id="address" placeholder="address" value="<?=$strAddress?>">-->
-            <div class="email-field">
-              <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
-              <small class="error">Enter valid email</small>
-            </div>
-            <div class="password-field">
-              <input name="password" type="password" required id="password" placeholder="select password">
-              <small class="error">Passwords must be at least 8 characters with 1 capital letter, 1 number, and one special character.</small>
-            </div>
-            <div class="password2-field">
-              <input name="password2" type="password" required id="password2" placeholder="confirm password">
-              <small class="error">Passwords must match.</small>
-            </div>
-            <button type="submit" class="small">Sign Up & Create Free Wallet</button>
-<!--             <strong style="color:#FFF;"><?=$strError?></strong> -->
-            <br><small>Already have an account? <a href="/signin.php">Sign in</a></small>
+
+                    <!--
+                    <div class="firstname-field">
+                      <input name="firstname" type="text" required id="firstname" placeholder="first name (must match your ID)" value="<?=$strFirst?>">
+                      <small class="error">Enter first name</small>
+                    </div>
+                    <div class="lastname-field">
+                      <input name="lastname" type="text" required id="lastname" placeholder="last name (must match your ID)" value="<?=$strLast?>">
+                      <small class="error">Enter last name</small>
+                    </div>
+                    <div class="phone-field">
+                      <input name="phonenumber" type="text" required id="phonenumber" placeholder="mobile phone number" value="<?=$strPhone?>">
+                      <small class="error">Enter valid phone</small>
+                    </div>
+                    <input name="address" type="text" required id="address" placeholder="address" value="<?=$strAddress?>">
+                    -->
+
+                    <div class="email-field">
+                      <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
+                      <small class="error">Enter valid email</small>
+                    </div>
+                    <div class="password-field">
+                      <input name="password" type="password" required id="password" placeholder="select password">
+                      <small class="error">Passwords must be at least 8 characters with 1 capital letter, 1 number, and one special character.</small>
+                    </div>
+                    <div class="password2-field">
+                      <input name="password2" type="password" required id="password2" placeholder="confirm password">
+                      <small class="error">Passwords must match.</small>
+                    </div>
+                    <button type="submit" class="small">Sign Up & Create Free Wallet</button>
+        <!--             <strong style="color:#FFF;"><?=$strError?></strong> -->
+                    <br><small>Already have an account? <a href="signin.php">Sign in</a></small>
+
+
 			    </div>
 			</div>
 		</form>		
@@ -131,7 +137,11 @@ $strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg
 	
 <!--SIDEBAR AREA-->        
 	<div class="small-12 medium-4 columns">
-		<?php //include __ROOT__."/panel_side_contact.php"; ?>
+
+
+
+
+
 	</div>
 	
 	

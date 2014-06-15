@@ -1,7 +1,8 @@
 <?php
 //error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
 include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //calls server.php within
-include $_SERVER['DOCUMENT_ROOT']."/inc/funct_jsonrpc.php"; //calls server.php within
+include $_SERVER['DOCUMENT_ROOT']."/inc/funct_jsonrpc.php"; //allows site to connect directly to an rpc server
+
 
 function funct_Billing_GetBalance($strAccount){ 
 
@@ -94,6 +95,91 @@ function funct_Billing_NewWalletAddress($strLabel,$strLabel2,$strLabel3){ //crea
 	$label = $json_feed->label;
 	$error = $json_feed->error;
 	return $address ;
+}
+
+
+
+function funct_MakeWalletAddressUpdate($intUserID,$strWalletNewAddressHost){
+//create a new wallet address
+
+    global $DB_LINK ; //Allows Function to Access variable defined in constants.php ( database link )
+
+    //get info from database for member with hash get their id
+    $query="SELECT * FROM " . TBL_USERS . " WHERE id= '".$intUserID."' " ;
+    //echo "SQL STMNT = " . $query .  "<br>";
+    $rs = mysqli_query($DB_LINK, $query);// or die(mysqli_error());
+    if(mysqli_num_rows($rs)>0){ $row=mysqli_fetch_array($rs);
+        $strNameFirst=				$row["first_name"]; 		//important
+        $strNameLast=				$row["last_name"]; 			//important
+        $strEmail=					$row["email"]; 				//important
+        $strPhone=					$row["cellphone"]; 			//important
+        $intCountryID= 				$row["country_id"];
+        $intCountryPhoneCode= 		$row["country_phonecode"];
+        //$strWalletAddress_BTC=		$row["wallet_btc"]; 		//their own personal wallet to forward btc to
+        $intBalance=				$row["balance"]; 			//important
+        $intBalanceBTC_old=			$row["balance_btc"];
+        $intEarnedTotal=			$row["total_earned"];
+        $strName = 	$strNameFirst." ".$strNameLast;
+    }
+
+    /* make wallet receiving address or full wallet */
+    //get their custom wallet address - Blockchain.info  or local bitcoin qt json rpc
+    $strWalletLabel = $intNewRecordID." ".$FormRegEmail ;
+    $strWalletLabel = AlphaNumericOnly_RepaceWithSpace($strWalletLabel);
+
+    if(!$strWalletNewAddressHost){$strWalletNewAddressHost = WALLET_NEWADDRESS_HOST ;}
+
+    if($strWalletNewAddressHost=="blockchain.info"){
+        //blockchain.info
+        $strWallet_Address = funct_Billing_NewWalletAddress($strWalletLabel);
+
+        //archive the address to avoid 1000 gui limit.. can it still get monies?
+        //funct_Billing_ArchiveAddress( $strWallet_Address );
+
+        $strSQLUpdate = " wallet_btc='$strWallet_Address' , " ;
+    }
+
+    if($strWalletNewAddressHost=="amsterdam"){
+        //coincafe.co
+        $strWallet_Address = funct_Billing_NewWalletAddress_Amsterdam($strName,$intUserID,$strEmail);
+        $strSQLUpdate = " wallet_btc='$strWallet_Address' ,  wallet_address_cc='$strWallet_Address' , " ;
+    }
+
+
+    if($strWallet_Address){
+
+        //update database with new wallet hash code
+        $query="UPDATE " . TBL_USERS . " SET ".
+            $strSQLUpdate.
+            " wallet_receive_on =1 , ".
+            " wallet_location = '$strWalletNewAddressHost' ".
+            " WHERE id=".$intUserID ;
+        //echo "SQL STMNT = " . $query .  "<br>";
+        mysqli_query($DB_LINK, $query);// or die(mysqli_error());
+
+
+        //add record to wallet addresses table TBL_WALLET_ADDRESSES
+        $query = "INSERT INTO ".TBL_WALLET_ADDRESSES.
+            " ( user_id, 	wallet_address,			wallet_server, 				user_name,	date_created ) VALUES ".
+            " ( $intUserID,	'$strWallet_Address',	'$strWalletNewAddressHost',	'$strName',	NOW() 	  ) " ;
+        //echo "SQL STMNT = " . $query .  "<br>";
+        mysqli_query($DB_LINK, $query); //$intWalletID = mysqli_insert_id($DB_LINK);
+
+
+        //make QR Code and save to their directory - google, phpapi
+        if($strWallet_Address){
+            $strQRcodeIMG = PATH_QRCODES.$strWallet_Address.".png";
+            $strError = funct_Billing_GetQRCodeImage( $strWallet_Address, $strQRcodeIMG ); //save img to disk
+        }
+        //update database with successful code creation
+        $query="UPDATE " . TBL_USERS . " SET flag_qrcodeimg=1 WHERE id=".$intUserID ;
+        //echo "SQL STMNT = " . $query .  "<br>";
+        mysqli_query($DB_LINK, $query);// or die(mysqli_error());
+
+    }
+
+
+    return $strWallet_Address ;
 }
 
 
