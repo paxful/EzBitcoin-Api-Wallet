@@ -18,4 +18,8 @@ class Address_model extends CI_Model {
         return $query->row();
     }
 
+    public function update_total_received_crypto($address, $total_received) {
+        $this->db->update('addresses', array('crypto_totalreceived' => $total_received), array('address' => $address));
+    }
+
 }

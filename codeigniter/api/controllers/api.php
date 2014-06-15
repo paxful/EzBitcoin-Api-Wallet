@@ -4,6 +4,7 @@ class Api extends CI_Controller {
 
     private $log_id;
     private $user;
+    private $method;
     private $crypto_type = 'BTC';
 
     public function __construct()
@@ -183,7 +184,7 @@ class Api extends CI_Controller {
 		try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $int_amount , $comment , $comment_to );
             if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, 'sent', $int_amount, $this->crypto_type, $to_address, $from_address = '', $comment);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, '', $comment);
             }
 
         } catch (Exception $e) {
@@ -219,7 +220,7 @@ class Api extends CI_Controller {
         try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $int_amount , $comment , $comment_to );
             if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, 'sent', $int_amount, $this->crypto_type, $to_address, $from_address = '', $comment);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, $from_address = '', $comment);
             }
 
         } catch (Exception $e) {
@@ -264,15 +265,88 @@ class Api extends CI_Controller {
             return;
         }
 
-        $int_amount = $tx_info["amount"] ;
-        $to_address = $tx_info["details"][0]["address"]; // address where transaction was sent to. from address may be multiple inputs which means many addresses
+        // TODO make it into separate class cause same thing is #validate_transaction() function
+        $int_amount =           $tx_info["amount"] ;
+        $confirmations = 	    $tx_info["confirmations"] ;
+        $account_name = 		$tx_info["details"][0]["account"] ;
+        $to_address =           $tx_info["details"][0]["address"]; // address where transaction was sent to. from address may be multiple inputs which means many addresses
+        $address_from = 		"" ; //always blank as there is no way to know where bitcoin comes from UNLESS we do get rawtransaction
+        $time = 				$tx_info["time"] ;
+        $time_received = 		$tx_info["timereceived"];
+        $category = 			$tx_info["details"][0]["category"];
+        $block_hash = 		    $tx_info["blockhash"];
+        $block_index = 		    $tx_info["blockindex"];
+        $block_time = 		    $tx_info["blocktime"];
 
-        // TODO print transaction full information
+        $new = "Transaction hash: ".$tx_id
+            ."\n balance: ".$tx_info["balance"]
+            ."\n amount: ".$tx_info["amount"]
+            ."\n confirmations: ".$tx_info["confirmations"]
+            ."\n blockhash: ".$tx_info["blockhash"]
+            ."\n blockindex: ".$tx_info["blockindex"]
+            ."\n blocktime: ".$tx_info["blocktime"]
+            ."\n txid: ".$tx_info["txid"]
+            ."\n time: ".$tx_info["time"]
+            ."\n timereceived: ".$tx_info["timereceived"]
+            ."\n account: ".$tx_info["details"][0]["account"]
+            ."\n address: ".$tx_info["details"][0]["address"]
+            ."\n category: ".$tx_info["details"][0]["category"]
+            ."\n amount: ".$tx_info["details"][0]["amount"]
+            ."\n fee: ".$tx_info["details"][0]["fee"]  // According to https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list, fee is returned, but it doesn't seem that way here
+        ;
+        if($this->config->item('api_is_debug_mode')) {
+            echo nl2br($new)."<br>";
+        }
 
         $this->load->model('Address_model', '', TRUE);
+        $this->load->model('Transaction_model', '', TRUE);
         $address_model = $this->Address_model->get_address($to_address);
 
         $int_new_balance = $address_model->crypto_balance + $int_amount;
+
+        $transaction_model = $this->Transaction_model->get_transaction_by_tx_id($tx_id);
+
+        // TODO make a log_id column here to relate this transaction to specific log
+        // first callback, because no transaction initially found in db
+        if (!$transaction_model) {
+            $this->Transaction_model->insert_new_transaction_from_callback($tx_id, $this->user->id, $this->method, TX_RECEIVE, $int_amount,
+                $this->crypto_type, $to_address, $address_from, $confirmations, $tx_info["txid"], $block_hash, $block_index, $block_time, $time,
+                $time_received, $category, $account_name, $int_new_balance);
+
+                $address_total_received = $address_model->crypto_totalreceived + $int_amount;
+                $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
+        } else {
+            // bitcoind sent 2nd callback for the transaction which is 6th confirmation
+            $this->Transaction_model($$transaction_model->id, $confirmations);
+        }
+
+        // now it is time to fire to the API user callback URL which is his app that is using this server's API
+
+//        $app_response = $this->user->callbackurl."?secret=$strSecret&transaction_hash=$strTransactionID&address=$strAddress&input_address=$strAddress&userid=$strLabel2&value=$intAmount&confirms=$intConfirmations&server=amsterdam";
+//        $app_response_json = file_get_contents($app_response);
+//        $json_feed = json_decode($app_response_json);
+//        $strCallbackResponse = $app_response_json;
+//
+//        $strReturnError = $strCallbackResponse ;
+//        //CATCH ERROR AND EMAIL
+//
+//        if($strCallbackResponse=="*ok*"){
+//            $strSQL2 = " , callback_status=1 ";
+//        }
+//
+//        //if we get back an *ok* from the script then update the transations tbl status
+//        $query="UPDATE " . $tbl_Transactions . " SET response_callback='".$strCallbackResponse."' , callback_url='$json_url' $strSQL2 WHERE txid='".$strTransactionID."'" ;
+//        if($strDebug){ echo "SQL STMNT = " . $query .  "<br>"; }
+//        mysqli_query($DB_LINK, $query)  or funct_die_and_Report(mysqli_error($DB_LINK), "Error updating transaction response.  Admin has been informed", "$strQueryString \n $query \n error= $strReturnError ", $strERRORPage, $intNewLogID) ;
+//
+//        //if we do not get back an ok we need some method of
+//        //hitting the callback url over and over until we get an *ok* how?
+//
+//        if(RETURN_OUTPUTTYPE=="json"){
+//        echo json_encode(array( 'confirmations'=>"$intConfirmations", 'address'=>"$strAddress", 'amount'=>"$intAmount", 'txid'=>"$strTransactionID", 'callback_url'=>"$json_url", 'error'=>"$strReturnError" ));
+//        }else{
+//            echo $strReturnError ; //die;
+//        }
 
     }
 
@@ -324,6 +398,7 @@ class Api extends CI_Controller {
         if (!$method) $invalid_query[] = 'no method';
         if (!$apikey) $invalid_query[] = 'no apikey';
         if (!$apipassword) $invalid_query[] = 'no apipassword';
+        $this->method = $method;
         return isset($invalid_query) == true ? implode($invalid_query, ', ') : null; // if some of required query params were missing, then return null
     }
 

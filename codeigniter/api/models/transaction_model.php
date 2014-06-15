@@ -6,8 +6,8 @@ class Transaction_model extends CI_Model {
         parent::__construct();
     }
 
-    public function insert_new_transaction($tx_id, $user_id, $tx_type, $int_amount, $crypto_type, $to_address, $from_address, $comment) {
-        $this->db->insert('transaction', array(
+    public function insert_new_transaction($tx_id, $user_id, $tx_type, $int_amount, $crypto_type, $to_address, $from_address = '', $comment) {
+        $this->db->insert('transactions', array(
             'tx_id' => $tx_id,
             'user_id' => $user_id,
             'transaction_type' => $tx_type,
@@ -20,6 +20,44 @@ class Transaction_model extends CI_Model {
             'messagetext' => $comment
         ));
         return $this->db->insert_id();
+    }
+
+    /**
+     * Because PHP does not support function overloading we have to make a separate function
+     */
+    public function insert_new_transaction_from_callback($tx_id, $user_id, $method, $tx_type, $int_amount, $crypto_type, $address_to, $address_from,
+            $confirmations, $bitcoind_tx_info, $block_hash, $block_index, $block_time, $time, $time_received, $category, $account_name, $int_new_balance)
+    {
+        $this->db->insert('transactions', array(
+            'tx_id' => $tx_id,
+            'user_id' => $user_id,
+            'method' => $method,
+            'transaction_type' => $tx_type,
+            'crypto_amount' => $int_amount,
+            'crypto_type' => $crypto_type,
+            'address_to' => $address_to,
+            'address_from' => $address_from,
+            'confirmations' => $confirmations,
+            'response' => $bitcoind_tx_info,
+            'block_hash' => $block_hash,
+            'block_index' => $block_index,
+            'block_time' => $block_index,
+            'tx_time' => $time,
+            'tx_timereceived' => $time_received,
+            'tx_category' => $category,
+            'address_account' => $account_name,
+            'crypto_balancecurrent' => $int_new_balance
+        ));
+        return $this->db->insert_id();
+    }
+
+    public function update_tx_confirmations($id, $confirmations) {
+        $this->db->update('transactions', array('confirmations' => $confirmations), array('id' => $id));
+    }
+
+    public function get_transaction_by_tx_id($tx_id) {
+        $query = $this->db->get_where('transactions', array('tx_id' => $tx_id), 1);
+        return $query->row();
     }
 
 }
