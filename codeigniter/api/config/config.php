@@ -279,7 +279,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = FALSE;
+$config['global_xss_filtering'] = TRUE; // it requires a bit of processing overhead, but we need it cause this is bitcoin!
 
 /*
 |--------------------------------------------------------------------------
@@ -293,7 +293,7 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_cookie_name' = The cookie name
 | 'csrf_expire' = The number in seconds the token should expire.
 */
-$config['csrf_protection'] = FALSE;
+$config['csrf_protection'] = TRUE; // put on the protection
 $config['csrf_token_name'] = 'csrf_test_name';
 $config['csrf_cookie_name'] = 'csrf_cookie_name';
 $config['csrf_expire'] = 7200;
@@ -363,5 +363,5 @@ $config['proxy_ips'] = '';
 
 /* Bitcoind params */
 $config['jsonrpc_connectionstring'] = 'http://61141261cRe2Epu0qOFU:L2iFnU14rf0r3v3r832W@37.58.86.163:8332';
-$config['bitcoind_debug'] = false;
-$config['merchant_debug'] = false;
+$config['bitcoind_is_debug_mode'] = false;
+$config['api_is_debug_mode'] = false;

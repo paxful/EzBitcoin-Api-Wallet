@@ -38,5 +38,5 @@
 |
 */
 
-$route['default_controller'] = "merchant";
+$route['default_controller'] = "api";
 $route['404_override'] = '';
