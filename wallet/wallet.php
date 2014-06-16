@@ -1,11 +1,9 @@
 <?php 
 ob_start(); //so we can redirect even after headers are sent
 
-error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
-//echo get_current_user();
-require "session.php";
+require "inc/session.php";
 
-error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',2);
+//error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',2);
 $strERRORPage = 		"wallpet.php";
 $intTime = 				time();
 $strIPAddress = 		$_SERVER['REMOTE_ADDR'];

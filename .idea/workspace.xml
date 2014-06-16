@@ -2,11 +2,463 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/constants.php" afterPath="$PROJECT_DIR$/wallet/constants.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/SendGrid.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/capcha/example-captcha.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/capcha/example-mailhide.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/capcha/recaptchalib.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/class.phpmailer.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/funct_jsonrpc.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/functmail.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/index.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/jsonRPCClient.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/jsonRPCServer.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/password.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/CHANGELOG" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/INSTALL" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/LICENSE" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/README" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/VERSION" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/bindings/tcpdf/qrcode.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_10.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_10.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_11.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_11.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_12.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_12.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_13.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_13.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_14.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_14.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_15.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_15.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_16.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_16.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_17.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_17.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_18.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_18.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_19.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_19.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_20.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_20.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_21.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_21.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_22.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_22.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_23.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_23.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_24.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_24.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_25.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_25.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_26.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_26.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_27.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_27.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_28.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_28.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_29.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_29.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_30.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_30.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_31.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_31.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_32.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_32.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_33.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_33.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_34.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_34.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_35.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_35.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_36.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_36.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_37.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_37.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_38.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_38.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_39.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_39.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_40.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_40.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_8.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_9.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/frame_9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_101_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_105_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_109_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_113_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_117_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_121_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_125_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_129_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_133_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_137_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_141_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_145_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_149_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_153_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_157_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_161_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_165_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_169_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_173_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_177_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_21_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_25_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_29_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_33_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_37_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_41_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_45_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_49_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_53_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_57_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_61_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_65_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_69_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_73_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_77_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_81_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_85_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_89_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_93_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_0/mask_97_0.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_101_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_105_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_109_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_113_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_117_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_121_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_125_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_129_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_133_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_137_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_141_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_145_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_149_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_153_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_157_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_161_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_165_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_169_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_173_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_177_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_21_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_25_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_29_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_33_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_37_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_41_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_45_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_49_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_53_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_57_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_61_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_65_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_69_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_73_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_77_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_81_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_85_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_89_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_93_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_1/mask_97_1.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_101_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_105_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_109_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_113_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_117_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_121_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_125_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_129_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_133_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_137_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_141_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_145_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_149_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_153_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_157_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_161_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_165_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_169_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_173_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_177_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_21_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_25_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_29_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_33_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_37_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_41_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_45_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_49_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_53_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_57_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_61_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_65_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_69_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_73_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_77_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_81_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_85_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_89_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_93_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_2/mask_97_2.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_101_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_105_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_109_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_113_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_117_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_121_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_125_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_129_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_133_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_137_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_141_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_145_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_149_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_153_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_157_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_161_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_165_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_169_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_173_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_177_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_21_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_25_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_29_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_33_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_37_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_41_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_45_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_49_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_53_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_57_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_61_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_65_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_69_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_73_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_77_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_81_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_85_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_89_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_93_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_3/mask_97_3.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_101_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_105_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_109_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_113_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_117_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_121_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_125_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_129_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_133_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_137_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_141_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_145_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_149_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_153_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_157_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_161_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_165_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_169_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_173_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_177_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_21_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_25_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_29_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_33_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_37_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_41_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_45_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_49_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_53_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_57_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_61_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_65_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_69_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_73_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_77_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_81_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_85_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_89_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_93_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_4/mask_97_4.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_101_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_105_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_109_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_113_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_117_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_121_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_125_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_129_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_133_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_137_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_141_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_145_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_149_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_153_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_157_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_161_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_165_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_169_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_173_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_177_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_21_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_25_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_29_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_33_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_37_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_41_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_45_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_49_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_53_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_57_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_61_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_65_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_69_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_73_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_77_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_81_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_85_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_89_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_93_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_5/mask_97_5.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_101_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_105_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_109_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_113_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_117_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_121_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_125_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_129_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_133_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_137_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_141_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_145_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_149_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_153_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_157_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_161_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_165_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_169_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_173_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_177_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_21_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_25_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_29_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_33_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_37_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_41_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_45_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_49_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_53_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_57_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_61_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_65_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_69_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_73_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_77_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_81_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_85_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_89_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_93_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_6/mask_97_6.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_101_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_105_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_109_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_113_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_117_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_121_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_125_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_129_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_133_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_137_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_141_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_145_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_149_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_153_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_157_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_161_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_165_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_169_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_173_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_177_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_21_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_25_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_29_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_33_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_37_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_41_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_45_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_49_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_53_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_57_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_61_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_65_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_69_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_73_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_77_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_81_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_85_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_89_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_93_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/cache/mask_7/mask_97_7.dat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/index.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/phpqrcode.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrbitstream.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrconfig.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrconst.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrencode.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrimage.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrinput.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrlib.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrmask.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrrscode.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrspec.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrsplit.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/qrtools.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/tools/merge.bat" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/tools/merge.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/tools/merge.sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/tools/merged_config.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/inc/phpqrcode/tools/merged_header.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/ajax_do.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/constants.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/foundation.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/functBilling.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/functStrings.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/server.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/session.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/wallet/verify.php" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/do.php" afterPath="$PROJECT_DIR$/wallet/do.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/index.php" afterPath="$PROJECT_DIR$/wallet/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/install/readme_install_bitcoind.md" afterPath="$PROJECT_DIR$/install/readme_install_bitcoind.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/loadcontent.php" afterPath="$PROJECT_DIR$/wallet/loadcontent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/processorder.php" afterPath="$PROJECT_DIR$/wallet/processorder.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/processorder2.php" afterPath="$PROJECT_DIR$/wallet/processorder2.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/sendcrypto.php" afterPath="$PROJECT_DIR$/wallet/sendcrypto.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/settings.php" afterPath="$PROJECT_DIR$/wallet/settings.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/signin.php" afterPath="$PROJECT_DIR$/wallet/signin.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/signup.php" afterPath="$PROJECT_DIR$/wallet/signup.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/wallet.php" afterPath="$PROJECT_DIR$/wallet/wallet.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,48 +481,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="session.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/inc/session.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="74" selection-start="688" selection-end="688" vertical-scroll-proportion="138.04167" vertical-offset="3613" max-vertical-offset="4140">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="constants.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wallet/constants.php">
+        <entry file="file://$PROJECT_DIR$/wallet/inc/constants.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="27" selection-start="318" selection-end="337" vertical-scroll-proportion="-1.981132" vertical-offset="0" max-vertical-offset="2520">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="do.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/wallet/do.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="233" column="0" selection-start="9326" selection-end="9326" vertical-scroll-proportion="0.9775449" vertical-offset="2842" max-vertical-offset="11940">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wallet/settings.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="0" selection-start="990" selection-end="990" vertical-scroll-proportion="-15.0" vertical-offset="0" max-vertical-offset="11760">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wallet/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="97" column="138" selection-start="2997" selection-end="2997" vertical-scroll-proportion="-34.0" vertical-offset="639" max-vertical-offset="2760">
-              <folding>
-                <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hud.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wallet/hud.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="53" selection-start="1203" selection-end="1203" vertical-scroll-proportion="-12.5" vertical-offset="210" max-vertical-offset="1410">
+            <state line="123" column="27" selection-start="7262" selection-end="7262" vertical-scroll-proportion="-2.8301888" vertical-offset="1635" max-vertical-offset="2550">
               <folding />
             </state>
           </provider>
@@ -79,7 +502,34 @@
       <file leaf-file-name="wallet.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="0" selection-start="163" selection-end="185" vertical-scroll-proportion="-3.125" vertical-offset="0" max-vertical-offset="15090">
+            <state line="8" column="48" selection-start="262" selection-end="262" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="15060">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="do.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/do.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="462" column="59" selection-start="21592" selection-end="21592" vertical-scroll-proportion="-1.875" vertical-offset="6885" max-vertical-offset="12675">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="functBilling.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wallet/inc/functBilling.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="134" column="0" selection-start="5498" selection-end="5498" vertical-scroll-proportion="-6.792453" vertical-offset="1650" max-vertical-offset="6555">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="readme.md" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/readme.md">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="51" column="5" selection-start="2446" selection-end="2446" vertical-scroll-proportion="0.65779465" vertical-offset="419" max-vertical-offset="945">
               <folding />
             </state>
           </provider>
@@ -110,13 +560,6 @@
         <option value="$PROJECT_DIR$/merchant/functStrings.php" />
         <option value="$PROJECT_DIR$/merchant/constants.php" />
         <option value="$PROJECT_DIR$/merchant/test.php" />
-        <option value="$PROJECT_DIR$/wallet/processorder.php" />
-        <option value="$PROJECT_DIR$/wallet/sendcrypto.php" />
-        <option value="$PROJECT_DIR$/wallet/processorder2.php" />
-        <option value="$PROJECT_DIR$/wallet/ajax_do.php" />
-        <option value="$PROJECT_DIR$/wallet/loadcontent.php" />
-        <option value="$PROJECT_DIR$/wallet/signin.php" />
-        <option value="$PROJECT_DIR$/wallet/signup.php" />
         <option value="$PROJECT_DIR$/wallet/verify.php" />
         <option value="$PROJECT_DIR$/wallet/session.php" />
         <option value="$PROJECT_DIR$/wallet/hud.php" />
@@ -130,21 +573,34 @@
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/install/readme_secure_bitcoind.md" />
         <option value="$PROJECT_DIR$/install/readme_install_apiserver.md" />
-        <option value="$PROJECT_DIR$/readme.md" />
         <option value="$PROJECT_DIR$/install/readme_install_bitcoind.md" />
-        <option value="$PROJECT_DIR$/wallet/settings.php" />
         <option value="$PROJECT_DIR$/wallet/constants.php" />
+        <option value="$PROJECT_DIR$/wallet/signup.php" />
+        <option value="$PROJECT_DIR$/wallet/signin.php" />
+        <option value="$PROJECT_DIR$/wallet/sendcrypto.php" />
+        <option value="$PROJECT_DIR$/wallet/processorder2.php" />
+        <option value="$PROJECT_DIR$/wallet/processorder.php" />
         <option value="$PROJECT_DIR$/wallet/index.php" />
+        <option value="$PROJECT_DIR$/wallet/ajax_do.php" />
+        <option value="$PROJECT_DIR$/wallet/inc/functmail.php" />
+        <option value="$PROJECT_DIR$/wallet/inc/index.php" />
+        <option value="$PROJECT_DIR$/wallet/settings.php" />
+        <option value="$PROJECT_DIR$/wallet/inc/session.php" />
+        <option value="$PROJECT_DIR$/wallet/wallet.php" />
+        <option value="$PROJECT_DIR$/wallet/loadcontent.php" />
         <option value="$PROJECT_DIR$/wallet/do.php" />
+        <option value="$PROJECT_DIR$/wallet/inc/constants.php" />
+        <option value="$PROJECT_DIR$/wallet/inc/functBilling.php" />
+        <option value="$PROJECT_DIR$/readme.md" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="287" />
+    <option name="x" value="334" />
     <option name="y" value="22" />
-    <option name="width" value="1393" />
-    <option name="height" value="806" />
+    <option name="width" value="1346" />
+    <option name="height" value="665" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -160,7 +616,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="Scope" currentSubView="Project Files" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -172,6 +628,20 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="EzAPI.com">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -180,47 +650,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="wallet" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EzAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="install" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -231,6 +662,7 @@
     <property name="options.searchVisible" value="true" />
     <property name="DefaultHtmlFileTemplate" value="Html5" />
     <property name="FullScreen" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -309,7 +741,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="287" y="22" width="1393" height="806" extended-state="0" />
+    <frame x="334" y="22" width="1346" height="665" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -317,7 +749,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16223978" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1679049" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
@@ -360,22 +792,13 @@
     <entry file="file://$PROJECT_DIR$/wallet/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="14" column="0" selection-start="431" selection-end="431" vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="15645">
-          <folding>
-            <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/hud.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="24" column="45" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1395">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="141" column="0" selection-start="8042" selection-end="8042" vertical-scroll-proportion="0.0" vertical-offset="2115" max-vertical-offset="3480">
           <folding />
         </state>
       </provider>
@@ -392,16 +815,9 @@
         <state line="50" column="11" selection-start="1870" selection-end="1870" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="10335" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/ajax_do.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
@@ -412,9 +828,7 @@
     <entry file="file://$PROJECT_DIR$/wallet/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="357" column="29" selection-start="13636" selection-end="13636" vertical-scroll-proportion="0.0" vertical-offset="3975" max-vertical-offset="15660">
-          <folding>
-            <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -435,16 +849,9 @@
         <state line="11" column="23" selection-start="304" selection-end="304" vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="10395" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/ajax_do.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3795" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
@@ -455,9 +862,7 @@
     <entry file="file://$PROJECT_DIR$/wallet/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="357" column="29" selection-start="13636" selection-end="13636" vertical-scroll-proportion="0.0" vertical-offset="3975" max-vertical-offset="15660">
-          <folding>
-            <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -476,11 +881,6 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="611" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/server.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="147" selection-end="147" vertical-scroll-proportion="0.096" vertical-offset="0" max-vertical-offset="625" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/merchant/constants.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="35" column="54" selection-start="1116" selection-end="1157" vertical-scroll-proportion="0.41025642" vertical-offset="225" max-vertical-offset="1335">
@@ -488,108 +888,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/foundation.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2580" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/ajax_do.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="0" selection-start="1439" selection-end="1439" vertical-scroll-proportion="0.8851675" vertical-offset="165" max-vertical-offset="870" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="4" selection-start="278" selection-end="278" vertical-scroll-proportion="-5.3273616" vertical-offset="3421" max-vertical-offset="4980" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/processorder.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="65" selection-start="1310" selection-end="1310" vertical-scroll-proportion="-1.5162866" vertical-offset="1201" max-vertical-offset="1815" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/signin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="43" selection-start="2386" selection-end="2386" vertical-scroll-proportion="-8.666667" vertical-offset="1157" max-vertical-offset="2850" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/signup.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="8" selection-start="2855" selection-end="2855" vertical-scroll-proportion="-3.625" vertical-offset="1203" max-vertical-offset="2670" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/verify.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="9" selection-start="1630" selection-end="1630" vertical-scroll-proportion="0.36585367" vertical-offset="330" max-vertical-offset="10635" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/funct_jsonrpc.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="0.018939395" vertical-offset="0" max-vertical-offset="1965" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/session.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="96" column="37" selection-start="4228" selection-end="4228" vertical-scroll-proportion="0.0" vertical-offset="1440" max-vertical-offset="4185">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="159" column="26" selection-start="7322" selection-end="7322" vertical-scroll-proportion="0.0" vertical-offset="2385" max-vertical-offset="5070" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="0" selection-start="978" selection-end="978" vertical-scroll-proportion="0.0" vertical-offset="525" max-vertical-offset="8250">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/inc/functmail.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="175" column="47" selection-start="5305" selection-end="5305" vertical-scroll-proportion="0.7304236" vertical-offset="2056" max-vertical-offset="2925" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/functBilling.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="26" selection-start="4854" selection-end="4854" vertical-scroll-proportion="0.403481" vertical-offset="1500" max-vertical-offset="6615">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/merchant/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="254" column="30" selection-start="10153" selection-end="10153" vertical-scroll-proportion="0.45411393" vertical-offset="3463" max-vertical-offset="10500">
-          <folding />
-        </state>
+        <state line="254" column="30" selection-start="10153" selection-end="10153" vertical-scroll-proportion="0.45411393" vertical-offset="3463" max-vertical-offset="10500" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/install/readme_secure_bitcoind.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="412" selection-end="412" vertical-scroll-proportion="-6.6" vertical-offset="0" max-vertical-offset="2895">
-          <folding />
-        </state>
+        <state line="11" column="0" selection-start="412" selection-end="412" vertical-scroll-proportion="-6.6" vertical-offset="0" max-vertical-offset="2895" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/install/readme_install_apiserver.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="19" selection-start="298" selection-end="298" vertical-scroll-proportion="-6.6" vertical-offset="0" max-vertical-offset="1575">
-          <folding />
-        </state>
+        <state line="11" column="19" selection-start="298" selection-end="298" vertical-scroll-proportion="-6.6" vertical-offset="0" max-vertical-offset="1575" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cp/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="18" column="28" selection-start="501" selection-end="501" vertical-scroll-proportion="-0.5813953" vertical-offset="645" max-vertical-offset="2310">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="106" selection-start="2067" selection-end="2067" vertical-scroll-proportion="0.66561013" vertical-offset="210" max-vertical-offset="945">
           <folding />
         </state>
       </provider>
@@ -615,20 +931,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="0" selection-start="163" selection-end="185" vertical-scroll-proportion="-3.125" vertical-offset="0" max-vertical-offset="15090">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/functStrings.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="35" selection-start="66" selection-end="92" vertical-scroll-proportion="-1.875" vertical-offset="0" max-vertical-offset="3630">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/install/readme_install_bitcoind.md">
       <provider selected="true" editor-type-id="text-editor">
         <state line="190" column="0" selection-start="5947" selection-end="5947" vertical-scroll-proportion="0.625" vertical-offset="2450" max-vertical-offset="3210">
@@ -643,39 +945,142 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/hud.php">
+    <entry file="file://$PROJECT_DIR$/wallet/signin.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="53" selection-start="1203" selection-end="1203" vertical-scroll-proportion="-12.5" vertical-offset="210" max-vertical-offset="1410">
+        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="26.25" vertical-offset="630" max-vertical-offset="2820">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/signup.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2640">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="138" selection-start="2997" selection-end="2997" vertical-scroll-proportion="-34.0" vertical-offset="639" max-vertical-offset="2760">
-          <folding>
-            <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state line="2" column="26" selection-start="33" selection-end="33" vertical-scroll-proportion="0.04587156" vertical-offset="0" max-vertical-offset="2775">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/constants.php">
+    <entry file="file://$PROJECT_DIR$/wallet/hud.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="27" selection-start="318" selection-end="337" vertical-scroll-proportion="-1.981132" vertical-offset="0" max-vertical-offset="2520">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1410">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/functmail.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="46" selection-start="148" selection-end="148" vertical-scroll-proportion="0.06880734" vertical-offset="0" max-vertical-offset="2925">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="3" selection-start="14" selection-end="14" vertical-scroll-proportion="0.06880734" vertical-offset="0" max-vertical-offset="654">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/SendGrid.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="855">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/processorder.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="26" selection-start="32" selection-end="32" vertical-scroll-proportion="0.02245509" vertical-offset="0" max-vertical-offset="1800">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/processorder2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="26" selection-start="32" selection-end="32" vertical-scroll-proportion="0.02245509" vertical-offset="0" max-vertical-offset="5055">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/settings.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="0" selection-start="990" selection-end="990" vertical-scroll-proportion="-15.0" vertical-offset="0" max-vertical-offset="11760">
+        <state line="7" column="31" selection-start="230" selection-end="230" vertical-scroll-proportion="0.15718563" vertical-offset="0" max-vertical-offset="11745">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/session.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="74" selection-start="688" selection-end="688" vertical-scroll-proportion="138.04167" vertical-offset="3613" max-vertical-offset="4140">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/functStrings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="20" selection-start="1049" selection-end="1049" vertical-scroll-proportion="-5.1195445" vertical-offset="3103" max-vertical-offset="3630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="2" selection-start="62" selection-end="62" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="5025">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/funct_jsonrpc.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="29" selection-start="37" selection-end="37" vertical-scroll-proportion="-2.8554218" vertical-offset="1467" max-vertical-offset="1965">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="48" selection-start="262" selection-end="262" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="15060">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/wallet/do.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="233" column="0" selection-start="9326" selection-end="9326" vertical-scroll-proportion="0.9775449" vertical-offset="2842" max-vertical-offset="11940">
+        <state line="462" column="59" selection-start="21592" selection-end="21592" vertical-scroll-proportion="-1.875" vertical-offset="6885" max-vertical-offset="12675">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="123" column="27" selection-start="7262" selection-end="7262" vertical-scroll-proportion="-2.8301888" vertical-offset="1635" max-vertical-offset="2550">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/functBilling.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="134" column="0" selection-start="5498" selection-end="5498" vertical-scroll-proportion="-6.792453" vertical-offset="1650" max-vertical-offset="6555">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="5" selection-start="2446" selection-end="2446" vertical-scroll-proportion="0.65779465" vertical-offset="419" max-vertical-offset="945">
           <folding />
         </state>
       </provider>

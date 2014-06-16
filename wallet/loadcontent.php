@@ -1,6 +1,6 @@
 <?php
 //error_reporting(1); // Turn off all error reporting
-error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',1);
+//error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',1);
 ob_start(); //so we can redirect even after headers are sent
 
 
@@ -8,8 +8,8 @@ ob_start(); //so we can redirect even after headers are sent
 $strDo = 				trim($_GET['do']);
 
 if($strDo=="ajax" || $strDo=="iframe"){
-	
-	require_once "session.php";
+
+    require "inc/session.php";
 
 	//calling file via ajax so get values from query string
 	$intNewstID = 			funct_GetandCleanVariables($_GET['newest_msg_id']); 
@@ -70,6 +70,9 @@ if($sortby=="price"){$strOrderBySTMT =" date_added DESC  " ;} //bottom
 
 //Switch statement for types of content
 switch ($intType){
+
+
+
 	//!CASE TRANSACTIONS
 	case "transactions": //list of transactions in wallet.php
 

@@ -1,6 +1,5 @@
 <?php 
-error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
-require "session.php";
+require "inc/session.php";
 
 //Define Page Values
 $strThisPage = 		PAGE_SETTINGS;

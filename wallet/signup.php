@@ -1,7 +1,5 @@
-<?php 
-error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
-
-require "session.php";
+<?php
+require "inc/session.php";
 
 $strError = 			(funct_GetandCleanVariables($_GET["error"])); //set error msg manually in query
 $strEmail = 			(funct_GetandCleanVariables($_GET["email"])); //set error msg manually in query

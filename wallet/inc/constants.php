@@ -24,6 +24,7 @@ define("QRSCANAPP_DROID_URL",               "https://play.google.com/store/apps/
 
 //##############################
 //Crypto API Server Settings
+define("WALLET_NEWADDRESS_HOST",            ""); // "blockchain.info" or "ezwallet" web api
 define("JSONRPC_API_MERCHANT_URL",          ""); //connecting to a web api via get/post which does the rpc calls for us
 define("JSONRPC_API_LOGIN",                 ""); //
 define("JSONRPC_API_PASSWORD",              ""); //
@@ -122,6 +123,7 @@ if( ! $DB_LINK = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME) ){
 //Main content tables
 define("TBL_USERS",                         "tbl_member");                  //holds all user records
 define("TBL_WALLET_ADDRESSES",              "tbl_wallet_addresses");        //logging addresses for each user across crypto wallets
+define("TBL_WALLET_BALANCES",               "tbl_wallet_balances");         //logging addresses for each user across crypto wallets
 define("TBL_TRANSACTIONS",                  "tbl_transactions");            //holds all transactions
 define("TBL_TRANSACTIONS_QUE",              "tbl_transactions_que");        //logs all send out requests for authorization
 define("TBL_ESCROW",                        "tbl_escrow");                  //used for sending coins via email and other escrow services
