@@ -9,7 +9,7 @@ if($strDo){
 
 	error_reporting(E_ALL & ~E_NOTICE);
 
-	require "session.php";
+    require "inc/session.php";
 	$intUserID = 			funct_GetandCleanVariables(DETECT_USERID) ;
 }
 

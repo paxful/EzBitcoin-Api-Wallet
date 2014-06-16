@@ -1,6 +1,5 @@
-<?php 
-error_reporting(E_ERROR | E_PARSE);
-require "session.php";
+<?php
+require "inc/session.php";
 
 //process incoming orders. each time bitcoin is sent to a merchant this url will be accessed.
 //this page will be called everytime the account Ghaleon gets btc so only use it for easybitz

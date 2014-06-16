@@ -1,7 +1,6 @@
 <?php
 //error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
-include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //calls server.php within
-include $_SERVER['DOCUMENT_ROOT']."/inc/funct_jsonrpc.php"; //allows site to connect directly to an rpc server
+
 
 
 function funct_Billing_GetBalance($strAccount){ 
@@ -99,7 +98,7 @@ function funct_Billing_NewWalletAddress($strLabel,$strLabel2,$strLabel3){ //crea
 
 
 
-function funct_MakeWalletAddressUpdate($intUserID,$strWalletNewAddressHost){
+function funct_MakeWalletAddressUpdate($intUserID, $strCrypto_Code){
 //create a new wallet address
 
     global $DB_LINK ; //Allows Function to Access variable defined in constants.php ( database link )
@@ -127,35 +126,30 @@ function funct_MakeWalletAddressUpdate($intUserID,$strWalletNewAddressHost){
     $strWalletLabel = $intNewRecordID." ".$FormRegEmail ;
     $strWalletLabel = AlphaNumericOnly_RepaceWithSpace($strWalletLabel);
 
-    if(!$strWalletNewAddressHost){$strWalletNewAddressHost = WALLET_NEWADDRESS_HOST ;}
 
-    if($strWalletNewAddressHost=="blockchain.info"){
-        //blockchain.info
-        $strWallet_Address = funct_Billing_NewWalletAddress($strWalletLabel);
-
-        //archive the address to avoid 1000 gui limit.. can it still get monies?
-        //funct_Billing_ArchiveAddress( $strWallet_Address );
-
-        $strSQLUpdate = " wallet_btc='$strWallet_Address' , " ;
-    }
-
-    if($strWalletNewAddressHost=="amsterdam"){
-        //coincafe.co
-        $strWallet_Address = funct_Billing_NewWalletAddress_Amsterdam($strName,$intUserID,$strEmail);
-        $strSQLUpdate = " wallet_btc='$strWallet_Address' ,  wallet_address_cc='$strWallet_Address' , " ;
-    }
-
+    //https://github.com/goethewins/EzBit-BitCoin-API--Wallet
+    $strWallet_Address = funct_Billing_NewWalletAddress($strName,$intUserID,$strEmail);
+    //$strSQLUpdate = " wallet_btc='$strWallet_Address' ,  wallet_address_cc='$strWallet_Address' , " ;
 
     if($strWallet_Address){
 
         //update database with new wallet hash code
         $query="UPDATE " . TBL_USERS . " SET ".
             $strSQLUpdate.
-            " wallet_receive_on =1 , ".
-            " wallet_location = '$strWalletNewAddressHost' ".
+            " wallet_receive_on =1  ".
             " WHERE id=".$intUserID ;
         //echo "SQL STMNT = " . $query .  "<br>";
         mysqli_query($DB_LINK, $query);// or die(mysqli_error());
+
+
+        if(!$strCrypto_Code){$strCrypto_Code="btc" ;}
+        //add record to balances table - must only be on record per crypto type
+        $query = "INSERT INTO ".TBL_WALLET_BALANCES.
+            " ( user_id, 	currency_type, 	currency_code,	    balance	) VALUES ".
+            " ( $intUserID,	'crypto',	    '$strCrypto_Code',  0 ) " ;
+        //echo "SQL STMNT = " . $query .  "<br>";
+        mysqli_query($DB_LINK, $query); //$intWalletID = mysqli_insert_id($DB_LINK);
+
 
 
         //add record to wallet addresses table TBL_WALLET_ADDRESSES
@@ -166,11 +160,13 @@ function funct_MakeWalletAddressUpdate($intUserID,$strWalletNewAddressHost){
         mysqli_query($DB_LINK, $query); //$intWalletID = mysqli_insert_id($DB_LINK);
 
 
+
         //make QR Code and save to their directory - google, phpapi
         if($strWallet_Address){
             $strQRcodeIMG = PATH_QRCODES.$strWallet_Address.".png";
             $strError = funct_Billing_GetQRCodeImage( $strWallet_Address, $strQRcodeIMG ); //save img to disk
         }
+
         //update database with successful code creation
         $query="UPDATE " . TBL_USERS . " SET flag_qrcodeimg=1 WHERE id=".$intUserID ;
         //echo "SQL STMNT = " . $query .  "<br>";

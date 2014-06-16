@@ -1,6 +1,6 @@
 <?php
 
-require "session.php";
+require "inc/session.php";
 
 // If we are on production, ensure page is ssl encrypted for entering in credit card info
 // Todo: move to global include
@@ -121,9 +121,10 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
           <ul>
               <li><a href="">LAMP</a> - Linux Apache MySql PHP platform. (comes installed by default on most linux servers)</li>
               <li>PDO mysql php module</li>
+              <li>MYSQLI php module</li>
               <li>mcrypt php module</li>
               <li><a href="">Code Igniter PHP framework</a> (comes included)</li>
-              <li>Works with the Ez Wallet BitCoin API</li>
+              <li>Ez Wallet BitCoin API or Blockchain.info API</li>
           </ul>
 
           <br><br>

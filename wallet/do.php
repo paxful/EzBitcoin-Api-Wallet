@@ -2,19 +2,70 @@
 
 ob_start(); //so we can redirect even after headers are sent
 
-require "session.php";
+require "inc/session.php";
 
-error_reporting(E_ALL & ~E_NOTICE);
+//error_reporting(E_ALL & ~E_NOTICE);
 
 //Get Fresh Page QueryString Variables
 $strDo = 			trim($_GET['do']);
-
 $intUserID = 		funct_GetandCleanVariables(DETECT_USERID);
 //$strChestKey = DETECT_CHESTKEY ;
 
 //echo "strDo= " . $strDo;
 switch ($strDo){
 
+
+
+    //making a new address - called from
+    //!CASE newpublickey
+    case "newpublickey": //send email confirm code
+
+        $intUserID = funct_GetandCleanVariables($_POST["userid"]);
+
+        if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+        if( $stmt = $DB_MYSQLI->prepare("SELECT id,email,cellphone,name,wallet_btc FROM ".TBL_USERS." WHERE id = ? ") ) {
+
+            $stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
+            $stmt -> execute(); //Execute it
+            $stmt -> bind_result($intUserID_DB,$Email_DB,$Phone_DB,$strName,$strWalletAddress); //bind results
+            $stmt -> fetch(); //fetch the value
+            //mysqli_stmt_store_result($stmt);
+            //$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
+            //echo "totalrows: $intTotalRowsFound <br>";
+            $stmt -> close(); //Close statement
+        }else{
+            echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
+        }
+
+        $strWalletAddress= trim($strWalletAddress) ;
+        $strWalletLabel = $intUserID_DB."|".$Email_DB."|".$Phone_DB."|".$strName ;
+        //echo "making wallet address for ... ".$strWalletLabel."<br>";
+        $strWalletAddress = funct_Billing_NewWalletAddress($strWalletLabel);
+        if($strWalletAddress){
+            //update database with new wallet hash code
+            //$query="UPDATE " . TBL_USERS . " SET wallet_btc='".$strWalletAddress."' WHERE id=".$intUserID_DB ;
+            //echo "SQL STMNT = " . $query .  "<br>";
+            //mysqli_query($DB_LINK, $query) or die(mysqli_error());
+
+            if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+            if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET wallet_btc = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
+            if(!($stmt->bind_param('si',								$strWalletAddress, $intUserID_DB ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
+            if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
+
+            $strQRcodeIMG = PATH_QRCODES.$intUserID_DB.".png" ;
+            $strError = funct_Billing_GetQRCodeImage($strWalletAddress, $strQRcodeIMG ); //save img to disk
+
+            $strPostImgPath = PATH_POSTERS.$intUserID_DB.".png" ;
+            funct_CreateQRPoster($strQRcodeIMG, $strPostImgPath, $strWalletAddress); //add easy bits logo to image - simple image, php lib
+        }
+
+        //redirect to settings page
+        header( 'Location: '. PAGE_SETTINGS.'?error=Code sent to email' ); die(); //Make sure code after is not executed
+
+        break;
+
+
+    //called from
     //!CASE activatereceiveaddress
     case "activatereceiveaddress": //make wallet code
 
@@ -45,6 +96,45 @@ switch ($strDo){
     break;
 
 
+    //called from wallet.pho
+    case "getbalance": //!case "getbalance"
+
+        $strFiatType = 					(funct_GetandCleanVariables($_GET["fiat"])) ;
+        $strCryptoType = 				(funct_GetandCleanVariables($_GET["crypto"])) ;
+        $intOwnerID = 					(funct_GetandCleanVariables($_GET["userid"])) ;
+
+        if($intOwnerID != $intUserID_fromcode){
+            // 401 redirect
+            if($intUserID_fromcode == ''){
+                error_log('AUTH ISSUE: balance requested from user who is not logged in');
+                // todo: ajax fail should redirect to login page
+            } else {
+                error_log('AUTH ISSUE: balance requested from unauthorized user');
+                // todo: ajax fail should redirect to login page
+            }
+            header("HTTP/1.1 401 Unauthorized");
+            exit();
+        }
+
+        //get usr info
+        $query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $intOwnerID ;
+        //echo "SQL STMNT = " . $query .  "<br>";
+        $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+        $intBalanceCrypto=				$row["balance_btc"];
+
+        //get balances
+        $intBalance = $intBalanceCrypto ;
+
+        //get fiat / crypto symbol
+        $intCryptoRate = funct_Billing_GetRate($strCryptoType);
+        $intFiatBalance = $intBalance * $intCryptoRate ;
+
+        echo $intBalance.",".$intFiatBalance ;
+
+    break;
+
+
+
     //!CASE sendemailcode
     case "sendemailcode": //send email confirm code
 
@@ -58,7 +148,7 @@ switch ($strDo){
         $strError = "Email sent!";
         //redirect to settings page
         header( 'Location: '. PAGE_WALLET ); die(); //Make sure code after is not executed
-        break;
+    break;
 
 
 
@@ -136,7 +226,9 @@ switch ($strDo){
         //redirect to settings page
         header( 'Location: '. PAGE_SETTINGS.'?error_testphone='.$strError ); die(); //Make sure code after is not executed
 
-        break;
+    break;
+
+
 
     //!CASE confirmphonecode
     case "confirmphonecode": //confirm phone code via sms
@@ -164,8 +256,6 @@ switch ($strDo){
             if(!($stmt->bind_param('i',														$intUserID  ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
             if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
 
-
-
             $strError = "Phone confirmed! Thank you!";
         }else{
             $strError = "Phone code wrong...";
@@ -173,116 +263,14 @@ switch ($strDo){
 
         //redirect to settings page
         //header( 'Location: '. PAGE_SETTINGS."?error_confirmphone=".$strError ); die(); //Make sure code after is not executed
-        break;
-
-
-
-    //for claiming coins sent via email - not tested
-	//!CASE claimcoins
-	case "claimcoins":
-	//let them claim their coins
-		$strEmail = 	funct_GetandCleanVariables($_POST['email']);
-		$strCode = 		funct_GetandCleanVariables($_POST['code']);
-
-		if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-		if( $stmt = $DB_MYSQLI->prepare("SELECT user_id,user_email,address_email,status_id,status_msg,label,transaction_id_send,transaction_id_get FROM ".TBL_ESCROW." WHERE verify_code = ? ") ) {
-
-			$stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
-			$stmt -> execute(); //Execute it
-			mysqli_stmt_store_result($stmt);
-			$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
-
-			$stmt -> bind_result($intUserID,$intUserEmail,$strEmailReceiver,$intStatusID,$strStatusMsg,$strLabel,$intTransactionID_send,$intTransactionID_get); //bind results
-			$stmt -> fetch(); //fetch the value
-
-			//echo "totalrows: $intTotalRowsFound <br>";
-			if($intTotalRowsFound<1){
-        		$strError = "Code not found";
-			}else{ //Email found so ...
-
-				while ($stmt->fetch()){
-
-					//if found then see if the email matches and
-					if($strEmailReceiver!=$strEmail){
-						$strError = "Email does not match. Admin Alerted";
-					}
-
-					//if status is zero then. Important!
-					if($intStatusID>0){
-						$strError = "Coins already Claimed. $strStatusMsg ";
-					}
-
-				}
-			}
-
-			$stmt -> close(); //Close statement
-		}else{
-			echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
-		}
-
-
-		//if it all checks out
-		if(!$strError){
-
-			//write cookie with the code for cashing in on the wallet page
-			setcookie("claimcode", $strCode, COOKIE_EXPIRE, COOKIE_PATH, COOKIE_DOMAIN);
-
-			//redirect them to signup.
-			header( 'Location: '. CODE_DO.'?do=join&email='.$strEmailReceiver ); die(); //Make sure code after is not executed
-
-		}
-
-	break;
-
-
-
-    //making a new address
-    //!CASE newpublickey
-    case "newpublickey": //send email confirm code
-
-        $intUserID = funct_GetandCleanVariables($_POST["userid"]);
-
-        if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-        if( $stmt = $DB_MYSQLI->prepare("SELECT id,email,cellphone,name,wallet_btc FROM ".TBL_USERS." WHERE id = ? ") ) {
-
-            $stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
-            $stmt -> execute(); //Execute it
-            $stmt -> bind_result($intUserID_DB,$Email_DB,$Phone_DB,$strName,$strWalletAddress); //bind results
-            $stmt -> fetch(); //fetch the value
-            //mysqli_stmt_store_result($stmt);
-            //$intTotalRowsFound = mysqli_stmt_num_rows($stmt);
-            //echo "totalrows: $intTotalRowsFound <br>";
-            $stmt -> close(); //Close statement
-        }else{
-            echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
-        }
-
-        $strWalletAddress= trim($strWalletAddress) ;
-        $strWalletLabel = $intUserID_DB."|".$Email_DB."|".$Phone_DB."|".$strName ;
-        //echo "making wallet address for ... ".$strWalletLabel."<br>";
-        $strWalletAddress = funct_Billing_NewWalletAddress($strWalletLabel);
-        if($strWalletAddress){
-            //update database with new wallet hash code
-            //$query="UPDATE " . TBL_USERS . " SET wallet_btc='".$strWalletAddress."' WHERE id=".$intUserID_DB ;
-            //echo "SQL STMNT = " . $query .  "<br>";
-            //mysqli_query($DB_LINK, $query) or die(mysqli_error());
-
-            if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
-            if(!($stmt = $DB_MYSQLI->prepare("UPDATE ".TBL_USERS." SET wallet_btc = ? WHERE id = ? ") )) { echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error; }
-            if(!($stmt->bind_param('si',								$strWalletAddress, $intUserID_DB ) )) { echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error; }
-            if(!($stmt->execute())) { echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;}
-
-            $strQRcodeIMG = PATH_QRCODES.$intUserID_DB.".png" ;
-            $strError = funct_Billing_GetQRCodeImage($strWalletAddress, $strQRcodeIMG ); //save img to disk
-
-            $strPostImgPath = PATH_POSTERS.$intUserID_DB.".png" ;
-            funct_CreateQRPoster($strQRcodeIMG, $strPostImgPath, $strWalletAddress); //add easy bits logo to image - simple image, php lib
-        }
-
-        //redirect to settings page
-        header( 'Location: '. PAGE_SETTINGS.'?error=Code sent to email' ); die(); //Make sure code after is not executed
 
     break;
+
+
+
+
+
+
 
 
 
@@ -482,7 +470,6 @@ switch ($strDo){
 					$strWalletAddress = funct_MakeWalletAddressUpdate($intUserID);
 				}
 
-
                 //send new email code on join
 				if(LOGIN_SENDEMAILCODE){ //update member record with new confirm code
 					//$query = "UPDATE ".TBL_USERS." SET emailcode='$intCode' WHERE id = $intNewRecordID " ;
@@ -540,7 +527,7 @@ switch ($strDo){
 
 		}//end if no errors
 
-		break;
+	break;
 
 
 
@@ -579,7 +566,7 @@ switch ($strDo){
 
 		}//end if username found
 
-		break;
+	break;
 
 
 
@@ -689,7 +676,7 @@ switch ($strDo){
 
 		}
 
-		break;
+	break;
 
 
 
@@ -757,7 +744,7 @@ switch ($strDo){
 		header( 'Location: '.PAGE_SIGNIN.'?error_forgot='.$errorMSG );
 		die();
 
-		break;
+	break;
 
 
 
@@ -774,14 +761,76 @@ switch ($strDo){
 		header( 'Location: /' );
 		die(); //Make sure code after is not executed
 
-		break;
+	break;
 
 
 
 	//!CASE errornotloggedin
 	case "errornotloggedin":
 		$ErrorMSG = "You must be a Member and logged in to access " . $_SERVER['HTTP_REFERER'];
-		break;
+	break;
+
+
+
+
+    /*
+     //for claiming coins sent via email - not tested
+     //!CASE claimcoins
+     case "claimcoins":
+     //let them claim their coins
+         $strEmail = 	funct_GetandCleanVariables($_POST['email']);
+         $strCode = 		funct_GetandCleanVariables($_POST['code']);
+
+         if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
+         if( $stmt = $DB_MYSQLI->prepare("SELECT user_id,user_email,address_email,status_id,status_msg,label,transaction_id_send,transaction_id_get FROM ".TBL_ESCROW." WHERE verify_code = ? ") ) {
+
+             $stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
+             $stmt -> execute(); //Execute it
+             mysqli_stmt_store_result($stmt);
+             $intTotalRowsFound = mysqli_stmt_num_rows($stmt);
+
+             $stmt -> bind_result($intUserID,$intUserEmail,$strEmailReceiver,$intStatusID,$strStatusMsg,$strLabel,$intTransactionID_send,$intTransactionID_get); //bind results
+             $stmt -> fetch(); //fetch the value
+
+             //echo "totalrows: $intTotalRowsFound <br>";
+             if($intTotalRowsFound<1){
+                 $strError = "Code not found";
+             }else{ //Email found so ...
+
+                 while ($stmt->fetch()){
+
+                     //if found then see if the email matches and
+                     if($strEmailReceiver!=$strEmail){
+                         $strError = "Email does not match. Admin Alerted";
+                     }
+
+                     //if status is zero then. Important!
+                     if($intStatusID>0){
+                         $strError = "Coins already Claimed. $strStatusMsg ";
+                     }
+
+                 }
+             }
+
+             $stmt -> close(); //Close statement
+         }else{
+             echo "Prepare failed: (" . $DB_MYSQLI->errno . ") " . $DB_MYSQLI->error;
+         }
+
+
+         //if it all checks out
+         if(!$strError){
+
+             //write cookie with the code for cashing in on the wallet page
+             setcookie("claimcode", $strCode, COOKIE_EXPIRE, COOKIE_PATH, COOKIE_DOMAIN);
+
+             //redirect them to signup.
+             header( 'Location: '. CODE_DO.'?do=join&email='.$strEmailReceiver ); die(); //Make sure code after is not executed
+
+         }
+
+     break;
+     */
 
 
 } //End Switch Statement

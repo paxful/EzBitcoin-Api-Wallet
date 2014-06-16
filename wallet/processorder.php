@@ -1,6 +1,5 @@
-<?php 
-//error_reporting(E_ERROR | E_PARSE);
-require "session.php";
+<?php
+require "inc/session.php";
 
 //get values from query string 
 $real_secret = 				funct_GetandCleanVariables($_GET['secret']); //this I entered into the blockchain wallet form

@@ -6,8 +6,7 @@ if($intDebugMode){
 	if(DEBUGMODE==2){ error_reporting(E_ERROR | E_WARNING | E_PARSE); }
 	if(DEBUGMODE==1){ error_reporting(E_ERROR | E_PARSE); }
 }else{
-	//error_reporting(0);// Turn off all error reporting
-	//error_reporting(E_ERROR | E_WARNING | E_PARSE);// Report simple running errors
+	error_reporting(0);// Turn off all error reporting
 }
 
 //protect against acunetix security scanner
@@ -21,12 +20,10 @@ session_start(); //Start Session before Constants.php to allow defining of sessi
 require "constants.php"; //calls server.php within
 require "functStrings.php"; //holds all custom string formatting functions
 require "functBilling.php"; //holds billing functions * should really only use as needed
-include $_SERVER['DOCUMENT_ROOT']."/inc/functmail.php"; //holds all email functions * use as needed
-include $_SERVER['DOCUMENT_ROOT']."/inc/password.php"; //holds all email functions * use as needed
-
-//include $_SERVER['DOCUMENT_ROOT']."/inc/jsonRPCClient.php"; //holds all custom string formatting functions
-//include $_SERVER['DOCUMENT_ROOT']."/inc/functdatabase.php"; //holds database functions, largely useless for now ?
-//include $_SERVER['DOCUMENT_ROOT']."/inc/functApps.php"; //holds all application shell call functions * BUG cmp3.php which is included in this writes out to the headers and disables writing of cookies.
+require "functmail.php"; //holds all email functions * use as needed
+require "password.php"; //holds all email functions * use as needed
+require "jsonRPCClient.php"; //calls server.php within
+require "funct_jsonrpc.php"; //allows site to connect directly to an rpc server
 
 
 $intUserID_fromcode = funct_GetUserIDfromUserCode(); //legacy fix to replace int with 48 char hash from cookie
