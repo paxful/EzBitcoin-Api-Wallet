@@ -24,7 +24,7 @@ define("QRSCANAPP_DROID_URL",               "https://play.google.com/store/apps/
 
 //##############################
 //Crypto API Server Settings
-define("WALLET_NEWADDRESS_HOST",            ""); // "blockchain.info" or "ezwallet" web api
+define("WALLET_NEWADDRESS_HOST",            ""); // "blockchain.info" or "ezwallet" web api can be used as their api is the same
 define("JSONRPC_API_MERCHANT_URL",          ""); //connecting to a web api via get/post which does the rpc calls for us
 define("JSONRPC_API_LOGIN",                 ""); //
 define("JSONRPC_API_PASSWORD",              ""); //
@@ -33,8 +33,8 @@ define("JSONRPC_CONNECTIONSTRING",          ""); //only needed if connecting dir
 
 //##############################
 //Billing Settings ... only used if you want to raise or lower btc rate
-define("RATE_HIKE_LUMP",                    0); //hike rate of crypto by this lump
-define("RATE_HIKE_PERCENT",                 0.0); //hike crypto rate by percentage 0.1= 10%
+define("RATE_HIKE_LUMP",                    0); //change rate of crypto by this lump
+define("RATE_HIKE_PERCENT",                 0.0); //change crypto rate by percentage 0.1= 10%
 define("RATE_MINIMUM_SELL",                 0); //rate never falls below
 define("RATE_RANDOMIZER_MAX",               0); // ex 800 - 0-24 800-824
 define("MININGFEE_FAST",                    0.001); //0.001
@@ -44,7 +44,7 @@ define("MININGFEE_SLOW",                    0.00001); //0.00001
 
 //##############################
 //!SECURITY Settings
-define("SECURITY_SENDOUTS_MUSTBE_APPROVED", "1");//an admin must approve all external sends sencrypto.php is where this check is /cp/que.php lists all in the que
+define("SECURITY_SENDOUTS_MUSTBE_APPROVED", "1");//an admin must approve all external sends table transactions_que is used to store these transactions.
 define("SECURITY_LOGIN_WAIT_SECONDS",       "5");//seconds to wait in between each login
 define("SECURITY_CAPCHACHECK",              "0");//force capcha check on or off signin NOT WORKING ON PRODUCTION.....
 define("SECURITY_CAPCHA_PUBLICKEY",         "6LfryPESAAAAANWZGkE8SnScmNFo2QQ4z5QKHP7k");//
@@ -52,8 +52,8 @@ define("SECURITY_CAPCHA_PRIVATEKEY",        "6LfryPESAAAAAIo0c7MapKAEbNjPIh2JPNG
 define("SECURITY_PASSWORD_LOOSE_LOGIN",     1); //allow them to login with verifyhash or literal password hash... insecure but done to allow legacy passwords
 define("SECURITY_WRITE_PASSWORD",           1); //write password to cookie file hashed
 define("SECURITY_ON_BLOCKCHAIN_ALLOWED",    0); //write password to cookie file hashed
-define("SECURITY_ADMIN_LOGIN",              "B1gT1m38dM1nz"); //write password to cookie file hashed
-define("SECURITY_ADMIN_PASSWORD",           "c01nc4f3!@#"); //write password to cookie file hashed
+define("SECURITY_ADMIN_LOGIN",              "adminlogin"); //write password to cookie file hashed
+define("SECURITY_ADMIN_PASSWORD",           "adminpassword"); //write password to cookie file hashed
 define("PASSWORD_ENCRYPT",                  "bcrypt"); //bcrypt 1
 
 
@@ -82,7 +82,6 @@ define("EMAIL_SMTPPASSWORD",                '');
 //##############################
 //Media & App Paths
 define("PATH_ADMIN",                        "/cp/");
-define("PATH_APPS",                         "/usr/local/bin/");
 define("__ROOT__",                          $_SERVER['DOCUMENT_ROOT']);
 define("PATH_MEDIA",                        "/media/");
 define("PATH_TEMP",                         "/media/temp/"); //not used...

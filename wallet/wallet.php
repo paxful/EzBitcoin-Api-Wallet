@@ -18,6 +18,9 @@ $strError_send = 				funct_GetandCleanVariables($_GET["error_send"]);
 $strWallet_Address_preload = 	funct_GetandCleanVariables($_GET["code"]);
 $strWallet_Address_preload2 = 	funct_GetandCleanVariables($_GET["qr"]);
 
+
+//#### Get the qr code , label and amount from qrcode scanning app
+
 if($strWallet_Address_preload2){ $strWallet_Address_preload = $strWallet_Address_preload2 ;}
 //$strWallet_Address_preload = "bitcoin:1Hwau6DA1dAfjhMtakhpkf6jgVmTSfTx5a?amount=0.008003&label=Pizza and Pint";
 
@@ -44,96 +47,56 @@ if($BIPSFormat){ //if BIPS format passed as address then
 	$intWallet_Label_preload = $label ;
 }
 
-
 $intLastMSGID = 0 ;
 
 
+//logged in users only
+if(! $intUserID1){ echo "login please"; die; }
 
-if($intUserID1){ 
 
-	//Get User Data from DataBase
-	$query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $intUserID1 ;
-	//echo "SQL STMNT = " . $query .  "<br>";
-	$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
-	$intUserID_db=						$row["id"];
-	$Password_db=						$row["password"];
-	$Email_db=							$row["email"];
-	$strName=							$row["first_name"]." ".$row["first_name"];
-	$strDate_PasswordChanged=			$row["date_passwordchanged"];
-	$intSendLocked=						$row["sendlocked"];
-	$intEmailConfirmed=					$row["verification_email"];
-	//echo "intEmailConfirmed= ".$intEmailConfirmed."<br>";
+//Get User Data from DataBase
+$query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $intUserID1 ;
+//echo "SQL STMNT = " . $query .  "<br>";
+$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+$intUserID_db=						$row["id"];
+$Password_db=						$row["password"];
+$Email_db=							$row["email"];
+$strName=							$row["first_name"]." ".$row["last_name"];
+$strDate_PasswordChanged=			$row["date_passwordchanged"];
+$intSendLocked=						$row["sendlocked"];
 
-	$intWalletReceiveOn = 				$row["wallet_receive_on"];
-	$strWalletLocation = 				$row["wallet_location"];
-	//echo "strWallet_Receive_Show= ".$strWallet_Receive_Show."<br>";
+$intEmailConfirmed=					$row["verification_email"];
+//echo "intEmailConfirmed= ".$intEmailConfirmed."<br>";
 
-    //Check if user's email is confirmed, then give them access to this page.
-    if(!$intEmailConfirmed){ 
-		//header( 'Location: '.PAGE_VERIFY."?do=confirmemail&error=Please verify your email to use your wallet." ); die();
-	}
-	
-	//$intBalance_USD=					$row["balance"]; //balance of dollars
-	$intBalance_BTC=					$row["balance_btc"]; //balance of BTC
-	$intBalance_BTC= number_format($intBalance_BTC,8) ;
-	
-	//get usd value of BTC - coindesk, gox, bitstamp
-	$intRate_BTC_USD = funct_Billing_GetRate("btc");
-	$intBalance_BTC_usd = $intBalance_BTC * $intRate_BTC_USD;
+//if email is not confirmed then show the confirm email form
+if(!$intEmailConfirmed){ $strShowEmailConfirmFlag=true ;}
 
-	$strWalletBTC=						$row["wallet_btc"]; //their wallet address legacy blockchain.info	
-	$strWallet_MainAddress_CC=			$row["wallet_address_cc"]; //amsterdam wallet address
-	$strHashBTC=						$row["btc_address"]; //address to forward all funds too..
-	
-	$strQRcodeIMG = PATH_QRCODES.$strWalletBTC.".png";
-	
-	
-	
-	//#####################################################################################
-	//WALLET AUTO REGENERATION ROUTINE
-	/*
-	we consider the following information in this routine
-	email confirmed flag, wallet actiaved flag, password changed flag
-	walletaddress (blockchain.info) walletaddress coincafe.co
-	*/
-	
-	if(!$intEmailConfirmed){ $strShowEmailConfirmFlag=true ;}
-	if($intEmailConfirmed AND (!$intWalletReceiveOn ) ){ $strWalletRequestFlag=true ;}
-	
-	//AUTO HEALING 
-	//if they should have a receive address yet don't then make them one
-	if($intEmailConfirmed AND $intWalletReceiveOn AND !$strWalletBTC){ 
-		
-		$strWalletBTC = funct_MakeWalletAddressUpdate($intUserID_db);
-		//function should update their main address wallet_btc in members table 
-		//thus this condition will not be met again
-	}
-	
-	if($intEmailConfirmed AND $intWalletReceiveOn AND ( $strWalletBTC OR $strWallet_MainAddress_CC ) ){ $strWalletShowReceiveAdddressFlag=true ;}
+$intWalletReceiveOn = 				$row["wallet_receive_on"];
+$intBalance_BTC= number_format($row["balance_btc"],8) ; //balance of BTC
 
-	
-	//set wallet id to the new wallet code
-	if($strWallet_MainAddress_CC AND $strWalletLocation=="amsterdam"){ $strWalletBTC = $strWallet_MainAddress_CC ;}
+$intRate_BTC_USD = funct_Billing_GetRate("btc"); //get usd value of BTC - coindesk, gox, bitstamp
+$intBalance_BTC_usd = $intBalance_BTC * $intRate_BTC_USD;
 
-	//if their qrcode image doesn't exist then create it again (legacy check from userid.png naming convention. now walletaddress.png)
-	if($strWalletShowReceiveAdddressFlag){
-		
-		//if no qr code image is detected then create one
-		if(!file_exists(__ROOT__.$strQRcodeIMG)){
-			$strError = funct_Billing_GetQRCodeImage($strWalletBTC, $strQRcodeIMG ); //save img to disk
-			//echo "no qr image.. writing file... $strError <br>";
-		}
-	}
-	
-	/* 
-	at the end we need to know if we should ask them to confirm their email
-	or if we should ask them to change their password & generate receiver address
-	or if we should should show them their receive address and show them qrcode image
-	*/
-	//#####################################################################################
+$strWallet_MainAddress=		    	$row["wallet_address"]; //bitcoin wallet address
+$strQRcodeIMG = PATH_QRCODES.$strWalletBTC.".png";
+
+
+//#####################################################################################
+//WALLET AUTO REGENERATION ROUTINE
+//if their qrcode image doesn't exist then create it again (/media/qrcode/walletaddress.png)
+if($strWalletShowReceiveAdddressFlag){
+
+    //if no qr code image is detected then create one
+    if(!file_exists(__ROOT__.$strQRcodeIMG)){
+        $strError = funct_Billing_GetQRCodeImage($strWalletBTC, $strQRcodeIMG ); //save img to disk
+        //echo "no qr image.. writing file... $strError <br>";
+    }
+}
+//#####################################################################################
 
 
 
+/*
 	//##########################################################
 	//process coin claims claimcode
 
@@ -240,15 +203,12 @@ if($intUserID1){
 			
 			//inform admin that the email system worked?
 			
-			
-			
+
 		}
 
-	}//end if cookie found
+	}//end process claim code
 	//##########################################################
-
-
-}//end if user id found
+*/
 
 
 //get current BTC rate
@@ -463,71 +423,67 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 	<!--SIDEBAR AREA LEFT-->
         <div class="small-12 medium-4 columns">
 			<div class="panel radius">
-<!--                RECEIVE MODULE-->
+
+
+
+
+
+
+<!-- ############################## RECEIVE MODULE -->
                 
                 <h4>My Wallet Address</h4>
+
 				<?php
-				//if email is not verified then show the please verify your email message
+				//if email is not verified then show the  verify your email form
 				if($strShowEmailConfirmFlag){
 				?>
-						<!-- BEGIN email verify AREA -->
-						<form data-abide action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
-							<div class="confirm_email">
-							    <h5>To activate your receive wallet address. Please check your email and click the confirmation link. <br>Tip: check your Spam folder.</h5>
-								<h3><?=$strError?></h3>
-								    <input name="emailcode" type="text" placeholder="enter your email code">
-								    <input name="do" type="hidden" value="confirmemailcode">
-									<span class="txtError"><?=$strError_confirmemail?></span>
-									<button type="submit">Confirm Email</button><br>
-									<?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>
-								<a href="<?=CODE_DO?>?do=sendemailcode">send code again to your email <?=$strEmail_DB?></a>
-							</div>
-						</form>
-						<!-- END email verify AREA -->
+                    <!-- BEGIN email verify AREA -->
+                    <form data-abide action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
+                        <div class="confirm_email">
+                            <h5>To activate your receive wallet address. Please check your email and click the confirmation link. <br>Tip: check your Spam folder.</h5>
+                            <h3><?=$strError?></h3>
+                                <input name="emailcode" type="text" placeholder="enter your email code">
+                                <input name="do" type="hidden" value="confirmemailcode">
+                                <span class="txtError"><?=$strError_confirmemail?></span>
+                                <button type="submit">Confirm Email</button><br>
+                                <?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>
+                            <a href="<?=CODE_DO?>?do=sendemailcode">send code again to your email <?=$strEmail_DB?></a>
+                        </div>
+                    </form>
+                    <!-- END email verify AREA -->
 				<?
 				}//end if email is not confirmed
-				
-				
-				//else if walleton flag is off then show the make wallet button
-				if($strWalletRequestFlag){ 
+
+				//show receive address and qr code image
+				if($strWallet_MainAddress){
 				?>
-						<!-- BEGIN email verify AREA -->
-						<form action="<?=CODE_DO?>?do=activatereceiveaddress" name="passwordupdate" method="POST">
-							<div class="confirm_email">
-
-		                        <script>
-								function validateForm_passwordupdate() {
-									//just autosubmit it
-									document.passwordupdate.submit();
-									}
-								</script>
-								<input name="do" type="hidden" value="activatereceiveaddress">
-								<!--<button type="submit"></button>--><br>
-								<a href="javascript:;" class="button" onClick="validateForm_passwordupdate();">Turn On my Receive Address Now</a><br>
-
-
-							</div>
-						</form>
-				
-				<?
-				}
-				
-				
-				
-				if($strWalletShowReceiveAdddressFlag){
-				?>
-				    <input name="wallethash" type="text" id="wallethash" value="<?=$strWalletBTC?>">
-					<script> $("#wallethash").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
+				    <input name="wallethash" type="text" id="wallethash" value="<?=$strWalletBTC?>"><script> $("#wallethash").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
 					<img src="<?=$strQRcodeIMG?>" />
 				<?php
-				}
+				}else{ //no btc wallet address in members table so
+
+                    //scan balances table for address
+
+
+                        //if address found then update members table with it
+
+
+                        //if no address then make them a new one
+
+                        //
+
+
+                }
 				?>
 				
             </div>
+<!-- ############################## END RECEIVE MODULE -->
+
+
+
+
             
-            
-            
-<!--        SEND MODULE-->
+<!-- ############################## SEND MODULE -->
 			<? if($intSendLocked){ ?>
 				Your sending privileges have been locked.... sorry please contact <?=SUPPORT_EMAIL?><br><br>
 			<? }else{ //show send code ?>
@@ -853,9 +809,15 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 								
 			
 			<? } ?>
-<!--            SEND MODULE END-->
+<!-- ############################## SEND MODULE END-->
 
         </div>
+
+
+
+
+
+
 
 	<!--MAIN-->
         <div class="small-12 medium-8 columns">

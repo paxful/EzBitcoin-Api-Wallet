@@ -1,5 +1,12 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+
+/* Bitcoind params */
+$config['jsonrpc_connectionstring'] = 'http://loginhere:passwordhere@ipaddresshere:8332';
+$config['bitcoind_is_debug_mode'] = false;
+$config['api_is_debug_mode'] = false;
+
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -361,7 +368,3 @@ $config['proxy_ips'] = '';
 /* End of file config.php */
 /* Location: ./application/config/config.php */
 
-/* Bitcoind params */
-$config['jsonrpc_connectionstring'] = 'http://61141261cRe2Epu0qOFU:L2iFnU14rf0r3v3r832W@37.58.86.163:8332';
-$config['bitcoind_is_debug_mode'] = false;
-$config['api_is_debug_mode'] = false;

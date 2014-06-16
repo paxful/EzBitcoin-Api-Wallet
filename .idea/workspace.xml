@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/readme.md" afterPath="$PROJECT_DIR$/readme.md" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/merchant/constants.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/merchant/functStrings.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/merchant/index.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/merchant/server.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/merchant/test.php" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/codeigniter/api/config/config.php" afterPath="$PROJECT_DIR$/codeigniter/api/config/config.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/inc/constants.php" afterPath="$PROJECT_DIR$/wallet/inc/constants.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wallet/wallet.php" afterPath="$PROJECT_DIR$/wallet/wallet.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
@@ -38,17 +46,31 @@
       <file leaf-file-name="constants.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wallet/inc/constants.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="123" column="27" selection-start="7262" selection-end="7262" vertical-scroll-proportion="0.0" vertical-offset="1845" max-vertical-offset="2610">
+            <state line="26" column="128" selection-start="1671" selection-end="1671" vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="2535">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wallet.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="wallet.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="48" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="15060">
-              <folding />
+            <state line="450" column="30" selection-start="16834" selection-end="16834" vertical-scroll-proportion="0.43125" vertical-offset="6405" max-vertical-offset="14490">
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#1;n#div#1;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#4;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#9;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#center#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#div#0;n#center#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,16 +87,16 @@
       <file leaf-file-name="functBilling.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wallet/inc/functBilling.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="132" column="0" selection-start="5469" selection-end="5469" vertical-scroll-proportion="-13.75" vertical-offset="1650" max-vertical-offset="6555">
+            <state line="132" column="0" selection-start="5469" selection-end="5469" vertical-scroll-proportion="0.0" vertical-offset="1650" max-vertical-offset="6555">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="readme.md" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="readme.md" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/readme.md">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="66" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.486692" vertical-offset="404" max-vertical-offset="945">
+            <state line="39" column="106" selection-start="1726" selection-end="1726" vertical-scroll-proportion="-7.24" vertical-offset="404" max-vertical-offset="945">
               <folding />
             </state>
           </provider>
@@ -131,12 +153,13 @@
         <option value="$PROJECT_DIR$/wallet/inc/index.php" />
         <option value="$PROJECT_DIR$/wallet/settings.php" />
         <option value="$PROJECT_DIR$/wallet/inc/session.php" />
-        <option value="$PROJECT_DIR$/wallet/wallet.php" />
         <option value="$PROJECT_DIR$/wallet/loadcontent.php" />
         <option value="$PROJECT_DIR$/wallet/do.php" />
-        <option value="$PROJECT_DIR$/wallet/inc/constants.php" />
         <option value="$PROJECT_DIR$/wallet/inc/functBilling.php" />
         <option value="$PROJECT_DIR$/readme.md" />
+        <option value="$PROJECT_DIR$/wallet/inc/constants.php" />
+        <option value="$PROJECT_DIR$/codeigniter/api/config/config.php" />
+        <option value="$PROJECT_DIR$/wallet/wallet.php" />
       </list>
     </option>
   </component>
@@ -145,7 +168,7 @@
     <option name="x" value="334" />
     <option name="y" value="22" />
     <option name="width" value="1346" />
-    <option name="height" value="665" />
+    <option name="height" value="938" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -173,16 +196,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="QuikBitAPI.com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -193,6 +206,16 @@
             <PATH_ELEMENT USER_OBJECT="EzAPI.com">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QuikBitAPI.com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -286,7 +309,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="334" y="22" width="1346" height="665" extended-state="0" />
+    <frame x="334" y="22" width="1346" height="938" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -344,7 +367,21 @@
     <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="48" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="15060">
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#1;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#9;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#center#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -381,18 +418,6 @@
         <state line="24" column="45" selection-start="795" selection-end="795" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1395" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="40" selection-start="1362" selection-end="1362" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="1410">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="11" selection-start="1870" selection-end="1870" vertical-scroll-proportion="0.0" vertical-offset="750" max-vertical-offset="10335" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
@@ -415,18 +440,6 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="28" selection-start="737" selection-end="737" vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="1350">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="23" selection-start="304" selection-end="304" vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="10395" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/sendcrypto.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8250" />
@@ -447,28 +460,6 @@
     <entry file="file://$PROJECT_DIR$/wallet/loadcontent.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7050" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/functStrings.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="48" selection-start="289" selection-end="289" vertical-scroll-proportion="0.2016129" vertical-offset="0" max-vertical-offset="744" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/server.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="611" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="54" selection-start="1116" selection-end="1157" vertical-scroll-proportion="0.41025642" vertical-offset="225" max-vertical-offset="1335">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="254" column="30" selection-start="10153" selection-end="10153" vertical-scroll-proportion="0.45411393" vertical-offset="3463" max-vertical-offset="10500" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/install/readme_secure_bitcoind.md">
@@ -486,11 +477,6 @@
         <state line="18" column="28" selection-start="501" selection-end="501" vertical-scroll-proportion="-0.5813953" vertical-offset="645" max-vertical-offset="2310">
           <folding />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/merchant/test.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="21" selection-start="586" selection-end="586" vertical-scroll-proportion="0.42121685" vertical-offset="0" max-vertical-offset="960" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/codeigniter/api/controllers/api.php">
@@ -616,13 +602,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="48" selection-start="262" selection-end="262" vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="15060">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/do.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="462" column="59" selection-start="21592" selection-end="21592" vertical-scroll-proportion="0.0" vertical-offset="6885" max-vertical-offset="12675">
@@ -630,24 +609,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wallet/inc/constants.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="123" column="27" selection-start="7262" selection-end="7262" vertical-scroll-proportion="0.0" vertical-offset="1845" max-vertical-offset="2610">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/inc/functBilling.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="132" column="0" selection-start="5469" selection-end="5469" vertical-scroll-proportion="-13.75" vertical-offset="1650" max-vertical-offset="6555">
+        <state line="132" column="0" selection-start="5469" selection-end="5469" vertical-scroll-proportion="0.0" vertical-offset="1650" max-vertical-offset="6555">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/readme.md">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="66" selection-start="2364" selection-end="2364" vertical-scroll-proportion="0.486692" vertical-offset="404" max-vertical-offset="945">
+        <state line="39" column="106" selection-start="1726" selection-end="1726" vertical-scroll-proportion="-7.24" vertical-offset="404" max-vertical-offset="945">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/inc/constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="128" selection-start="1671" selection-end="1671" vertical-scroll-proportion="-13.75" vertical-offset="0" max-vertical-offset="2535">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/codeigniter/api/config/config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="30" selection-start="263" selection-end="263" vertical-scroll-proportion="0.11070111" vertical-offset="0" max-vertical-offset="5640">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/codeigniter/api/config/constants.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="24" selection-start="905" selection-end="905" vertical-scroll-proportion="0.37269372" vertical-offset="42" max-vertical-offset="855">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wallet/wallet.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="450" column="30" selection-start="16834" selection-end="16834" vertical-scroll-proportion="0.43125" vertical-offset="6405" max-vertical-offset="14490">
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#0;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#1;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#1;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#div#0;n#div#2;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#strong#0;n#form#0;n#div#1;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#9;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#center#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#center#0;n#div#10;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
