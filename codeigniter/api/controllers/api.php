@@ -184,7 +184,7 @@ class Api extends CI_Controller {
 		try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $int_amount , $comment , $comment_to );
             if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, '', $comment);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, '', $comment, $this->log_id);
             }
 
         } catch (Exception $e) {
@@ -220,7 +220,7 @@ class Api extends CI_Controller {
         try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $int_amount , $comment , $comment_to );
             if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, $from_address = '', $comment);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, $from_address = '', $comment, $this->log_id);
             }
 
         } catch (Exception $e) {
@@ -306,48 +306,40 @@ class Api extends CI_Controller {
 
         $transaction_model = $this->Transaction_model->get_transaction_by_tx_id($tx_id);
 
-        // TODO make a log_id column here to relate this transaction to specific log
         // first callback, because no transaction initially found in db
         if (!$transaction_model) {
-            $this->Transaction_model->insert_new_transaction_from_callback($tx_id, $this->user->id, $this->method, TX_RECEIVE, $int_amount,
+            $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback($tx_id, $this->user->id, $this->method, TX_RECEIVE, $int_amount,
                 $this->crypto_type, $to_address, $address_from, $confirmations, $tx_info["txid"], $block_hash, $block_index, $block_time, $time,
-                $time_received, $category, $account_name, $int_new_balance);
+                $time_received, $category, $account_name, $int_new_balance, $this->log_id
+            );
 
-                $address_total_received = $address_model->crypto_totalreceived + $int_amount;
-                $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
+            $address_total_received = $address_model->crypto_totalreceived + $int_amount;
+            $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
+            $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
         } else {
             // bitcoind sent 2nd callback for the transaction which is 6th confirmation
-            $this->Transaction_model($$transaction_model->id, $confirmations);
+            $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
         }
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
+        // mind the secret here, that app has to verify that it is coming from the API server not somebody else
+        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->apipassword."&transaction_hash=".$tx_id."&address=".$to_address."&value=".$int_amount."&confirms=".$confirmations;
+        $app_response = file_get_contents($full_callback_url);
 
-//        $app_response = $this->user->callbackurl."?secret=$strSecret&transaction_hash=$strTransactionID&address=$strAddress&input_address=$strAddress&userid=$strLabel2&value=$intAmount&confirms=$intConfirmations&server=amsterdam";
-//        $app_response_json = file_get_contents($app_response);
-//        $json_feed = json_decode($app_response_json);
-//        $strCallbackResponse = $app_response_json;
-//
-//        $strReturnError = $strCallbackResponse ;
-//        //CATCH ERROR AND EMAIL
-//
-//        if($strCallbackResponse=="*ok*"){
-//            $strSQL2 = " , callback_status=1 ";
-//        }
-//
-//        //if we get back an *ok* from the script then update the transations tbl status
-//        $query="UPDATE " . $tbl_Transactions . " SET response_callback='".$strCallbackResponse."' , callback_url='$json_url' $strSQL2 WHERE txid='".$strTransactionID."'" ;
-//        if($strDebug){ echo "SQL STMNT = " . $query .  "<br>"; }
-//        mysqli_query($DB_LINK, $query)  or funct_die_and_Report(mysqli_error($DB_LINK), "Error updating transaction response.  Admin has been informed", "$strQueryString \n $query \n error= $strReturnError ", $strERRORPage, $intNewLogID) ;
-//
-//        //if we do not get back an ok we need some method of
-//        //hitting the callback url over and over until we get an *ok* how?
-//
-//        if(RETURN_OUTPUTTYPE=="json"){
-//        echo json_encode(array( 'confirmations'=>"$intConfirmations", 'address'=>"$strAddress", 'amount'=>"$intAmount", 'txid'=>"$strTransactionID", 'callback_url'=>"$json_url", 'error'=>"$strReturnError" ));
-//        }else{
-//            echo $strReturnError ; //die;
-//        }
+        $callback_status = null;
+        if($app_response == "OK") {
+            $callback_status = 1;
+        }
 
+        //if we get back an OK from the script then update the transactions status
+        $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
+
+        if (RETURN_OUTPUTTYPE == "json") {
+            echo json_encode(array(
+                'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $int_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+        } else {
+            echo $app_response ;
+        }
     }
 
     private function is_authenticated() {
