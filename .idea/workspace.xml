@@ -67,7 +67,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="0" selection-start="3108" selection-end="3108" vertical-scroll-proportion="0.5081967" vertical-offset="1142" max-vertical-offset="3675">
+            <state line="163" column="17" selection-start="5472" selection-end="5472" vertical-scroll-proportion="0.73770493" vertical-offset="1860" max-vertical-offset="4080">
               <folding />
             </state>
           </provider>
@@ -202,24 +202,6 @@
         <subPane subId="Project Files">
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="EzAPI.com">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="EzAPI.com">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="install">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
@@ -663,7 +645,7 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="0" selection-start="3108" selection-end="3108" vertical-scroll-proportion="0.5081967" vertical-offset="1142" max-vertical-offset="3675">
+        <state line="163" column="17" selection-start="5472" selection-end="5472" vertical-scroll-proportion="0.73770493" vertical-offset="1860" max-vertical-offset="4080">
           <folding />
         </state>
       </provider>

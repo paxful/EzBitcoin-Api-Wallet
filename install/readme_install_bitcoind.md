@@ -17,12 +17,33 @@ Ubuntu PPA's can be from an untrusted source be careful and check the site. Curr
 ### install via source on linux CentOS etc...
 Will usually install to /root/.bitcoin but you can move it elsewhere as long as you update the path
 
+If you are on Ubuntu or Debain and want to install from source then first upgrade apt-get and then install the dependancies.
+
+    sudo apt-get update
+    sudo apt-get upgrade -y
     sudo apt-get install -y git-core build-essential libssl-dev libboost-all-dev libdb++-dev libgtk2.0-dev
+
+For CentOS etc... the above may have to be fetched with [Yum](http://www.tecmint.com/20-linux-yum-yellowdog-updater-modified-commands-for-package-mangement/)
+
+    yum update
+    yum -y install git libssl
+
     git clone https://github.com/bitcoin/bitcoin.git
+    cd bitcoin
     git checkout v0.9.2
     cd /root && mv /root/.bitcoin/bitcoin /root/ && cd bitcoin
     ./autogen.sh && ./configure --with-gui=no && make
-    pico bitcoin.conf
+
+if the above command doesn't work, ubuntu 14.0 then run the below commands to install missing dependancies for autoconf
+
+    sudo apt-get install build-essential
+    sudo apt-get install libtool autotools-dev autoconf
+    sudo apt-get install libssl-dev
+
+If it complains about an incompatible version of berkley db then run this line to ignore it
+
+    ./autogen.sh && ./configure --with-gui=no --with-incompatible-bdb && make
+
 
 
 
@@ -85,7 +106,7 @@ notify email of failures stops etc
 save file with alt-o and exit with alt-w in pico
 
 
-### IMPORTANT:  Being notified when funds arrive - **This is the part that no one has any idea how to do** *Let my people go*
+### IMPORTANT:  Being notified when funds arrive - **This is the part that no one has any idea how to do
 Create a bash script that runs everytime an address on bitcoind gets funds.
 
     touch /root/.bitcoin/walletnotify_btc.sh
@@ -97,11 +118,9 @@ Add the following to the file bash script . writes out logfile with date and cal
     F=/home/walletnotify_btc_transaction_log
     D=`date +"%Y%m%d%H%M%S"`
     echo ${D} - ${1} >> ${F}
-
-Calls a url with a script, can be local or remote. below url is on the local box. change it to where ever you install the API server site.
-
     curl 'http://127.0.0.1/walletnotify.php?transactionhash='%s
 
+Calls a url with a script, can be local or remote. below url is on the local box. change it to where ever you install the API server site.
 
 
 
@@ -125,6 +144,10 @@ Assign ownership of bitcoind files to new user
     chown -R cryptomanager:cryptomanager /opt/bitcoin-0.9.2/
 
 
+Open Bitcoind Ports. Bitcoin uses ports 8332 and 8333 on TCP IP and UDP.
+If your host has them closed then be certain to open them and if you have a firewall installed be certain that it allows those ports incoming and outgoing on both TCPIP and UDP
+
+
 
 ### Run BitcoinD -
 BitcoinD will now begin download the block chain files which can take over a day. Will be sluggish and unresponsive during this time as it will be downloading 20+ gigs of the blockchain files, just wait or copy them from elsewhere
@@ -135,6 +158,10 @@ BitcoinD will now begin download the block chain files which can take over a day
 Optional - For faster install copy blockchain files new install. You must have these files from a previous install. takes days otherwise
 
     cp -av /root/.bitcoin/blocks /opt/bitcoin-0.9.2/blocks/
+
+Once all .dat files are copied over run bitcoind with the -rescan command to verify the blockchain files
+
+    bitcoind -rescan
 
 Test install - should see 0.000000
 
