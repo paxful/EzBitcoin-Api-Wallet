@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="73c6f603-e7d7-40eb-8e1a-aa0b75f8b892" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/install/readme_install_bitcoind.md" afterPath="$PROJECT_DIR$/install/readme_install_bitcoind.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="QuikBitAPI.com.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -68,7 +67,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="35" selection-start="1162" selection-end="1162" vertical-scroll-proportion="0.58638084" vertical-offset="0" max-vertical-offset="3210">
+            <state line="233" column="25" selection-start="6549" selection-end="6549" vertical-scroll-proportion="4.407314" vertical-offset="0" max-vertical-offset="3735">
               <folding />
             </state>
           </provider>
@@ -664,7 +663,7 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="35" selection-start="1162" selection-end="1162" vertical-scroll-proportion="0.58638084" vertical-offset="0" max-vertical-offset="3210">
+        <state line="233" column="25" selection-start="6549" selection-end="6549" vertical-scroll-proportion="4.407314" vertical-offset="0" max-vertical-offset="3735">
           <folding />
         </state>
       </provider>
