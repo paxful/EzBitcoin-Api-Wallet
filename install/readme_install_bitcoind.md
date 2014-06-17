@@ -177,45 +177,41 @@ May have to do in folder -> sudo update-rc.d runbitcoind defaults
 
 
 
-**To Do**
-Need a cron job to encrypt and backup the wallet.dat file, via email, ftp etc....
-
-Read security guide to secure the server
+# **To Do**
+*Need a cron job to encrypt and backup the wallet.dat file, via email, ftp etc....
 
 
 
 
 
-### If you mess things up...
 
-delete all files recursive in directory
+## If you mess things up...
+
+### delete all files recursive in directory
 
     rm -rf ./bitcoin
 
 
+## Common commands guide for basic bitcoind administration
 
-
-
-### Common commands guide for basic bitcoind administration
-
-# see if bitcoind is running
+### see if bitcoind is running
 
     ps ax | grep bitcoin | grep -v grep
 
-#get process info of pid.
+###get process info of pid.
 
     top -p 10622
 
-#kill process
+###kill process
 
     sudo pkill -9 -f bitcoind
     sudo bitcoind -deamon
 
-#To get a list of accounts on the system, execute bitcoind
+###To get a list of accounts on the system, execute bitcoind
 
     bitcoind listreceivedbyaddress 0 true
 
-#get a list of transactions
+###get a list of transactions
 
     bitcoind listtransactions
 

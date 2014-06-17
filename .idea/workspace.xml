@@ -67,7 +67,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="233" column="25" selection-start="6549" selection-end="6549" vertical-scroll-proportion="4.407314" vertical-offset="0" max-vertical-offset="3735">
+            <state line="103" column="0" selection-start="3108" selection-end="3108" vertical-scroll-proportion="0.5081967" vertical-offset="1142" max-vertical-offset="3675">
               <folding />
             </state>
           </provider>
@@ -88,7 +88,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="106" selection-start="1726" selection-end="1726" vertical-scroll-proportion="0.0" vertical-offset="404" max-vertical-offset="945">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="945">
               <folding />
             </state>
           </provider>
@@ -620,16 +620,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/readme.md">
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="106" selection-start="1726" selection-end="1726" vertical-scroll-proportion="0.0" vertical-offset="404" max-vertical-offset="945">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wallet/inc/functBilling.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="132" column="0" selection-start="5469" selection-end="5469" vertical-scroll-proportion="0.0" vertical-offset="1980" max-vertical-offset="6555">
@@ -658,12 +648,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/readme.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="945">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/install/readme_install_bitcoind.md">
       <provider editor-type-id="MarkdownPreviewEditor">
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="233" column="25" selection-start="6549" selection-end="6549" vertical-scroll-proportion="4.407314" vertical-offset="0" max-vertical-offset="3735">
+        <state line="103" column="0" selection-start="3108" selection-end="3108" vertical-scroll-proportion="0.5081967" vertical-offset="1142" max-vertical-offset="3675">
           <folding />
         </state>
       </provider>
