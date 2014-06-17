@@ -4,8 +4,8 @@ BitcoinD Ubuntu Linux Install Guide
 
 
 ### install on Ubuntu via PPA
-Ubuntu PPA's can be from an untrusted source be careful and check the site
-    sudo aptitude install python-software-properties
+Ubuntu PPA's can be from an untrusted source be careful and check the site. Currently only BlueMatt updates the bitcoin Core PPA
+    sudo apt-get install software-properties-common python-software-properties
     sudo add-apt-repository ppa:bitcoin/bitcoin
     sudo aptitude update
     sudo aptitude install bitcoind
@@ -15,9 +15,9 @@ Ubuntu PPA's can be from an untrusted source be careful and check the site
 
 ### install via source on linux CentOS etc...
 Will usually install to /root/.bitcoin but you can move it elsewhere as long as you update the path
-    sudo apt-get install -y git-core build-essential libssl-dev libboost-all-dev libdb4.8-dev libdb4.8++-dev libgtk2.0-dev
+    sudo apt-get install -y git-core build-essential libssl-dev libboost-all-dev libdb++-dev libgtk2.0-dev
     git clone https://github.com/bitcoin/bitcoin.git
-    git checkout v0.9.0
+    git checkout v0.9.2
     cd /root && mv /root/.bitcoin/bitcoin /root/ && cd bitcoin
     ./autogen.sh && ./configure --with-gui=no && make
     pico bitcoin.conf
