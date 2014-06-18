@@ -39,10 +39,10 @@ Install Guide
 -----
 Our goal with this is to introduce bitcoin developement to a whole new class of developers. Thus we have prepared step by step documentation to guide even the greenest newb through the once occulted bitcoin server install process.
 
-* <a href="blob/master/install/readme_installbitcoind.md">Installing and Configuring BitcoinD step by step tutorial</a>
-* <a href="blob/master/install/readme_securebitcoind.md">How to Secure your BitcoinD server step by step tutorial</a>
-* <a href="blob/master/install/db_api.sql.md">API Database .SQL file</a>
-* <a href="blob/master/install/db_wallet.sql.md">Wallet Database .SQL file</a>
+* <a href="install/readme_install_bitcoind.md">Installing and Configuring BitcoinD step by step tutorial</a>
+* <a href="install/readme_secure_bitcoind.md">How to Secure your BitcoinD server step by step tutorial</a>
+* <a href="install/db_api.sql.md">API Database .SQL file</a>
+* <a href="install/db_wallet.sql.md">Wallet Database .SQL file</a>
 * <a href="/merchant/test.php">Merchant API demo</a>
 * <a href="/wallet/">Wallet demo</a> currently serving over 40,000 users
 
