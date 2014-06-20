@@ -6,3 +6,7 @@
 .idea/workspace.xml
 
 .idea/workspace.xml
+
+codeigniter/api/config/database.php
+
+codeigniter/api/config/config.php
