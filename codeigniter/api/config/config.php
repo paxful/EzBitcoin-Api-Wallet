@@ -2,7 +2,7 @@
 
 
 /* Bitcoind params */
-$config['jsonrpc_connectionstring'] = 'http://loginhere:passwordhere@ipaddresshere:8332';
+$config['jsonrpc_connectionstring'] = 'http://username:password@server:8332';
 $config['bitcoind_is_debug_mode'] = false;
 $config['api_is_debug_mode'] = false;
 
@@ -33,7 +33,7 @@ $config['base_url']	= '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
