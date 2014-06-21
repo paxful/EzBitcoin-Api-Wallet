@@ -102,4 +102,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `lastactivity` datetime DEFAULT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2;
+
+INSERT INTO `users` (`id`, `apikey`, `apipassword`, `email`, `name`, `callbackurl`, `lastactivity`, `created`) VALUES
+(1, '0bb611895b9232310c3c4fb82d72bfb7', '98b5ee46205e3d64433166490c5b5e84', 'email@example.com', 'Test User 1', NULL, NULL, '2014-06-14 19:08:52');

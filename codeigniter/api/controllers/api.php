@@ -31,6 +31,7 @@ class Api extends CI_Controller {
                 $balance = $this->jsonrpcclient->getbalance();
             }
             echo $balance;
+            $this->update_log_response_msg($this->log_id, $balance);
         } catch (Exception $e) {
             echo json_encode(array( 'error' => $e->getMessage()));
         }
@@ -77,7 +78,9 @@ class Api extends CI_Controller {
             if($this->config->item('api_is_debug_mode')) {
                 echo nl2br($new) . "\n";
             }
-            echo "valid";
+            $response = "valid";
+            echo $response;
+            $this->update_log_response_msg($this->log_id, $response);
 
         } catch (Exception $e) {
             $this->update_log_response_msg($this->log_id, $e->getMessage());
@@ -120,11 +123,15 @@ class Api extends CI_Controller {
         }
 
         //return error will be wallet address if it works
-        if(RETURN_OUTPUTTYPE == "json"){
-            echo json_encode(array( 'isvalid' => $intIsValid, 'address' => $address, 'ismine' => $intIsMine ));
+        $response = null;
+        if(RETURN_OUTPUTTYPE == "json") {
+            $response = json_encode(array( 'isvalid' => $intIsValid, 'address' => $address, 'ismine' => $intIsMine ));
+            echo $response;
         } else {
-            echo "$intIsValid|$address|$intIsMine" ;
+            $response = "$intIsValid|$address|$intIsMine";
+            echo $response;
         }
+        $this->update_log_response_msg($this->log_id, $response);
     }
 
     /**
@@ -142,7 +149,9 @@ class Api extends CI_Controller {
         try {
             $new_wallet_addres = $this->jsonrpcclient->getnewaddress();
 
-            $this->Log_model->insert_new_address($this->user->id, $new_wallet_addres, $this->crypto_type);
+            $this->load->model('Address_model', '', TRUE);
+
+            $this->Address_model->insert_new_address($this->user->id, $new_wallet_addres, $this->crypto_type);
         } catch (Exception $e) {
             echo json_encode(array( 'error' => $e->getMessage()));
             $this->update_log_response_msg($this->log_id, $e->getMessage());
@@ -150,11 +159,15 @@ class Api extends CI_Controller {
         }
 
         //return error will be wallet address if it works
-        if(RETURN_OUTPUTTYPE=="json"){
-            echo json_encode(array( 'address' => $new_wallet_addres));
+        $response = null;
+        if(RETURN_OUTPUTTYPE=="json") {
+            $response = json_encode(array( 'address' => $new_wallet_addres));
+            echo $response;
         } else {
-            echo $new_wallet_addres;
+            $response = $new_wallet_addres;
+            echo $response;
         }
+        $this->update_log_response_msg($this->log_id, $response);
     }
 
     /**
@@ -178,13 +191,10 @@ class Api extends CI_Controller {
 
         $this->load->model('Transaction_model', '', TRUE);
 
-		//Request error: -1 - value is type str, expected real
-		$int_amount = (float)$amount;
-
 		try{
-            $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $int_amount , $comment , $comment_to );
+            $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , (float)$amount , $comment , $comment_to );
             if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, '', $comment, $this->log_id);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, (float)$amount, $this->crypto_type, $to_address, '', $comment, $this->log_id);
             }
 
         } catch (Exception $e) {
@@ -194,11 +204,15 @@ class Api extends CI_Controller {
         }
 
 		//return will be wallet address if it works
+        $response = null;
 		if (RETURN_OUTPUTTYPE=="json") {
-            echo json_encode(array( 'message' => "transaction successful", 'tx_hash' => $tx_id));
+            $response = json_encode(array( 'message' => "transaction successful", 'tx_hash' => $tx_id));
+            echo $response;
         } else {
-            echo $tx_id;
+            $response = $tx_id;
+            echo $response;
         }
+        $this->update_log_response_msg($this->log_id, $response);
     }
 
     public function sendfrom_toaddress($from_address = '', $to_address = '', $amount = '', $comment = '', $comment_to = '') {
@@ -214,13 +228,10 @@ class Api extends CI_Controller {
 
         $this->load->model('Transaction_model', '', TRUE);
 
-        //Request error: -1 - value is type str, expected real
-        $int_amount = (float)$amount;
-
         try{
-            $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $int_amount , $comment , $comment_to );
+            $tx_id = $this->jsonrpcclient->sendfrom( $from_address, $to_address , (float)$amount , $comment , $comment_to );
             if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $int_amount, $this->crypto_type, $to_address, $from_address = '', $comment, $this->log_id);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, (float)amount, $this->crypto_type, $to_address, $from_address = '', $comment, $this->log_id);
             }
 
         } catch (Exception $e) {
@@ -334,12 +345,16 @@ class Api extends CI_Controller {
         //if we get back an OK from the script then update the transactions status
         $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
 
+        $response = null;
         if (RETURN_OUTPUTTYPE == "json") {
-            echo json_encode(array(
+            $response = json_encode(array(
                 'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $int_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+            echo $response;
         } else {
-            echo $app_response ;
+            $response = $app_response;
+            echo $response;
         }
+        $this->update_log_response_msg($this->log_id, $response);
     }
 
     private function is_authenticated() {
