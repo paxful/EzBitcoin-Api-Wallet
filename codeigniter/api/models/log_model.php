@@ -11,8 +11,8 @@ class Log_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    public function update_log_after_user_validation($log_id, $apikey, $response) {
-        $this->db->update('logs', array('apikey' => $apikey, 'response' => $response), array('id' => $log_id));
+    public function update_log_after_user_validation($log_id, $guid, $response) {
+        $this->db->update('logs', array('guid' => $guid, 'response' => $response), array('id' => $log_id));
     }
 
     public function update_log_response($log_id, $response) {

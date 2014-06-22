@@ -6,42 +6,82 @@ class Api extends CI_Controller {
     private $user;
     private $method;
     private $crypto_type = 'BTC';
+    private $jsonrpc_debug;
 
     public function __construct()
     {
         parent::__construct();
         $jsonrpc_conn_string = $this->config->item('jsonrpc_connectionstring');
-        $jsonrpc_debug = $this->config->item('bitcoind_is_debug_mode');
-        $this->load->library('jsonrpcclient', array('url' => $jsonrpc_conn_string, 'debug' => $jsonrpc_debug));
+        $this->jsonrpc_debug = $this->config->item('bitcoind_is_debug_mode');
+        $this->load->library('jsonrpcclient', array('url' => $jsonrpc_conn_string, 'debug' => $this->jsonrpc_debug));
 
         $this->load->library('user_agent');
         $this->load->model('Log_model', '', TRUE); // load up log model to log all requests
         $this->load->model('User_model', '', TRUE); // load up user model
+        $this->load->model('Address_model', '', TRUE);
+
+        if ($this->input->get('debug') or $this->jsonrpc_debug == true) {
+            echo "URI segment: ".$this->uri->uri_string()."<br />";
+            echo "Controller: ".$this->uri->segment(1).", GUID: ".$this->uri->segment(2).", method: ".$this->uri->segment(3)."<br />";
+        }
     }
 
 	public function index() {
 		$this->load->view('welcome_message');
 	}
 
-    public function balance($account = '') {
+    public function balance() {
+        if (!$this->is_authenticated()) {
+            return;
+        }
+
+        $user_info = $this->User_model->get_user_balance($this->user->id, $this->crypto_type);
+        $response = null;
+
+        if ($user_info) {
+            $response = json_encode(array('balance' => $user_info->balance, 'crypto_type' => $this->crypto_type));
+            echo $response;
+        } else {
+            $response = json_encode(array('error' => 'balance not found for crypto type '.$this->crypto_type));
+            echo $response;
+        }
+        echo $response;
+        $this->update_log_response_msg($this->log_id, $response);
+    }
+
+    public function address_balance() {
+        if (!$this->is_authenticated()) {
+            return;
+        }
+
+        $address = $this->input->get('address');
+        $confirmations = $this->input->get('confirmations');
+        if (!$confirmations) {
+            $confirmations = 0;
+        }
+
         try {
-            if ($account) {
-                $balance = $this->jsonrpcclient->getbalance($account);
+            if ($address) {
+                $balance = $this->jsonrpcclient->getreceivedbyaddress($address, $confirmations);
             } else {
+                // TODO query user db for his all adresses total
                 $balance = $this->jsonrpcclient->getbalance();
             }
-            echo $balance;
+            // TODO convert to satoshis, check how to know total received
+            echo json_encode(array('balance' => $balance, 'address' => $address, 'total_received' => $balance));
             $this->update_log_response_msg($this->log_id, $balance);
         } catch (Exception $e) {
             echo json_encode(array( 'error' => $e->getMessage()));
         }
     }
 
-    public function validate_transaction($tx_id = '') {
+    public function validate_transaction() {
 
         if (!$this->is_authenticated()) {
             return;
         }
+
+        $tx_id = $this->input->get('txid');
         if(!$tx_id){
             echo json_encode(array( 'error' => NO_TX_ID));
             $this->update_log_response_msg($this->log_id, NO_TX_ID);
@@ -75,7 +115,7 @@ class Api extends CI_Controller {
                 ."\n amount: ".$tx_info["details"][0]["amount"]
                 ."\n"
             ;
-            if($this->config->item('api_is_debug_mode')) {
+            if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
                 echo nl2br($new) . "\n";
             }
             $response = "valid";
@@ -88,11 +128,12 @@ class Api extends CI_Controller {
         }
     }
 
-    public function validate_address($address = '') {
+    public function validate_address() {
 
         if (!$this->is_authenticated()) {
             return;
         }
+        $address = $this->input->get('address');
         if(!$address){
             echo json_encode(array( 'error' => NO_ADDRESS));
             $this->update_log_response_msg($this->log_id, NO_ADDRESS);
@@ -107,51 +148,50 @@ class Api extends CI_Controller {
             return;
         }
 
-        $intIsValid = $address_valid["isvalid"];
-        if (!$intIsValid) {
+        $is_valid = $address_valid["isvalid"];
+        if (!$is_valid) {
             echo json_encode(array( 'error' => INVALID_ADDRESS));
             $this->update_log_response_msg($this->log_id, INVALID_ADDRESS);
             return;
         }
 
         $address = $address_valid["address"];
-        $intIsMine = $address_valid["ismine"];
+//        $is_mine = $address_valid["ismine"]; // this is for all users of the API inside bitcoind
+        $is_mine = false;
 
+        $user_address = $this->Address_model->get_address_for_user($address, $this->user->id);
         //return the address is the bitcoind and the current merchant owns the address
-        if($intIsMine AND $address){
-            // TODO get stuff from db
+        if($user_address){
+            $is_mine = true;
         }
 
-        //return error will be wallet address if it works
         $response = null;
         if(RETURN_OUTPUTTYPE == "json") {
-            $response = json_encode(array( 'isvalid' => $intIsValid, 'address' => $address, 'ismine' => $intIsMine ));
+            $response = json_encode(array( 'isvalid' => $is_valid, 'address' => $address, 'ismine' => $is_mine ));
             echo $response;
         } else {
-            $response = "$intIsValid|$address|$intIsMine";
+            $response = "$is_valid|$address|$is_mine";
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);
     }
 
-    /**
-     * create new address in blockchain
-     */
     public function new_address() {
 
         if (!$this->is_authenticated()) {
             return;
         }
 
-        // TODO add labels specific to the app
-
         $this->load->model('User_model', '', TRUE);
         try {
             $new_wallet_addres = $this->jsonrpcclient->getnewaddress();
 
-            $this->load->model('Address_model', '', TRUE);
+            $label = $this->input->get('label');
+            if (!$label) {
+                $label = '';
+            }
 
-            $this->Address_model->insert_new_address($this->user->id, $new_wallet_addres, $this->crypto_type);
+            $this->Address_model->insert_new_address($this->user->id, $new_wallet_addres, $label, $this->crypto_type);
         } catch (Exception $e) {
             echo json_encode(array( 'error' => $e->getMessage()));
             $this->update_log_response_msg($this->log_id, $e->getMessage());
@@ -161,7 +201,7 @@ class Api extends CI_Controller {
         //return error will be wallet address if it works
         $response = null;
         if(RETURN_OUTPUTTYPE=="json") {
-            $response = json_encode(array( 'address' => $new_wallet_addres));
+            $response = json_encode(array( 'address' => $new_wallet_addres, 'label' => $label));
             echo $response;
         } else {
             $response = $new_wallet_addres;
@@ -177,10 +217,20 @@ class Api extends CI_Controller {
      * @param string $comment
      * @param string $comment_to
      */
-    public function sendtoaddress($to_address = '', $amount = '', $comment = '', $comment_to = '') {
+    public function payment() {
 
         if (!$this->is_authenticated()) {
             return;
+        }
+
+        $to_address =  $this->input->get('to');
+        $amount =   $this->input->get('amount');
+        $fee =      $this->input->get('fee');
+        $note =     $this->input->get('note');
+        $cryptotype = $this->input->get('cryptotype');
+
+        if (!$note) {
+            $note = '';
         }
 
         if (empty($to_address) or empty($amount)) {
@@ -189,12 +239,24 @@ class Api extends CI_Controller {
             return;
         }
 
-        $this->load->model('Transaction_model', '', TRUE);
+        $this->db->trans_start();
+        $user_balance = $this->User_model->get_user_balance($this->user->id);
+        if ($user_balance->balance < $amount) {
+            echo json_encode(array('error' => NO_FUNDS));
+            return;
+        }
 
+        $this->load->model('Transaction_model', '', TRUE);
+        $this->load->model('Balance_model', '', TRUE);
+
+        $new_balance = $user_balance->balance - $amount;
+        $this->Balance_model->update_user_balance($new_balance, $this->user->id);
+
+        $bitcoin_amount = (float) ($amount / SATOSHIS_FRACTION);
 		try{
-            $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , (float)$amount , $comment , $comment_to );
-            if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, (float)$amount, $this->crypto_type, $to_address, '', $comment, $this->log_id);
+            $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
+            if ($tx_id) {
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $bitcoin_amount, $this->crypto_type, $to_address, '', $note, $this->log_id);
             }
 
         } catch (Exception $e) {
@@ -202,50 +264,18 @@ class Api extends CI_Controller {
             $this->update_log_response_msg($this->log_id, $e->getMessage());
             return;
         }
+        $this->db->trans_complete();
 
-		//return will be wallet address if it works
         $response = null;
+        $message = 'Sent ' . $bitcoin_amount . ' ' . $cryptotype. ' to ' . $to_address;
 		if (RETURN_OUTPUTTYPE=="json") {
-            $response = json_encode(array( 'message' => "transaction successful", 'tx_hash' => $tx_id));
+            $response = json_encode(array( 'message' => $message, 'tx_hash' => $tx_id));
             echo $response;
         } else {
-            $response = $tx_id;
+            $response = $message.'|'.$tx_id;
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);
-    }
-
-    public function sendfrom_toaddress($from_address = '', $to_address = '', $amount = '', $comment = '', $comment_to = '') {
-        if (!$this->is_authenticated()) {
-            return;
-        }
-
-        if (empty($from_address) or empty($to_address) or empty($amount)) {
-            echo ADDRESS_AMOUNT_NOT_SPECIFIED;
-            $this->update_log_response_msg($this->log_id, ADDRESS_AMOUNT_NOT_SPECIFIED);
-            return;
-        }
-
-        $this->load->model('Transaction_model', '', TRUE);
-
-        try{
-            $tx_id = $this->jsonrpcclient->sendfrom( $from_address, $to_address , (float)$amount , $comment , $comment_to );
-            if($tx_id){
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, (float)amount, $this->crypto_type, $to_address, $from_address = '', $comment, $this->log_id);
-            }
-
-        } catch (Exception $e) {
-            echo json_encode(array( 'error' => $e->getMessage()));
-            $this->update_log_response_msg($this->log_id, $e->getMessage());
-            return;
-        }
-
-        //return will be wallet address if it works
-        if (RETURN_OUTPUTTYPE=="json") {
-            echo json_encode(array( 'message' => "transaction successful", 'tx_hash' => $tx_id));
-        } else {
-            echo $tx_id;
-        }
     }
 
     public function callback() {
@@ -305,11 +335,10 @@ class Api extends CI_Controller {
             ."\n amount: ".$tx_info["details"][0]["amount"]
             ."\n fee: ".$tx_info["details"][0]["fee"]  // According to https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list, fee is returned, but it doesn't seem that way here
         ;
-        if($this->config->item('api_is_debug_mode')) {
+        if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
             echo nl2br($new)."<br>";
         }
 
-        $this->load->model('Address_model', '', TRUE);
         $this->load->model('Transaction_model', '', TRUE);
         $address_model = $this->Address_model->get_address($to_address);
 
@@ -334,7 +363,7 @@ class Api extends CI_Controller {
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->apipassword."&transaction_hash=".$tx_id."&address=".$to_address."&value=".$int_amount."&confirms=".$confirmations;
+        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->password."&transaction_hash=".$tx_id."&address=".$to_address."&value=".$int_amount."&confirms=".$confirmations;
         $app_response = file_get_contents($full_callback_url);
 
         $callback_status = null;
@@ -358,9 +387,9 @@ class Api extends CI_Controller {
     }
 
     private function is_authenticated() {
-        $method = $this->uri->segment(2, "empty");
-        $apikey = $this->input->get('apikey');
-        $ipaddress = $this->input->ip_address();;
+        $guid =         $this->uri->segment(2);
+        $method =       $this->uri->segment(3, "empty");
+        $ipaddress =    $this->input->ip_address();;
         $full_query_str = $this->uri->uri_string().'?'.$this->input->server('QUERY_STRING');
 
         if ($this->input->get('cryptotype')) {
@@ -370,10 +399,10 @@ class Api extends CI_Controller {
         $agent = $this->agent->agent_string();
         $referrer = $this->agent->referrer();
         $error = $this->check_query_required_args();
-        $this->log_id = $this->log_call($method, $apikey, $ipaddress, $full_query_str, $agent, $referrer, $error); // log it
+        $this->log_id = $this->log_call($method, $guid, $ipaddress, $full_query_str, $agent, $referrer, $error); // log it
 
         if (!$error) {
-            $is_valid_user = $this->validate_user($apikey, $this->log_id); // error is printed inside #validate_user function
+            $is_valid_user = $this->validate_user($guid, $this->log_id); // error is printed inside #validate_user function
         } else {
             echo json_encode(array( 'error' => $error));
             return false;
@@ -384,10 +413,10 @@ class Api extends CI_Controller {
         return true;
     }
 
-    private function log_call($method, $apikey, $ipaddress, $querystring, $agent, $referrer, $response) {
+    private function log_call($method, $guid, $ipaddress, $querystring, $agent, $referrer, $response) {
         $data = array(
             'method' => $method,
-            'apikey' => $apikey = isset($apikey) == true ? $apikey : '',
+            'guid' => $guid = isset($guid) == true ? $guid : '',
             'ipaddress' => $ipaddress,
             'querystring' => $querystring,
             'agent' => $agent,
@@ -398,34 +427,34 @@ class Api extends CI_Controller {
     }
 
     private function check_query_required_args() {
-        $method = $this->uri->segment(2);
-        $apikey = $this->input->get('apikey');
-        $apipassword = $this->input->get('apipassword');
+        $method =       $this->uri->segment(3);
+        $guid =         $this->uri->segment(2);
+        $password =     $this->input->get('password');
         $invalid_query = array();
         if (!$method) $invalid_query[] = 'no method';
-        if (!$apikey) $invalid_query[] = 'no apikey';
-        if (!$apipassword) $invalid_query[] = 'no apipassword';
+        if (!$guid) $invalid_query[] = 'no guid';
+        if (!$password) $invalid_query[] = 'no password';
         $this->method = $method;
         return isset($invalid_query) == true ? implode($invalid_query, ', ') : null; // if some of required query params were missing, then return null
     }
 
     /**
      * Validate user and update log table row if validation was not successful
-     * @param $apikey
-     * @param $apipassword
+     * @param $guid
+     * @param $password
      * @param $log_id
      */
-    private function validate_user($apikey, $log_id) {
-        $user = $this->User_model->get_user($apikey);
+    private function validate_user($guid, $log_id) {
+        $user = $this->User_model->get_user($guid);
 
         if (!$user) {
-            echo json_encode(array( 'error' => "no user"));
-            $this->Log_model->update_log_after_user_validation($log_id, $apikey, "no user");
+            echo json_encode(array( 'error' => NO_USER));
+            $this->Log_model->update_log_after_user_validation($log_id, $guid, NO_USER);
             return false;
         }
-        if ($user->apipassword != $this->input->get('apipassword')) {
-            echo json_encode(array( 'error' => "wrong password"));
-            $this->Log_model->update_log_after_user_validation($log_id, $apikey, "wrong password");
+        if ($user->password != $this->input->get('password')) {
+            echo json_encode(array( 'error' => WRONG_PASSWD));
+            $this->Log_model->update_log_after_user_validation($log_id, $guid, WRONG_PASSWD);
             return false;
         }
         $this->user = $user;

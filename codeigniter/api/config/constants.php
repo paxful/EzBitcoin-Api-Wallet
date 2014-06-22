@@ -42,6 +42,8 @@ define("RETURN_OUTPUTTYPE", "json");
 
 define("DEBUG_API", TRUE);
 
+define('NO_USER', 'no user/guid found');
+define('WRONG_PASSWD', 'wrong password');
 define('NO_TX_ID', 'no tx id');
 define('NO_ADDRESS', 'no address specified');
 define('INVALID_ADDRESS', 'invalid address specified');
@@ -49,3 +51,5 @@ define('ADDRESS_AMOUNT_NOT_SPECIFIED', 'address or amount not specified');
 define('NO_TX_ID_PROVIDED', 'no tx id provided...');
 define('TX_SEND', 'sent');
 define('TX_RECEIVE', 'received');
+define('NO_FUNDS', 'insufficient funds');
+define('SATOSHIS_FRACTION', 100000000);

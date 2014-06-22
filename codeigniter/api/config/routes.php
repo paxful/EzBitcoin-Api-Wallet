@@ -40,3 +40,11 @@
 
 $route['default_controller'] = "api";
 $route['404_override'] = '';
+
+$route['api/(:any)/balance'] = 'api/balance/$1';
+$route['api/(:any)/address_balance'] = 'api/address_balance/$1';
+$route['api/(:any)/validate_transaction'] = 'api/validate_transaction/$1';
+$route['api/(:any)/validate_address'] = 'api/validate_address/$1';
+$route['api/(:any)/new_address'] = 'api/new_address/$1';
+$route['api/(:any)/payment'] = 'api/payment/$1';
+$route['api/(:any)/callback'] = 'api/callback/$1';
