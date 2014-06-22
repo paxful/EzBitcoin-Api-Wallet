@@ -38,14 +38,18 @@ class Api extends CI_Controller {
         $user_info = $this->User_model->get_user_balance($this->user->id, $this->crypto_type);
         $response = null;
 
+
         if ($user_info) {
             $response = json_encode(array('balance' => $user_info->balance, 'crypto_type' => $this->crypto_type));
-            echo $response;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         } else {
             $response = json_encode(array('error' => 'balance not found for crypto type '.$this->crypto_type));
-            echo $response;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         }
-        echo $response;
         $this->update_log_response_msg($this->log_id, $response);
     }
 
@@ -68,11 +72,13 @@ class Api extends CI_Controller {
                 $balance = $this->jsonrpcclient->getbalance();
             }
             // TODO convert to satoshis, check how to know total received
+            // TODO set content type applicaiton/json
             echo json_encode(array('balance' => $balance, 'address' => $address, 'total_received' => $balance));
             $this->update_log_response_msg($this->log_id, $balance);
         } catch (Exception $e) {
-            echo json_encode(array( 'error' => $e->getMessage()));
+            $response = json_encode(array( 'error' => $e->getMessage()));
         }
+        $this->update_log_response_msg($this->log_id, $response);
     }
 
     public function validate_transaction() {
@@ -83,8 +89,11 @@ class Api extends CI_Controller {
 
         $tx_id = $this->input->get('txid');
         if(!$tx_id){
-            echo json_encode(array( 'error' => NO_TX_ID));
-            $this->update_log_response_msg($this->log_id, NO_TX_ID);
+            $response = json_encode(array( 'error' => NO_TX_ID));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
 
@@ -123,9 +132,12 @@ class Api extends CI_Controller {
             $this->update_log_response_msg($this->log_id, $response);
 
         } catch (Exception $e) {
-            $this->update_log_response_msg($this->log_id, $e->getMessage());
-            echo json_encode(array( 'error' => $e->getMessage()));
+            $response = json_encode(array( 'error' => $e->getMessage()));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         }
+        $this->update_log_response_msg($this->log_id, $response);
     }
 
     public function validate_address() {
@@ -135,22 +147,28 @@ class Api extends CI_Controller {
         }
         $address = $this->input->get('address');
         if(!$address){
-            echo json_encode(array( 'error' => NO_ADDRESS));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array( 'error' => NO_ADDRESS)));
             $this->update_log_response_msg($this->log_id, NO_ADDRESS);
             return;
         }
 
         try{
             $address_valid = $this->jsonrpcclient->validateaddress($address) ;
-        } catch(Exception $e){
-            echo json_encode(array( 'error' => $e->getMessage()));
+        } catch(Exception $e) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array( 'error' => $e->getMessage())));
             $this->update_log_response_msg($this->log_id, $e->getMessage());
             return;
         }
 
         $is_valid = $address_valid["isvalid"];
         if (!$is_valid) {
-            echo json_encode(array( 'error' => INVALID_ADDRESS));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array( 'error' => INVALID_ADDRESS)));
             $this->update_log_response_msg($this->log_id, INVALID_ADDRESS);
             return;
         }
@@ -160,7 +178,7 @@ class Api extends CI_Controller {
         $is_mine = false;
 
         $user_address = $this->Address_model->get_address_for_user($address, $this->user->id);
-        //return the address is the bitcoind and the current merchant owns the address
+
         if($user_address){
             $is_mine = true;
         }
@@ -168,7 +186,9 @@ class Api extends CI_Controller {
         $response = null;
         if(RETURN_OUTPUTTYPE == "json") {
             $response = json_encode(array( 'isvalid' => $is_valid, 'address' => $address, 'ismine' => $is_mine ));
-            echo $response;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         } else {
             $response = "$is_valid|$address|$is_mine";
             echo $response;
@@ -193,7 +213,9 @@ class Api extends CI_Controller {
 
             $this->Address_model->insert_new_address($this->user->id, $new_wallet_addres, $label, $this->crypto_type);
         } catch (Exception $e) {
-            echo json_encode(array( 'error' => $e->getMessage()));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(array( 'error' => $e->getMessage())));
             $this->update_log_response_msg($this->log_id, $e->getMessage());
             return;
         }
@@ -202,7 +224,9 @@ class Api extends CI_Controller {
         $response = null;
         if(RETURN_OUTPUTTYPE=="json") {
             $response = json_encode(array( 'address' => $new_wallet_addres, 'label' => $label));
-            echo $response;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         } else {
             $response = $new_wallet_addres;
             echo $response;
@@ -210,13 +234,6 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
-    /**
-     *
-     * @param string $to_address
-     * @param string $amount
-     * @param string $comment
-     * @param string $comment_to
-     */
     public function payment() {
 
         if (!$this->is_authenticated()) {
@@ -234,15 +251,22 @@ class Api extends CI_Controller {
         }
 
         if (empty($to_address) or empty($amount)) {
-            echo ADDRESS_AMOUNT_NOT_SPECIFIED;
-            $this->update_log_response_msg($this->log_id, ADDRESS_AMOUNT_NOT_SPECIFIED);
+            $response = json_encode(array('error' => ADDRESS_AMOUNT_NOT_SPECIFIED));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
 
         $this->db->trans_start();
         $user_balance = $this->User_model->get_user_balance($this->user->id);
         if ($user_balance->balance < $amount) {
-            echo json_encode(array('error' => NO_FUNDS));
+            $response = json_encode(array('error' => NO_FUNDS));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
 
@@ -257,11 +281,14 @@ class Api extends CI_Controller {
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
             if ($tx_id) {
                 $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $bitcoin_amount, $this->crypto_type, $to_address, '', $note, $this->log_id);
-            }
+            } // TODO in else should throw exception when tx_id is not returned ?
 
         } catch (Exception $e) {
-            echo json_encode(array( 'error' => $e->getMessage()));
-            $this->update_log_response_msg($this->log_id, $e->getMessage());
+            $response = json_encode(array( 'error' => $e->getMessage()));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
         $this->db->trans_complete();
@@ -270,7 +297,9 @@ class Api extends CI_Controller {
         $message = 'Sent ' . $bitcoin_amount . ' ' . $cryptotype. ' to ' . $to_address;
 		if (RETURN_OUTPUTTYPE=="json") {
             $response = json_encode(array( 'message' => $message, 'tx_hash' => $tx_id));
-            echo $response;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         } else {
             $response = $message.'|'.$tx_id;
             echo $response;
@@ -293,7 +322,11 @@ class Api extends CI_Controller {
 
         $tx_id = $this->input->get('txid'); // check if not null
         if (!$tx_id) {
-            echo json_encode(array( 'error' => NO_TX_ID_PROVIDED));
+            $response = json_encode(array( 'error' => NO_TX_ID_PROVIDED));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
 
@@ -301,8 +334,11 @@ class Api extends CI_Controller {
             $tx_info = $this->jsonrpcclient->gettransaction($tx_id);
 
         } catch (Exception $e) {
-            echo json_encode(array( 'error' => $e->getMessage()));
-            $this->update_log_response_msg($this->log_id, $e->getMessage());
+            $response = json_encode(array( 'error' => $e->getMessage()));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
 
@@ -378,7 +414,9 @@ class Api extends CI_Controller {
         if (RETURN_OUTPUTTYPE == "json") {
             $response = json_encode(array(
                 'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $int_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
-            echo $response;
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
         } else {
             $response = $app_response;
             echo $response;
@@ -441,7 +479,6 @@ class Api extends CI_Controller {
     /**
      * Validate user and update log table row if validation was not successful
      * @param $guid
-     * @param $password
      * @param $log_id
      */
     private function validate_user($guid, $log_id) {
