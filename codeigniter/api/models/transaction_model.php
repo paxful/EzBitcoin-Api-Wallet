@@ -26,20 +26,18 @@ class Transaction_model extends CI_Model {
     /**
      * Because PHP does not support function overloading we have to make a separate function
      */
-    public function insert_new_transaction_from_callback($tx_id, $user_id, $method, $tx_type, $int_amount, $crypto_type, $address_to, $address_from,
-            $confirmations, $bitcoind_tx_info, $block_hash, $block_index, $block_time, $time, $time_received, $category, $account_name, $int_new_balance, $log_id)
+    public function insert_new_transaction_from_callback($tx_id, $user_id, $tx_type, $int_amount, $crypto_type, $address_to, $address_from,
+            $confirmations, $block_hash, $block_index, $block_time, $time, $time_received, $category, $account_name, $int_new_balance, $log_id)
     {
         $this->db->insert('transactions', array(
             'tx_id' => $tx_id,
             'user_id' => $user_id,
-            'method' => $method,
             'transaction_type' => $tx_type,
             'crypto_amount' => $int_amount,
             'crypto_type' => $crypto_type,
             'address_to' => $address_to,
             'address_from' => $address_from,
             'confirmations' => $confirmations,
-            'response' => $bitcoind_tx_info,
             'block_hash' => $block_hash,
             'block_index' => $block_index,
             'block_time' => $block_index,

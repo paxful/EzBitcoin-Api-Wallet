@@ -365,6 +365,7 @@ class Api extends CI_Controller {
         }
 
         // TODO make it into separate class cause same thing is #validate_transaction() function
+        echo "<pre>".print_r($tx_info)."</pre><br />";
         $btc_amount =           $tx_info["amount"] ;
         $confirmations = 	    $tx_info["confirmations"] ;
         $account_name = 		$tx_info["details"][0]["account"] ;
@@ -378,8 +379,7 @@ class Api extends CI_Controller {
         $block_time = 		    $tx_info["blocktime"];
 
         $new = "Transaction hash: ".$tx_id
-            ."\n balance: ".$tx_info["balance"]
-            ."\n amount: ".$tx_info["amount"]
+            ."\n amount: ".$tx_info['details'][0]["amount"]
             ."\n confirmations: ".$tx_info["confirmations"]
             ."\n blockhash: ".$tx_info["blockhash"]
             ."\n blockindex: ".$tx_info["blockindex"]
@@ -391,7 +391,6 @@ class Api extends CI_Controller {
             ."\n address: ".$tx_info["details"][0]["address"]
             ."\n category: ".$tx_info["details"][0]["category"]
             ."\n amount: ".$tx_info["details"][0]["amount"]
-            ."\n fee: ".$tx_info["details"][0]["fee"]  // According to https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list, fee is returned, but it doesn't seem that way here
         ;
         if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
             echo nl2br($new)."\n";
@@ -410,9 +409,10 @@ class Api extends CI_Controller {
         /* It is incoming transaction, because it is sent to some of the inner adresses */
         if ($address_model) {
             if (!$transaction_model) { // first callback, because no transaction initially found in db
-                $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback($tx_id, $this->user->id, $this->method, TX_RECEIVE, $btc_amount,
-                    $this->crypto_type, $to_address, $address_from, $confirmations, $tx_info["txid"], $block_hash, $block_index, $block_time, $time,
-                    $time_received, $category, $account_name, $new_address_balance, $this->log_id
+                $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
+                    $tx_id, $this->user->id, TX_RECEIVE, $btc_amount, $this->crypto_type,
+                    $to_address, $address_from, $confirmations, $block_hash, $block_index,
+                    $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
 
                 $address_total_received = $address_model->crypto_totalreceived + $btc_amount; // TODO set final balance to
