@@ -260,6 +260,7 @@ class Api extends CI_Controller {
         }
 
         $this->db->trans_start();
+
         $user_balance = $this->User_model->get_user_balance($this->user->id);
         if ($user_balance->balance < $amount) {
             $response = json_encode(array('error' => NO_FUNDS));
@@ -343,7 +344,7 @@ class Api extends CI_Controller {
         }
 
         // TODO make it into separate class cause same thing is #validate_transaction() function
-        $int_amount =           $tx_info["amount"] ;
+        $btc_amount =           $tx_info["amount"] ;
         $confirmations = 	    $tx_info["confirmations"] ;
         $account_name = 		$tx_info["details"][0]["account"] ;
         $to_address =           $tx_info["details"][0]["address"]; // address where transaction was sent to. from address may be multiple inputs which means many addresses
@@ -376,34 +377,49 @@ class Api extends CI_Controller {
         }
 
         $this->load->model('Transaction_model', '', TRUE);
+        $this->load->model('Balance_model', '', TRUE);
         $address_model = $this->Address_model->get_address($to_address);
-
-        $int_new_balance = $address_model->crypto_balance + $int_amount;
-
         $transaction_model = $this->Transaction_model->get_transaction_by_tx_id($tx_id);
 
-        // first callback, because no transaction initially found in db
-        if (!$transaction_model) {
-            $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback($tx_id, $this->user->id, $this->method, TX_RECEIVE, $int_amount,
-                $this->crypto_type, $to_address, $address_from, $confirmations, $tx_info["txid"], $block_hash, $block_index, $block_time, $time,
-                $time_received, $category, $account_name, $int_new_balance, $this->log_id
-            );
+        $satoshi_amount = $btc_amount * SATOSHIS_FRACTION;
+        $new_address_balance = $address_model->crypto_balance + $satoshi_amount;
 
-            $address_total_received = $address_model->crypto_totalreceived + $int_amount;
-            $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
-            $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
+        $this->db->trans_start();
+
+        /* It is incoming transaction, because it is sent to some of the inner adresses */
+        if ($address_model) {
+            if (!$transaction_model) { // first callback, because no transaction initially found in db
+                $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback($tx_id, $this->user->id, $this->method, TX_RECEIVE, $btc_amount,
+                    $this->crypto_type, $to_address, $address_from, $confirmations, $tx_info["txid"], $block_hash, $block_index, $block_time, $time,
+                    $time_received, $category, $account_name, $new_address_balance, $this->log_id
+                );
+
+                $address_total_received = $address_model->crypto_totalreceived + $btc_amount; // TODO set final balance to
+                $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
+                $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
+                $new_user_balance = $this->user->balance + $satoshi_amount;
+                $this->Balance_model->update_user_balance($new_user_balance, $this->user->id);
+            } else {
+                /* bitcoind sent 2nd callback for the transaction which is 6th confirmation */
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
+            }
+
+
+        /* It is outgoing transaction and the change is sent back to some of the change address */
         } else {
-            // bitcoind sent 2nd callback for the transaction which is 6th confirmation
-            $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
+            $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations); // assuming the transaction was found in db
         }
+
+        $this->db->trans_complete();
+
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->password."&transaction_hash=".$tx_id."&address=".$to_address."&value=".$int_amount."&confirms=".$confirmations;
+        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->password."&transaction_hash=".$tx_id."&address=".$to_address."&value=".$btc_amount."&confirms=".$confirmations;
         $app_response = file_get_contents($full_callback_url);
 
         $callback_status = null;
-        if($app_response == "OK") {
+        if($app_response == "*ok*") {
             $callback_status = 1;
         }
 
@@ -413,7 +429,7 @@ class Api extends CI_Controller {
         $response = null;
         if (RETURN_OUTPUTTYPE == "json") {
             $response = json_encode(array(
-                'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $int_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+                'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
             $this->output
                 ->set_content_type('application/json')
                 ->set_output($response);

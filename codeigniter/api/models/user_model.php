@@ -7,7 +7,11 @@ class User_model extends CI_Model {
     }
 
     public function get_user($guid) {
-        $query = $this->db->get_where('users', array('guid' => $guid), 1);
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->join('balances', 'users.id = balances.user_id');
+        $this->db->where(array('guid' => $guid));
+        $query = $this->db->get();
         return $query->row();
     }
 
