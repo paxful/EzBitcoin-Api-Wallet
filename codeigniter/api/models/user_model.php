@@ -6,7 +6,8 @@ class User_model extends CI_Model {
         parent::__construct();
     }
 
-    public function get_user($guid) {
+    public function get_user($guid)
+    {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->join('balances', 'users.id = balances.user_id');
@@ -15,7 +16,8 @@ class User_model extends CI_Model {
         return $query->row();
     }
 
-    public function get_user_balance($user_id, $crypto_type = 'BTC') {
+    public function get_user_balance($user_id, $crypto_type = 'BTC')
+    {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->join('balances', 'users.id = balances.user_id');
