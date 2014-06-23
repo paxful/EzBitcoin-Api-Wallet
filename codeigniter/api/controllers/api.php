@@ -310,6 +310,20 @@ class Api extends CI_Controller {
 
     public function callback() {
 
+        /* the url structure is different, so different segments of URI */
+        $method =       $this->uri->segment(1);
+        $ipaddress =    $this->input->ip_address();;
+        $full_query_str = $this->uri->uri_string().'?'.$this->input->server('QUERY_STRING');
+
+        if ($this->input->get('cryptotype')) {
+            $this->crypto_type = $this->input->get('cryptotype');
+        }
+
+        $agent = $this->agent->agent_string();
+        $referrer = $this->agent->referrer();
+        $error = $this->check_query_required_args();
+        $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, $error); // log it
+
         $secret = $this->input->get('secret');
         if ($secret != 'testingbtc12') {
             $response = json_encode(array( 'error' => NO_SECRET_FOR_CALLBACK));
@@ -319,6 +333,7 @@ class Api extends CI_Controller {
             $this->update_log_response_msg($this->log_id, $response);
             return;
         }
+        /*--------------------------------------------*/
 
 
         //sends callback on receive notification
