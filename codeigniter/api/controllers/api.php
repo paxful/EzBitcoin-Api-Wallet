@@ -415,7 +415,7 @@ class Api extends CI_Controller {
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->password."&transaction_hash=".$tx_id."&address=".$to_address."&value=".$btc_amount."&confirms=".$confirmations;
+        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
         $app_response = file_get_contents($full_callback_url);
 
         $callback_status = null;
