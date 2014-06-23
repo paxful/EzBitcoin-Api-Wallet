@@ -321,8 +321,7 @@ class Api extends CI_Controller {
 
         $agent = $this->agent->agent_string();
         $referrer = $this->agent->referrer();
-        $error = $this->check_query_required_args();
-        $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, $error); // log it
+        $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, ''); // log it
 
         $secret = $this->input->get('secret');
         if ($secret != 'testingbtc12') {
