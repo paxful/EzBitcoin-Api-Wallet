@@ -410,7 +410,7 @@ class Api extends CI_Controller {
         if ($address_model) {
             if (!$transaction_model) { // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
-                    $tx_id, $this->user->id, TX_RECEIVE, $btc_amount, $this->crypto_type,
+                    $tx_id, $this->user->id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC cryptotype
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
@@ -429,6 +429,8 @@ class Api extends CI_Controller {
         /* It is outgoing transaction and the change is sent back to some of the change address */
         } else {
             $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations); // assuming the transaction was found in db
+            $this->db->trans_complete();
+            return; // csdas
         }
 
         $this->db->trans_complete();
@@ -436,7 +438,9 @@ class Api extends CI_Controller {
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
+        // TODO something: Trying to get property of non-object
+        $user_model = $this->User_model->get_user_by_id($address_model->user_id);
+        $full_callback_url = $user_model->callbackurl."?secret=".$user_model->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
         $app_response = file_get_contents($full_callback_url);
 
         $callback_status = null;
