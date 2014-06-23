@@ -70,4 +70,9 @@ class Transaction_model extends CI_Model {
         return $query->row();
     }
 
+    public function get_transaction_by_tx_id($tx_id) {
+        $query = $this->db->get_where('transactions', array('tx_id' => $tx_id), 1);
+        return $query->row();
+    }
+
 }
