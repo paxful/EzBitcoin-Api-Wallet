@@ -21,8 +21,8 @@ class Api extends CI_Controller {
         $this->load->model('Address_model', '', TRUE);
 
         if ($this->input->get('debug') or $this->jsonrpc_debug == true) {
-            echo "URI segment: ".$this->uri->uri_string()."<br />";
-            echo "Controller: ".$this->uri->segment(1).", GUID: ".$this->uri->segment(2).", method: ".$this->uri->segment(3)."<br />";
+            echo "URI segment: ".$this->uri->uri_string()."\n";
+            echo "Controller: ".$this->uri->segment(1).", GUID: ".$this->uri->segment(2).", method: ".$this->uri->segment(3)."\n";
         }
     }
 
@@ -310,9 +310,16 @@ class Api extends CI_Controller {
 
     public function callback() {
 
-        if (!$this->is_authenticated()) {
+        $secret = $this->input->get('secret');
+        if ($secret != 'testingbtc12') {
+            $response = json_encode(array( 'error' => NO_SECRET_FOR_CALLBACK));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
             return;
         }
+
 
         //sends callback on receive notification
         //gets a transaction hash id
@@ -373,7 +380,7 @@ class Api extends CI_Controller {
             ."\n fee: ".$tx_info["details"][0]["fee"]  // According to https://en.bitcoin.it/wiki/Original_Bitcoin_client/API_calls_list, fee is returned, but it doesn't seem that way here
         ;
         if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
-            echo nl2br($new)."<br>";
+            echo nl2br($new)."\n";
         }
 
         $this->load->model('Transaction_model', '', TRUE);

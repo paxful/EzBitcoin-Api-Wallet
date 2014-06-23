@@ -49,6 +49,7 @@ define('NO_ADDRESS', 'no address specified');
 define('INVALID_ADDRESS', 'invalid address specified');
 define('ADDRESS_AMOUNT_NOT_SPECIFIED', 'address or amount not specified');
 define('NO_TX_ID_PROVIDED', 'no tx id provided...');
+define('NO_SECRET_FOR_CALLBACK', 'incorrect or no secret for callback provided');
 define('TX_SEND', 'sent');
 define('TX_RECEIVE', 'received');
 define('NO_FUNDS', 'insufficient funds');
