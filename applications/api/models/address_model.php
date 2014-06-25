@@ -27,7 +27,11 @@ class Address_model extends CI_Model {
     }
 
     public function update_total_received_crypto($address, $total_received) {
-        $this->db->update('addresses', array('crypto_totalreceived' => $total_received), array('address' => $address));
+        $this->db->update('addresses', array('total_received' => $total_received), array('address' => $address));
+    }
+
+    public function update_address_balance($address, $new_balance, $previous_balance) {
+        $this->db->update('addresses', array('balance' => $new_balance, 'previous_balance' => $previous_balance), array('address' => $address));
     }
 
 }

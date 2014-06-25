@@ -63,18 +63,36 @@ class Api extends CI_Controller {
         if (!$confirmations) {
             $confirmations = 0;
         }
+        if (!$address) {
+            $address = 'all';
+        }
 
         try {
             if ($address) {
-                $balance = $this->jsonrpcclient->getreceivedbyaddress($address, $confirmations);
+                /* TODO getting address balance with certain confirmations is more complicated, need to scan through all transactions and
+                / sum all transactions related to that address where confirmations >= n */
+
+                $user_address = $this->Address_model->get_address_for_user($address, $this->user->id);
+
+                if ($user_address) {
+                    $response = json_encode(array('balance' => $user_address->balance, 'address' => $address, 'total_received' => $user_address->total_received, 'crypto_type' => $this->crypto_type));
+                    $this->output
+                        ->set_content_type('application/json')
+                        ->set_output($response);
+                } else {
+                    $response = json_encode(array('error' => NO_USER_ADDRESS));
+                    $this->output
+                        ->set_content_type('application/json')
+                        ->set_output($response);
+                }
             } else {
-                // TODO query user db for his all adresses total
-                $balance = $this->jsonrpcclient->getbalance();
+                $user_balance = $this->User_model->get_user_balance($this->user->id);
+                $response = json_encode(array('balance' => $user_balance->balance, 'address' => $address, 'total_received' => $user_balance->total_received, 'crypto_type' => $this->crypto_type));
+                $this->output
+                    ->set_content_type('application/json')
+                    ->set_output($response);
             }
-            // TODO convert to satoshis, check how to know total received
-            // TODO set content type applicaiton/json
-            echo json_encode(array('balance' => $balance, 'address' => $address, 'total_received' => $balance));
-            $this->update_log_response_msg($this->log_id, $balance);
+
         } catch (Exception $e) {
             $response = json_encode(array( 'error' => $e->getMessage()));
         }
@@ -174,7 +192,7 @@ class Api extends CI_Controller {
         }
 
         $address = $address_valid["address"];
-//        $is_mine = $address_valid["ismine"]; // this is for all users of the API inside bitcoind
+//      $address_valid["ismine"]; // this is for all users of the API inside bitcoind
         $is_mine = false;
 
         $user_address = $this->Address_model->get_address_for_user($address, $this->user->id);
@@ -204,14 +222,14 @@ class Api extends CI_Controller {
 
         $this->load->model('User_model', '', TRUE);
         try {
-            $new_wallet_addres = $this->jsonrpcclient->getnewaddress();
+            $new_wallet_address = $this->jsonrpcclient->getnewaddress();
 
             $label = $this->input->get('label');
             if (!$label) {
                 $label = '';
             }
 
-            $this->Address_model->insert_new_address($this->user->id, $new_wallet_addres, $label, $this->crypto_type);
+            $this->Address_model->insert_new_address($this->user->id, $new_wallet_address, $label, $this->crypto_type);
         } catch (Exception $e) {
             $this->output
                 ->set_content_type('application/json')
@@ -223,12 +241,12 @@ class Api extends CI_Controller {
         //return error will be wallet address if it works
         $response = null;
         if(RETURN_OUTPUTTYPE=="json") {
-            $response = json_encode(array( 'address' => $new_wallet_addres, 'label' => $label));
+            $response = json_encode(array( 'address' => $new_wallet_address, 'label' => $label));
             $this->output
                 ->set_content_type('application/json')
                 ->set_output($response);
         } else {
-            $response = $new_wallet_addres;
+            $response = $new_wallet_address;
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);
@@ -275,6 +293,8 @@ class Api extends CI_Controller {
         $this->load->model('Balance_model', '', TRUE);
 
         $new_balance = $user_balance->balance - $amount;
+
+//        $this->Address_model->update_address_balance($to_address, ); // TODO shit how do we know from which address was spent... ?
         $this->Balance_model->update_user_balance($new_balance, $this->user->id);
 
         $bitcoin_amount = (float) ($amount / SATOSHIS_FRACTION);
@@ -282,6 +302,7 @@ class Api extends CI_Controller {
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
             if ($tx_id) {
                 $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $bitcoin_amount, $this->crypto_type, $to_address, '', $note, $this->log_id);
+                // TODO if its some inner address, should we update that address and users balance too?
             } // TODO in else should throw exception when tx_id is not returned ?
 
         } catch (Exception $e) {
@@ -399,10 +420,10 @@ class Api extends CI_Controller {
         $this->load->model('Transaction_model', '', TRUE);
         $this->load->model('Balance_model', '', TRUE);
         $address_model = $this->Address_model->get_address($to_address);
-        $transaction_model = $this->Transaction_model->get_transaction_by_tx_id($tx_id);
+        $transaction_model = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
 
         $satoshi_amount = $btc_amount * SATOSHIS_FRACTION;
-        $new_address_balance = $address_model->crypto_balance + $satoshi_amount;
+        $new_address_balance = $address_model->balance + $satoshi_amount;
 
         $this->db->trans_start();
 
@@ -410,31 +431,28 @@ class Api extends CI_Controller {
         if ($address_model) {
             if (!$transaction_model) { // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
-                    $tx_id, $this->user->id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC cryptotype
+                    $tx_id, $this->user->id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
 
-                $address_total_received = $address_model->crypto_totalreceived + $btc_amount; // TODO set final balance to address
+                $address_total_received = $address_model->total_received + $satoshi_amount; // TODO set final balance to address, but how?
                 $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
                 $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
                 $new_user_balance = $this->user->balance + $satoshi_amount;
                 $this->Balance_model->update_user_balance($new_user_balance, $this->user->id);
             } else {
-                /* bitcoind sent 2nd callback for the transaction which is 6th confirmation */
+                /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
             }
-
+            $this->db->trans_complete();
 
         /* It is outgoing transaction and the change is sent back to some of the change address */
         } else {
             $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations); // assuming the transaction was found in db
             $this->db->trans_complete();
-            return; // csdas
+            return;
         }
-
-        $this->db->trans_complete();
-
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
@@ -448,7 +466,7 @@ class Api extends CI_Controller {
             $callback_status = 1;
         }
 
-        //if we get back an OK from the script then update the transactions status
+        //if we get back an *ok* from the script then update the transactions status
         $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
 
         $response = null;
