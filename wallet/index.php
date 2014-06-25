@@ -1,179 +1,203 @@
 <?php
 
-require "inc/session.php";
+/*
+ *---------------------------------------------------------------
+ * APPLICATION ENVIRONMENT
+ *---------------------------------------------------------------
+ *
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
+ *
+ */
+define('ENVIRONMENT', 'development');
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING
+ *---------------------------------------------------------------
+ *
+ * Different environments will require different levels of error reporting.
+ * By default development will show errors but testing and live will hide them.
+ */
 
-// If we are on production, ensure page is ssl encrypted for entering in credit card info
-// Todo: move to global include
-if(SERVERTAG=="hg" || SERVERTAG=="prod"){ 
-  if($_SERVER["HTTPS"] != "on"){
-    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
-    exit();
-  }
-}else{ 
-  error_reporting(E_ERROR | E_PARSE); //ini_set('display_errors',2);
+if (defined('ENVIRONMENT'))
+{
+    switch (ENVIRONMENT)
+    {
+        case 'development':
+            error_reporting(E_ALL);
+            break;
+
+        case 'testing':
+        case 'production':
+            error_reporting(0);
+            break;
+
+        default:
+            exit('The application environment is not set correctly.');
+    }
 }
 
-if(DETECT_USERID){ 
-  header("Location: ".PAGE_WALLET);
+/*
+ *---------------------------------------------------------------
+ * SYSTEM FOLDER NAME
+ *---------------------------------------------------------------
+ *
+ * This variable must contain the name of your "system" folder.
+ * Include the path if the folder is not in the same  directory
+ * as this file.
+ *
+ */
+$system_path = '../core';
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION FOLDER NAME
+ *---------------------------------------------------------------
+ *
+ * If you want this front controller to use a different "application"
+ * folder then the default one you can set its name here. The folder
+ * can also be renamed or relocated anywhere on your server.  If
+ * you do, use a full server path. For more info please see the user guide:
+ * http://codeigniter.com/user_guide/general/managing_apps.html
+ *
+ * NO TRAILING SLASH!
+ *
+ */
+$application_folder = '../applications/wallet';
+
+/*
+ * --------------------------------------------------------------------
+ * DEFAULT CONTROLLER
+ * --------------------------------------------------------------------
+ *
+ * Normally you will set your default controller in the routes.php file.
+ * You can, however, force a custom routing by hard-coding a
+ * specific controller class/function here.  For most applications, you
+ * WILL NOT set your routing here, but it's an option for those
+ * special instances where you might want to override the standard
+ * routing in a specific front controller that shares a common CI installation.
+ *
+ * IMPORTANT:  If you set the routing here, NO OTHER controller will be
+ * callable. In essence, this preference limits your application to ONE
+ * specific controller.  Leave the function name blank if you need
+ * to call functions dynamically via the URI.
+ *
+ * Un-comment the $routing array below to use this feature
+ *
+ */
+// The directory name, relative to the "controllers" folder.  Leave blank
+// if your controller is not in a sub-folder within the "controllers" folder
+// $routing['directory'] = '';
+
+// The controller class file name.  Example:  Mycontroller
+// $routing['controller'] = '';
+
+// The controller function you wish to be called.
+// $routing['function']	= '';
+
+
+/*
+ * -------------------------------------------------------------------
+ *  CUSTOM CONFIG VALUES
+ * -------------------------------------------------------------------
+ *
+ * The $assign_to_config array below will be passed dynamically to the
+ * config class when initialized. This allows you to set custom config
+ * items or override any default config values found in the config.php file.
+ * This can be handy as it permits you to share one application between
+ * multiple front controller files, with each file containing different
+ * config values.
+ *
+ * Un-comment the $assign_to_config array below to use this feature
+ *
+ */
+// $assign_to_config['name_of_config_item'] = 'value of config item';
+
+
+
+// --------------------------------------------------------------------
+// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
+// --------------------------------------------------------------------
+
+/*
+ * ---------------------------------------------------------------
+ *  Resolve the system path for increased reliability
+ * ---------------------------------------------------------------
+ */
+
+// Set the current directory correctly for CLI requests
+if (defined('STDIN'))
+{
+    chdir(dirname(__FILE__));
 }
 
-$strEmail = (funct_GetandCleanVariables($_GET['email']));
-$strError = (funct_GetandCleanVariables($_GET['error']));
+if (realpath($system_path) !== FALSE)
+{
+    $system_path = realpath($system_path).'/';
+}
 
-?>
+// ensure there's a trailing slash
+$system_path = rtrim($system_path, '/').'/';
 
-<!doctype html>
-<html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Buy Bitcoins<?=TITLE_END?></title>
+// Is the system path correct?
+if ( ! is_dir($system_path))
+{
+    exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
+}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/img/favicon.png" />
+/*
+ * -------------------------------------------------------------------
+ *  Now that we know the path, set the main path constants
+ * -------------------------------------------------------------------
+ */
+// The name of THIS file
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
 
-    <link rel="stylesheet" href="css/foundation.css" />
-    <link rel="stylesheet" href="css/custom.css" />
+// The PHP file extension
+// this global constant is deprecated.
+define('EXT', '.php');
 
-    <script src="js/modernizr.js"></script>
-    <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-    <script>
+// Path to the system folder
+define('BASEPATH', str_replace("\\", "/", $system_path));
 
-      <?php /* HOME PAGE JS SETUP - TODO: MOVE TO INCLUDE 'home.js' */ ?>
+// Path to the front controller (this file)
+define('FCPATH', str_replace(SELF, '', __FILE__));
 
-      $(document).ready(function(){
-        <? if(MODE_UPGRADE){ ?>
-          $('#upgrademodal').foundation('reveal', 'open');
-        <? } ?>
-      });
-
-      function jsfunct_join() {
-        document.getElementById('checkout').action = '<?=CODE_DO?>?do=join';
-        var okSoFar=true
-        if (document.checkout.password.value=="") {
-          okSoFar=false
-          //alert("Enter a Password Please. at least 8 characters, 1 upper case, 1 number, 1 symbol")
-          document.checkout.password.focus()
-          return false;
-        }
-        if (okSoFar==true) {
-          document.getElementById('checkout').submit();
-        }
-      }
-
-    </script>
-
-  </head>
-  <body>
-
-    <?php require "hud.php"; ?>
-
-    <p><br></p><br>
+// Name of the "system folder"
+define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
 
 
-    <div class="row">
+// The path to the "application" folder
+if (is_dir($application_folder))
+{
+    define('APPPATH', $application_folder.'/');
+}
+else
+{
+    if ( ! is_dir(BASEPATH.$application_folder.'/'))
+    {
+        exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
+    }
 
-      <!-- BEGIN 1st COLUMN 5 WIDE -->
-      <div class="medium-4 columns hide-for-small-only">
-        <img src="img/wallet.png" width="300" height="300" />
-      </div>
-      <!-- END 1st COLUMN -->
+    define('APPPATH', BASEPATH.$application_folder.'/');
+}
 
-      <!-- BEGIN 2nd COLUMN 5 WIDE -->
-      <div class="small-8 medium-8 columns">
-
-        <h3>Get your free wallet</h3>
-
-        <small>Already registered? <a href="/signin.php">Sign in</a></small><br><br>
-
-        <form data-abide name="checkout" id="checkout" method="post" action="<?=CODE_DO?>?do=join">
-          <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
-          <small class="error">Please enter a proper email.</small>
-          <button type="submit" class="button small">Create Free Wallet</button><br>
-          <strong style="color:#FFF;"><?=$strError?></strong>
-        </form>
-
-          <h4>Open Source BitCoin  Wallet</h4>
-
-          <div>Made to be the simplest, fastest way to deploy a bitcoin wallet and introducing bitcoin to a whole new class of developers. </div>
-          <br><br>
-
-          <h4>Features</h4>
-          <ul>
-              <li>Supports over 100 fiat currencies.</li>
-              <li>Supports Multiple Crypto Currencies.</li>
-              <li>Runs on code igniter php framework for small footprint, easy install, secure database orm and mvc model.</li>
-          </ul>
-
-          <br><br>
-
-          <h4>Security</h4>
-          <ul>
-              <li>Hashed passwords</li>
-              <li>Protection against brute Force Logins</li>
-              <li>Database ORM model used prepared statements to avoid sql injection attacks</li>
-              <li>Protection against Security Scanners such as acutex etc..</li>
-          </ul>
-
-          <br><br>
-
-          <h4>Requirements</h4>
-          <ul>
-              <li><a href="">LAMP</a> - Linux Apache MySql PHP platform. (comes installed by default on most linux servers)</li>
-              <li>PDO mysql php module</li>
-              <li>MYSQLI php module</li>
-              <li>mcrypt php module</li>
-              <li><a href="">Code Igniter PHP framework</a> (comes included)</li>
-              <li>Ez Wallet BitCoin API or Blockchain.info API</li>
-          </ul>
-
-          <br><br>
-
-          <h4>Install Guide</h4>
-          <ul>
-              <li><a href="http://github.com/">Get the Source Code Here</a></li>
-          </ul>
-
-          <br><br>
-
-          <div>Please join us in making this solve even more problems for people</div>
-          <br>
-          <ul>
-              <li><a href="http://github.com/">GitHub</a></li>
-              <li><a href="http://bitcointalk.org">BitCoinTalk.org thread</a></li>
-              <li><a href="http://bitcointalk.org">Reddit thread</a></li>
-              <li>Donate to the cause </li>
-          </ul>
-
-
-
-      </div>
-      <!-- END 2nd COLUMN -->
-
-
-    </div>
-
-
-    <!--MAIN CONTENT AREA-->
-
-    <br><br><br><br><br><br> 
-
-    <script src="js/foundation.min.js"></script>
-    <script src="js/foundation/foundation.abide.js"></script>
-    <script>
-      $(document)
-        .foundation()
-        .foundation('abide', {
-          patterns: {
-          alpha: /[a-zA-Z]+/,
-            alpha_numeric : /[a-zA-Z0-9]+/,
-            integer: /-?\d+/,
-            number: /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/,
-            // generic password: upper-case, lower-case, number/special character, and min 8 characters
-            password : /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
-          }
-        });
-    </script>
-
-  </body>
-</html>
+/*
+ * --------------------------------------------------------------------
+ * LOAD THE BOOTSTRAP FILE
+ * --------------------------------------------------------------------
+ *
+ * And away we go...
+ *
+ */
+echo "Base path: ".BASEPATH.", app path: ".APPPATH;
+require_once BASEPATH.'core/CodeIgniter.php';

@@ -1,98 +1,202 @@
-<?php 
-phpinfo();
+<?php
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION ENVIRONMENT
+ *---------------------------------------------------------------
+ *
+ * You can load different configurations depending on your
+ * current environment. Setting the environment also influences
+ * things like logging and error reporting.
+ *
+ * This can be set to anything, but default usage is:
+ *
+ *     development
+ *     testing
+ *     production
+ *
+ * NOTE: If you change these, also change the error_reporting() code below
+ *
+ */
+define('ENVIRONMENT', 'development');
+/*
+ *---------------------------------------------------------------
+ * ERROR REPORTING
+ *---------------------------------------------------------------
+ *
+ * Different environments will require different levels of error reporting.
+ * By default development will show errors but testing and live will hide them.
+ */
+
+if (defined('ENVIRONMENT'))
+{
+    switch (ENVIRONMENT)
+    {
+        case 'development':
+            error_reporting(E_ALL);
+            break;
+
+        case 'testing':
+        case 'production':
+            error_reporting(0);
+            break;
+
+        default:
+            exit('The application environment is not set correctly.');
+    }
+}
+
+/*
+ *---------------------------------------------------------------
+ * SYSTEM FOLDER NAME
+ *---------------------------------------------------------------
+ *
+ * This variable must contain the name of your "system" folder.
+ * Include the path if the folder is not in the same  directory
+ * as this file.
+ *
+ */
+$system_path = 'core';
+
+/*
+ *---------------------------------------------------------------
+ * APPLICATION FOLDER NAME
+ *---------------------------------------------------------------
+ *
+ * If you want this front controller to use a different "application"
+ * folder then the default one you can set its name here. The folder
+ * can also be renamed or relocated anywhere on your server.  If
+ * you do, use a full server path. For more info please see the user guide:
+ * http://codeigniter.com/user_guide/general/managing_apps.html
+ *
+ * NO TRAILING SLASH!
+ *
+ */
+$application_folder = 'applications/api';
+
+/*
+ * --------------------------------------------------------------------
+ * DEFAULT CONTROLLER
+ * --------------------------------------------------------------------
+ *
+ * Normally you will set your default controller in the routes.php file.
+ * You can, however, force a custom routing by hard-coding a
+ * specific controller class/function here.  For most applications, you
+ * WILL NOT set your routing here, but it's an option for those
+ * special instances where you might want to override the standard
+ * routing in a specific front controller that shares a common CI installation.
+ *
+ * IMPORTANT:  If you set the routing here, NO OTHER controller will be
+ * callable. In essence, this preference limits your application to ONE
+ * specific controller.  Leave the function name blank if you need
+ * to call functions dynamically via the URI.
+ *
+ * Un-comment the $routing array below to use this feature
+ *
+ */
+// The directory name, relative to the "controllers" folder.  Leave blank
+// if your controller is not in a sub-folder within the "controllers" folder
+// $routing['directory'] = '';
+
+// The controller class file name.  Example:  Mycontroller
+// $routing['controller'] = '';
+
+// The controller function you wish to be called.
+// $routing['function']	= '';
 
 
-?>
-
-<!doctype html>
-<html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>api</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.ico" />
-
-      <link rel="stylesheet" href="foundation/css/foundation.css" />
-      <script src="foundation/js/modernizr.js"></script>
-    
-  </head>    
-  <body style="">
-    
-
-<div class="row">
-    <div class="small-12 columns">
-        <h2>EzBit Api</h2>
-        <h4>Bitcoin RESTful API JSONRPC Wrapper - PHP</h4><br>
-
-        <div>Made to be the simplest, fastest way to get your own bitcoin wallet server up and running. Optimized for simplicity and speed towards a MVP. We include a sample wallet web app as a sample application.</div>
-        <br>
-
-        <h4>Features</h4>
-        <ul>
-            <li>Supports multiple accounts so the same server api be used for multiple projects.</li>
-            <li>The Api mimicks <a href="http://blockchain.info/merchant">blockchain.info's merchant api</a> almost exactly so you can switch over easily. </li>
-            <li>Supports Multiple Crypto Currencies. Just install the deamon of the coin, copy the super class file and you are set.</li>
-            <li>Runs on code igniter php framework for small footprint, easy install, secure database orm and mvc model.</li>
-        </ul>
-        <br>
-
-        <h4>Requirements</h4>
-        <ul>
-            <li>hardware: linux server with at least 4 gigs of ram. Ubuntu 12.04 LTS preferred</li>
-            <li><a href="">LAMP</a> - Linux Apache MySql PHP platform. (comes installed by default on most linux servers)</li>
-            <li><a href="">Code Igniter PHP framework</a> (comes included)</li>
-            <li>bare minimum linux command line skills. step by step guide included :)</li>
-        </ul>
-        <h4>Install Guide</h4>
-        <div>Our goal with this is to introduce bitcoin developement to a whole new class of developers. Thus we have prepared step by step documentation to guide even the greenest newb through the once occulted bitcoin server install process.</div>
-        <ul>
-            <li><a href="install/readme_installbitcoind.txt">Installing and Configuring BitcoinD step by step tutorial</a></li>
-            <li><a href="install/readme_securebitcoind.txt">How to Secure your BitcoinD server step by step tutorial</a></li>
-            <li><a href="install/db_api.sql.txt">API Database .SQL file</a></li>
-            <li><a href="install/db_wallet.sql.txt">Wallet Database .SQL file</a></li>
-            <li><a href="/merchant/test.php">Merchant API demo</a></li>
-            <li><a href="/cp/">Merchant API Control Panel</a></li>
-            <li><a href="/wallet/">Wallet demo</a> currently serving over 40,000 users</li>
-        </ul>
-
-        <br><br>
-
-        <div>Please join us in making this solve even more problems for people</div>
-        <br>
-        <ul>
-            <li><a href="http://github.com/">GitHub</a></li>
-            <li><a href="http://bitcointalk.org">BitCoinTalk.org thread</a></li>
-            <li><a href="http://bitcointalk.org">Reddit thread</a></li>
-            <li>Donate to the cause </li>
-        </ul>
-
-
-    </div>
-
-</div>
+/*
+ * -------------------------------------------------------------------
+ *  CUSTOM CONFIG VALUES
+ * -------------------------------------------------------------------
+ *
+ * The $assign_to_config array below will be passed dynamically to the
+ * config class when initialized. This allows you to set custom config
+ * items or override any default config values found in the config.php file.
+ * This can be handy as it permits you to share one application between
+ * multiple front controller files, with each file containing different
+ * config values.
+ *
+ * Un-comment the $assign_to_config array below to use this feature
+ *
+ */
+// $assign_to_config['name_of_config_item'] = 'value of config item';
 
 
 
-<script src="foundation/js/foundation.min.js"></script>
-<script src="foundation/js/foundation/foundation.abide.js"></script>
-<script src="foundation/js/foundation/foundation.reveal.js"></script>
+// --------------------------------------------------------------------
+// END OF USER CONFIGURABLE SETTINGS.  DO NOT EDIT BELOW THIS LINE
+// --------------------------------------------------------------------
 
-<script>
-    $(document)
-        .foundation()
-        .foundation('abide', {
-            patterns: {
-                alpha: /[a-zA-Z]+/,
-                alpha_numeric : /[a-zA-Z0-9]+/,
-                integer: /-?\d+/,
-                number: /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/,
-                // generic password: upper-case, lower-case, number/special character, and min 8 characters
-                //password : /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
-            }
-        });
-</script>
+/*
+ * ---------------------------------------------------------------
+ *  Resolve the system path for increased reliability
+ * ---------------------------------------------------------------
+ */
 
-  </body>
-</html>
+// Set the current directory correctly for CLI requests
+if (defined('STDIN'))
+{
+    chdir(dirname(__FILE__));
+}
+
+if (realpath($system_path) !== FALSE)
+{
+    $system_path = realpath($system_path).'/';
+}
+
+// ensure there's a trailing slash
+$system_path = rtrim($system_path, '/').'/';
+
+// Is the system path correct?
+if ( ! is_dir($system_path))
+{
+    exit("Your system folder path does not appear to be set correctly. Please open the following file and correct this: ".pathinfo(__FILE__, PATHINFO_BASENAME));
+}
+
+/*
+ * -------------------------------------------------------------------
+ *  Now that we know the path, set the main path constants
+ * -------------------------------------------------------------------
+ */
+// The name of THIS file
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+
+// The PHP file extension
+// this global constant is deprecated.
+define('EXT', '.php');
+
+// Path to the system folder
+define('BASEPATH', str_replace("\\", "/", $system_path));
+
+// Path to the front controller (this file)
+define('FCPATH', str_replace(SELF, '', __FILE__));
+
+// Name of the "system folder"
+define('SYSDIR', trim(strrchr(trim(BASEPATH, '/'), '/'), '/'));
+
+
+// The path to the "application" folder
+if (is_dir($application_folder))
+{
+    define('APPPATH', $application_folder.'/');
+}
+else
+{
+    if ( ! is_dir(BASEPATH.$application_folder.'/'))
+    {
+        exit("Your application folder path does not appear to be set correctly. Please open the following file and correct this: ".SELF);
+    }
+
+    define('APPPATH', BASEPATH.$application_folder.'/');
+}
+
+/*
+ * --------------------------------------------------------------------
+ * LOAD THE BOOTSTRAP FILE
+ * --------------------------------------------------------------------
+ *
+ * And away we go...
+ *
+ */
+require_once BASEPATH.'core/CodeIgniter.php';
