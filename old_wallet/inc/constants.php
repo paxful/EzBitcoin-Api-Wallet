@@ -25,10 +25,10 @@ define("QRSCANAPP_DROID_URL",               "https://play.google.com/store/apps/
 //##############################
 //Crypto API Server Settings
 define("WALLET_NEWADDRESS_HOST",            ""); // "blockchain.info" or "ezwallet" web api can be used as their api is the same
-define("JSONRPC_API_MERCHANT_URL",          ""); //connecting to a web api via get/post which does the rpc calls for us
-define("JSONRPC_API_LOGIN",                 ""); //
-define("JSONRPC_API_PASSWORD",              ""); //
-define("JSONRPC_CONNECTIONSTRING",          ""); //only needed if connecting directly to a rpc server
+define("JSONRPC_API_MERCHANT_URL",          "https://37.58.86.163/api/"); //connecting to a web api via get/post which does the rpc calls for us
+define("JSONRPC_API_LOGIN",                 "0bb611895b9232310c3c4fb82d72bfb7"); //
+define("JSONRPC_API_PASSWORD",              "98b5ee46205e3d64433166490c5b5e84"); //
+define("JSONRPC_CONNECTIONSTRING",          "http://testingbtcU:testingbtc12@37.58.86.163:18332"); //only needed if connecting directly to a rpc server
 
 
 //##############################
@@ -136,16 +136,16 @@ define("TBL_COUNTRIES",                     "tbl_countries");               //st
 
 //##############################
 // Static Pages
-define("PAGE_HOME",                         "/wallet/");
-define("PAGE_SIGNIN",                       "/wallet/signin.php");
-define("PAGE_SIGNUP",                       "/wallet/signup.php");
-define("PAGE_WALLET",                       "/wallet/wallet.php");
-define("PAGE_SETTINGS",                     "/wallet/settings.php");
-define("CODE_DO",                           "/wallet/do.php");
-define("CODE_DOAJAX",                       "/wallet/ajax_do.php");
-define("CODE_PROCESSORDER",                 "/wallet/processorder2.php");
-define("MOD_SENDCRYPTO",                    "/wallet/sendcrypto.php");
-define("MOD_LOADCONTENT",                   "/wallet/loadcontent.php");
+define("PAGE_HOME",                         "/old_wallet/");
+define("PAGE_SIGNIN",                       "signin.php");
+define("PAGE_SIGNUP",                       "signup.php");
+define("PAGE_WALLET",                       "wallet.php");
+define("PAGE_SETTINGS",                     "settings.php");
+define("CODE_DO",                           "do.php");
+define("CODE_DOAJAX",                       "ajax_do.php");
+define("CODE_PROCESSORDER",                 "processorder2.php");
+define("MOD_SENDCRYPTO",                    "sendcrypto.php");
+define("MOD_LOADCONTENT",                   "loadcontent.php");
 
 
 //##############################

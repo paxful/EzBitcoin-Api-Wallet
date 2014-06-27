@@ -90,7 +90,7 @@ switch ($strDo){
             $strError = "ERROR - Receive Address NOT created. Please try again later.. sorry" ;
         }
 
-
+        //artur hates this... noob code
         header( 'Location: '. PAGE_WALLET.'?error='.$strError ); die(); //Make sure code after is not executed
 
     break;

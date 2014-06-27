@@ -76,17 +76,17 @@ function funct_Billing_ValidateAddress($strAddress){
 
 //################### WALLET FUNCTIONS BEGIN #######################################
 
-function funct_Billing_NewWalletAddress($strLabel,$strLabel2,$strLabel3){ //create a new wallet address, returns address as lone string
+function funct_Billing_NewWalletAddress( $strLabel, $strCrypto_Code ){ //create a new wallet address, returns address as lone string
 	//creates a new address via webapi 
-	// now using coincafe.co merchant api, Allah be praised! 
+
+//api call should take the crypto coin type
+
 	//http://5.153.60.162/merchant/?do=new_address&address=&label=testing%20public%20note&label2=testing%20note2&label3=testingnote3&loginname=coincafe&password=coincafe
 	$guid=urlencode(JSONRPC_API_LOGIN);
 	$firstpassword=urlencode(JSONRPC_API_PASSWORD);
 	$strLabel = urlencode($strLabel);
-	$strLabel2 = urlencode($strLabel2);
-	$strLabel3 = urlencode($strLabel3);
-	$json_url = JSONRPC_API_MERCHANT_URL."?do=new_address&loginname=$guid&password=$firstpassword&label=$strLabel&label2=$strLabel2&label3=$strLabel3";
-	
+	$json_url = JSONRPC_API_MERCHANT_URL."".$guid."/new_address?password=$firstpassword&label=$strLabel&cryptotype=$strCrypto_Code";
+	echo "$json_url <br>";
 	//site just spits our normal code now not json...
 	$json_data = file_get_contents($json_url);
 	$json_feed = json_decode($json_data);
@@ -123,42 +123,52 @@ function funct_MakeWalletAddressUpdate($intUserID, $strCrypto_Code){
 
     /* make wallet receiving address or full wallet */
     //get their custom wallet address - Blockchain.info  or local bitcoin qt json rpc
-    $strWalletLabel = $intNewRecordID." ".$FormRegEmail ;
-    $strWalletLabel = AlphaNumericOnly_RepaceWithSpace($strWalletLabel);
+    $strWalletLabel = AlphaNumericOnly_RepaceWithSpace($strEmail);
 
 
+    //create the new wallet address via json rpc
     //https://github.com/goethewins/EzBit-BitCoin-API--Wallet
-    $strWallet_Address = funct_Billing_NewWalletAddress($strName,$intUserID,$strEmail);
-    //$strSQLUpdate = " wallet_btc='$strWallet_Address' ,  wallet_address_cc='$strWallet_Address' , " ;
+    $strWallet_Address = funct_Billing_NewWalletAddress($strEmail);
 
     if($strWallet_Address){
 
         //update database with new wallet hash code
         $query="UPDATE " . TBL_USERS . " SET ".
             $strSQLUpdate.
-            " wallet_receive_on =1  ".
+            " wallet_receive_on = 1 ,  ".
+            " wallet_address= '$strWallet_Address' ".
             " WHERE id=".$intUserID ;
         //echo "SQL STMNT = " . $query .  "<br>";
         mysqli_query($DB_LINK, $query);// or die(mysqli_error());
 
 
-        if(!$strCrypto_Code){$strCrypto_Code="btc" ;}
+        //add record to wallet addresses table TBL_WALLET_ADDRESSES
+        $query = "INSERT INTO ".TBL_WALLET_ADDRESSES.
+            " ( user_id, 	wallet_address,	 		date_created ) VALUES ".
+            " ( $intUserID,	'$strWallet_Address',	NOW() 	  ) " ;
+        //echo "SQL STMNT = " . $query .  "<br>";
+        mysqli_query($DB_LINK, $query); //$intWalletID = mysqli_insert_id($DB_LINK);
+
+
         //add record to balances table - must only be on record per crypto type
+        //this record is needed only if their is multiple crypto alt coin support
+        //first see if there is already a record for this crypto type in the database
+        $query="SELECT * FROM " .TBL_WALLET_BALANCES. " WHERE currency_code= '".$strCrypto."' AND userid=".$intUserID."" ;
+        //echo "Rate Select SQL = " . $query .  "<br>";
+        $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
+        if(mysqli_num_rows($rs)>0){ $row=mysqli_fetch_array($rs);
+            //record found
+
+
+        }
+
+
+        if(!$strCrypto_Code){$strCrypto_Code="btc" ;}
         $query = "INSERT INTO ".TBL_WALLET_BALANCES.
             " ( user_id, 	currency_type, 	currency_code,	    balance	) VALUES ".
             " ( $intUserID,	'crypto',	    '$strCrypto_Code',  0 ) " ;
         //echo "SQL STMNT = " . $query .  "<br>";
         mysqli_query($DB_LINK, $query); //$intWalletID = mysqli_insert_id($DB_LINK);
-
-
-
-        //add record to wallet addresses table TBL_WALLET_ADDRESSES
-        $query = "INSERT INTO ".TBL_WALLET_ADDRESSES.
-            " ( user_id, 	wallet_address,			wallet_server, 				user_name,	date_created ) VALUES ".
-            " ( $intUserID,	'$strWallet_Address',	'$strWalletNewAddressHost',	'$strName',	NOW() 	  ) " ;
-        //echo "SQL STMNT = " . $query .  "<br>";
-        mysqli_query($DB_LINK, $query); //$intWalletID = mysqli_insert_id($DB_LINK);
-
 
 
         //make QR Code and save to their directory - google, phpapi
@@ -419,7 +429,33 @@ function funct_Billing_GetQRCodeImage($strHash, $strSaveToPath){ //create a new 
 
 
 
+function funct_CreateQRcode($strHashPaymentAddress, $pngFilePath){
 
+    //echo "calling QRcode::png  <br>";
+    $pngAbsoluteFilePath = __ROOT__.$pngFilePath ;
+
+    // generating from php qr code lib
+    QRcode::png($strHashPaymentAddress, $pngAbsoluteFilePath, "H",25,8); //25x8 = 980px
+    //echo "called QRcode::png  <br>";
+
+    if (file_exists($pngAbsoluteFilePath)) { //if file is not found then fall back onto a second method- google
+        return $pngFilePath ;
+    }
+
+}
+
+function funct_CreateQRcode_Google($strHashPaymentAddress, $pngFilePath){
+
+    $pngAbsoluteFilePath = __ROOT__.$pngFilePath ;
+
+    $url = 'https://chart.googleapis.com/chart?chs=540&cht=qr&chl='.$strHashPaymentAddress.'&choe=UTF-8';
+    file_put_contents($pngAbsoluteFilePath, file_get_contents($url));
+
+    if (file_exists($pngAbsoluteFilePath)) { //if file is not found then fall back onto a second method- google
+        return $pngFilePath ;
+    }
+
+}
 
 
 

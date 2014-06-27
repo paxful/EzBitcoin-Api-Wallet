@@ -24,6 +24,8 @@ require "functmail.php"; //holds all email functions * use as needed
 require "password.php"; //holds all email functions * use as needed
 require "jsonRPCClient.php"; //calls server.php within
 require "funct_jsonrpc.php"; //allows site to connect directly to an rpc server
+require 'phpqrcode/qrlib.php' ; //for making qr code images
+
 
 
 $intUserID_fromcode = funct_GetUserIDfromUserCode(); //legacy fix to replace int with 48 char hash from cookie

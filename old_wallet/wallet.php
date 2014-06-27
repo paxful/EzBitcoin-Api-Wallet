@@ -3,7 +3,7 @@ ob_start(); //so we can redirect even after headers are sent
 
 require "inc/session.php";
 
-//error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',2);
+error_reporting(E_ERROR | E_PARSE); ini_set('display_errors',2);
 $strERRORPage = 		"wallpet.php";
 $intTime = 				time();
 $strIPAddress = 		$_SERVER['REMOTE_ADDR'];
@@ -79,16 +79,19 @@ $intBalance_BTC_usd = $intBalance_BTC * $intRate_BTC_USD;
 
 $strWallet_MainAddress=		    	$row["wallet_address"]; //bitcoin wallet address
 $strQRcodeIMG = PATH_QRCODES.$strWalletBTC.".png";
-
+//echo "wallet: $strWallet_MainAddress <br>" ;
 
 //#####################################################################################
 //WALLET AUTO REGENERATION ROUTINE
 //if their qrcode image doesn't exist then create it again (/media/qrcode/walletaddress.png)
-if($strWalletShowReceiveAdddressFlag){
+if(!$strWallet_MainAddress){
+
+    //make new wallet address
+    $strWallet_MainAddress = funct_MakeWalletAddressUpdate($intUserID1, $strCrypto_Code);
 
     //if no qr code image is detected then create one
     if(!file_exists(__ROOT__.$strQRcodeIMG)){
-        $strError = funct_Billing_GetQRCodeImage($strWalletBTC, $strQRcodeIMG ); //save img to disk
+        $strError = funct_Billing_GetQRCodeImage($strWallet_MainAddress, $strQRcodeIMG ); //save img to disk
         //echo "no qr image.. writing file... $strError <br>";
     }
 }
@@ -435,7 +438,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 				<?php
 				//if email is not verified then show the  verify your email form
-				if($strShowEmailConfirmFlag){
+				if($strWallet_MainAddress){
 				?>
                     <!-- BEGIN email verify AREA -->
                     <form data-abide action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
