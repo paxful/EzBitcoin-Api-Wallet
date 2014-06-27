@@ -82,10 +82,11 @@ define("EMAIL_SMTPPASSWORD",                '');
 //##############################
 //Media & App Paths
 define("PATH_ADMIN",                        "/cp/");
+define("SITEROOT",                          "/old_wallet");
 define("__ROOT__",                          $_SERVER['DOCUMENT_ROOT']);
 define("PATH_MEDIA",                        "/media/");
 define("PATH_TEMP",                         "/media/temp/"); //not used...
-define("PATH_QRCODES",                      "/media/qrcodes/"); //available to public
+define("PATH_QRCODES",                      SITEROOT."/media/qrcodes/"); //available to public
 
 
 //##############################

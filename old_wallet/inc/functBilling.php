@@ -436,7 +436,7 @@ function funct_CreateQRcode($strHashPaymentAddress, $pngFilePath){
 
     // generating from php qr code lib
     QRcode::png($strHashPaymentAddress, $pngAbsoluteFilePath, "H",25,8); //25x8 = 980px
-    //echo "called QRcode::png  <br>";
+    echo "called QRcode::png - $pngAbsoluteFilePath  <br>";
 
     if (file_exists($pngAbsoluteFilePath)) { //if file is not found then fall back onto a second method- google
         return $pngFilePath ;

@@ -6,83 +6,66 @@ if(DETECT_USERID){
 ?>
 
 <!--TOP NAVIGATION BAR-->
-<div class="">
-  <div class="row">
-    <nav class="top-bar" style="background-color:#ccc;">
-      <ul class="title-area" style="background-color:#ccc;">
-        <li class="name">
-          <h1><a href="<?=$strHomeLink?>" style="background-color:#666;"><?=WEBSITENAME?></a></h1>
-        </li>
-        <li class="toggle-topbar menu-icon">
-          <a href="#"><span>Menu</span></a>
-        </li>
-      </ul>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="<?=$strHomeLink?>"><?=WEBSITENAME?></a>
+        </div>
 
-        <section class="top-bar-section">
-        <!-- Left Nav Section -->
-        <ul class="left">
-            <!-- <li><a href="faq.php" style="background-color:#663300;">F.A.Q.</a></li> -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Wallet</a></li>
+            </ul>
 
-        <?php if(DETECT_USERID){
 
-        $strUserIDhud = funct_GetandCleanVariables(DETECT_USERID);
-        
-          //Get User Data from DataBase
-          $query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $strUserIDhud ;
-          //echo "SQL STMNT = " . $query .  "<br>";
-          $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
-          $intUserID_hud=           $row["id"];
-          $Password_hud=            $row["password"];
-          $Email_hud=               $row["email"];
-          $strFirstName_hud=        $row["first_name"];
-          $strLastName_hud=         $row["last_name"];
-          $strPhone_hud=            $row["cellphone"];
-          
-          //$strWelcomeName = $Email_hud ;
-          if($strFirstName_hud){$strWelcomeName = $strFirstName_hud ;}
+            <?php if(DETECT_USERID){
 
-        ?>
-          <li><a href="<?=PAGE_WALLET?>" style="background-color:#cc6633;"><strong>My Wallet</strong></a></li>
+            $strUserIDhud = funct_GetandCleanVariables(DETECT_USERID);
+
+            //Get User Data from DataBase
+            $query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $strUserIDhud ;
+            //echo "SQL STMNT = " . $query .  "<br>";
+            $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+            $intUserID_hud=           $row["id"];
+            $Password_hud=            $row["password"];
+            $Email_hud=               $row["email"];
+            $strFirstName_hud=        $row["first_name"];
+            $strLastName_hud=         $row["last_name"];
+            $strPhone_hud=            $row["cellphone"];
+
+            //$strWelcomeName = $Email_hud ;
+            if($strFirstName_hud){$strWelcomeName = $strFirstName_hud ;}
+
+            ?>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Hi <?php echo $Email_hud ?></a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="<?php echo PAGE_SETTINGS ?>">Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<?php echo CODE_DO."?do=logout" ?>">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <?php }else{ ?>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="signin.php">Sign In</a></li>
                 <li class="divider"></li>
-                
-                <li class="has-dropdown">
-                <a href="<?=PAGE_SETTINGS?>" style="background-color:#cc6633;">Account</a>
-                <ul class="dropdown">
-                  <li><a href="<?=PAGE_SETTINGS?>">Settings</a></li>
-                  <li><a href="<?=PAGE_VERIFY?>">Verify</a></li>
-                </ul>
-            </li>
-          
-          
-          <li><a href="<?=CODE_DO?>?do=logout" style="background-color:#cc6633;">Logout</a></li>
-          
-        <?php }else{ ?>
-        
-          <li><a href="signin.php" style="background-color:#ff9900;">Sign In</a></li>
-                <li class="divider"></li>
-          <li><a href="signup.php" style="background-color:#ff9900;">Create Account</a></li>
-        
-        <?php } ?>
-        
-        
-        <?php
+                <li><a href="signup.php">Create Account</a></li>
+            </ul>
+            <?php } ?>
 
-        //get prices of btc for hud
-        $strCrypto="btc"; $strExchange=RATE_HUD_EXCHANGE;
-        $intRate_hud = funct_Billing_GetRate($strCrypto,$strExchange);
-        ?>
-
-        <?php if($intRate_hud){ ?><li><a href="#" style="background-color:#666;"><strong>BTC $<?=number_format($intRate_hud,2)?></strong></a></li><?php } ?>
-
-        </ul>
-          
-        </section>
-        <!-- END LEFT NAV BAR SECTION -->
-        
-        
-    </nav>
-  </div>
-</div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
 
 <div id="window_alert" class="alertwindow" style="display:none; position:fixed; left:5px; top:5px; width:90%; min-height:60px; z-index:10;"><span id="window_alert_txt" class="txtRPG_Actions"></span></div>
-
