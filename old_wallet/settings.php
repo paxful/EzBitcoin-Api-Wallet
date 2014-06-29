@@ -13,8 +13,9 @@ $strError_testphone = 		(funct_GetandCleanVariables($_GET['error_testphone']));
 $strError_confirmphone = 	(funct_GetandCleanVariables($_GET['error_confirmphone']));
 $strError_confirmemail = 	(funct_GetandCleanVariables($_GET['error_confirmemail']));
 
-
 if($strDo=="welcome"){$strError="Email Confirmed. Please Fill in your Address below";}
+
+
 
 //Check if logged in. If not then send to login page with an error.
 if($intUserID=="") { 
@@ -24,8 +25,7 @@ if($intUserID=="") {
 
 	if($DB_MYSQLI->connect_errno) { echo "Failed to connect to MySQL: (" . $DB_MYSQLI->connect_errno . ") " . $DB_MYSQLI->connect_error; }
 	$strSQL = "SELECT id,password,email,cellphone,first_name,last_name,address,address2,cityname,state,postal,country_id,country_phonecode,currency_id,currency_symbol,crypto_miner_fee,verification_level,verification_phone,verification_email FROM ".TBL_USERS." WHERE id = ? " ;
-	//echo "$strSQL <br>";
-	//echo  " $intUserID <br>";
+	//echo "$strSQL $intUserID <br>";
 	if( $stmt = $DB_MYSQLI->prepare($strSQL) ) { 
 		$stmt -> bind_param("i", $intUserID); //Bind parameters s - string, b - blob, i - int, etc
 		$stmt -> execute(); //Execute it
@@ -115,16 +115,17 @@ if($intUserID=="") {
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Account Settings<?=TITLE_END?></title>
+	<title>Account Settings</title>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="img/favicon.png" />
-	<link rel="stylesheet" href="css/web.css" />
-	<link rel="stylesheet" href="css/foundation.css" />
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootswatch.less" rel="stylesheet" />
+    <link href="css/bootstrapValidator.min.css" rel="stylesheet" />
+
 	<script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-	<script src="js/modernizr.js"></script>
 	
 
 <script language="javaScript">
@@ -133,9 +134,45 @@ if($intUserID=="") {
 		
 		<?php if($strDo=="emailconfirmed"){ ?>
 		//alert('Email Confirmed! Please fill in details');
-        $('#emailconfirm').foundation('reveal', 'open');			
+        $('#emailconfirm').modal('show');
 		<? } ?>
 	}); //close ready function
+
+
+
+    $(document).ready(function() {
+        $('#passwordupdate').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+
+                password2: {
+                    message: 'The password is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required and cannot be empty'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: 'The password must be more than 6 and less than 30 characters long'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_!@#$%^^&*]+$/,
+                            message: 'The password can only consist of alphabetical, number and symbols like !@#$%^&*'
+                        }
+                    }
+                }
+
+
+            }
+        });
+
+
 
 	function validateForm_passwordupdate() {
 	  var okSoFar=true
@@ -189,21 +226,7 @@ if($intUserID=="") {
 			document.signup.password.focus()
 			return false;
 		}
-		
 
-	/*
-		if (document.signup.passwordConfirm.value=="") {
-			okSoFar=false
-			alert("Please Retype your password to Confirm it")
-			document.signup.passwordConfirm.focus()
-			return false;
-		}
-	
-		if (document.signup.password.value != document.signup.passwordConfirm.value) {
-			alert("Your passwords do not match.")
-			return false;
-		} 
-	*/	 
 		//-- Reject eMail address if it doesn't contain an @ character.
 		var foundAt = document.signup.email.value.indexOf("@",0)
 		if (foundAt < 1 && okSoFar) {
@@ -279,29 +302,35 @@ if($intUserID=="") {
 <body onLoad="<?=$strOnBodyLoadJS?>">
 
 <?php require "hud.php"; ?>
+<div class="container-fluid">
 
-<p></p>
-<!-- BEGIN MAIN+SIDEBAR CONTENT AREA 8+4 COLUMNS -->
+<!-- BEGIN MAIN+SIDEBAR CONTENT AREA 8+4 -->
 <div class="row">
 
-    <!-- BEGIN MAIN CONTENT AREA 8 OF 12 COLUMNS -->
-	<div class="small-12 medium-8 columns">
-		
-		<h3>Settings <?=$Email_DB?></h3><br>
+    <!-- BEGIN MAIN CONTENT AREA 8 OF 12 -->
+	<div class="col-xs-12 col-md-8">
+
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Settings <?=$Email_DB?></h4>
+    </div>
+    <div class="panel-body">
+
 		<h4><?=$strError?></h4>
 
         
         <!-- BEGIN SETTINGS MAIN TABLE -->
-        <form data-abide action="<?=CODE_DO?>?do=update" method="POST" name="update">
+        <form role="form" action="<?=CODE_DO?>?do=update" method="POST" name="update">
             
-            <!-- Begin row Country 3+8+1 Columns -->
+            <!-- Begin row Country 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Country</h6>
                 </div>
-                <div class="small-8 columns">
-                    <select name="country" id="country" >
-                      <option value="0"<?php if($intCountryID < 1) { echo " selected " ;} ?>>Country...</option>
+                <div class="col-xs-8">
+                    <div class="form-group">
+                    <select class="form-control" name="country" id="country" >
+                      <option class="form-control" value="0"<?php if($intCountryID < 1) { echo " selected " ;} ?>>Country...</option>
                       <?php                       
                         $query=	"SELECT * FROM " .TBL_COUNTRIES. " ORDER BY sortid DESC, name ASC";
                         //echo "SQL STMNT = " . $q .  "<br>";
@@ -317,20 +346,22 @@ if($intUserID=="") {
                       <option value="<?php echo $intCountryID_DB ?>"<?php if($intCountryID_2 == $intCountryID_DB) { echo " selected " ;} ?>><?php echo $strCountryName_DB . " - ".$strCountryCode_DB ?></option>
                       <?php } //End Record While Loop ?>
                     </select>
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row Country -->
             
             
-            <!-- Begin row Currency 3+8+1 Columns -->
+            <!-- Begin row Currency 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Currency</h6>
                 </div>
-                <div class="small-8 columns">
-                    <select name="currency">
+                <div class="col-xs-8">
+                    <div class="form-group">
+                    <select class="form-control" name="currency">
                     <?php                       
                         $query=	"SELECT * FROM " .TBL_CURRENCY. " ORDER BY sortid DESC, currency_name ASC";
                         //echo "SQL STMNT = " . $q .  "<br>";
@@ -347,260 +378,166 @@ if($intUserID=="") {
                       <option value="<?php echo $intCurrencyID_DB ?>"<?php if($intCurrencyID == $intCurrencyID_DB) { echo " selected " ;} ?>><?php echo $strCurrencyName ?> - <?=$strCurrencyCode?></option>
                     <?php } //End Record While Loop ?>
                     </select>
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row Currency -->
             
-            
-            <!-- Begin row Password 3+8+1 Columns 
+
+            <!-- Begin row Mobile Phone 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
-                    <h6>Password</h6>
-                </div>
-                <div class="small-8 columns">
-                    <input name="password" type="password" required placeholder="password" value="<? echo $Password_DB; ?>" maxlength="30">
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>
-             End row Password -->
-            
-            
-            <!-- Begin row Email 3+8+1 Columns
-            <div class="row">
-                <div class="small-3 columns">
-                    <h6>Email</h6>
-                </div>
-                <div class="small-8 columns">
-                    <input name="email" type="text" required placeholder="your email"value="<?=$Email_DB?>" maxlength="50">
-                    <small class="error">Email is required</small>
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>
-             End row Email -->
-            
-            
-            <!-- Begin row Mobile Phone 3+8+1 Columns -->
-            <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Mobile Phone</h6>
                 </div>
-                <div class="small-8 columns">
-
-                      <input name="cellphone" type="text" required placeholder="your mobile phone" value="<?=$strCellPhone?>" maxlength="50">
-                      <small class="error">Mobile Phone is required</small>
-
+                <div class="col-xs-8">
+                    <div class="form-group">
+                      <input class="form-control" name="cellphone" type="text" required placeholder="your mobile phone" value="<?=$strCellPhone?>" maxlength="50">
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row Mobile Phone -->
            
 
-            <!-- Begin row First Name 3+8+1 Columns -->
+            <!-- Begin row First Name 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>First Name</h6>
                 </div>
-                <div class="small-8 columns">
-                    <input name="namefirst" type="text" required placeholder="first name" id="namefirst" value="<?=$strNameFirst?>" maxlength="50" />
-                    <small class="error">First Name is required</small>
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <input class="form-control" name="namefirst" type="text" required placeholder="first name" id="namefirst" value="<?=$strNameFirst?>" maxlength="50" />
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row First Name -->
  
             
-            <!-- Begin row Last Name 3+8+1 Columns -->
+            <!-- Begin row Last Name 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Last Name</h6>
                 </div>
-                <div class="small-8 columns">
-                    <input name="namelast" type="text" required placeholder="last name" id="namelast" value="<?=$strNameLast?>" maxlength="50" />
-                    <small class="error">Last Name is required</small>
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <input class="form-control" name="namelast" type="text" required placeholder="last name" id="namelast" value="<?=$strNameLast?>" maxlength="50" />
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row Last Name -->
            
             
-            <!-- Begin row Address1 3+8+1 Columns -->
+            <!-- Begin row Address1 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Address 1</h6>
                 </div>
-                <div class="small-8 columns">
-                    <input name="address" type="text" required placeholder="address 1" id="address1" value="<?=$strAddress_DB?>" maxlength="50" />
-                    <small class="error">Address is required</small>
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <input class="form-control" name="address" type="text" required placeholder="address 1" id="address1" value="<?=$strAddress_DB?>" maxlength="50" />
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
            <!--  End row Address1 -->
             
             
-            <!-- Begin row Address2 3+8+1 Columns -->
+            <!-- Begin row Address2 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Address 2</h6>
                 </div>
-                <div class="small-8 columns">
-                    <input name="address2" type="text" placeholder="address 2" id="address2" value="<?=$strAddress2_DB?>" maxlength="50" />
+                <div class="col-xs-8">
+                    <div class="form-group">
+                        <input class="form-control" name="address2" type="text" placeholder="address 2" id="address2" value="<?=$strAddress2_DB?>" maxlength="50" />
+                    </div>
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
              <!--End row Address2 -->
             
             
-            <!-- Begin row City and State/Province 3+8+1 Columns -->
+            <!-- Begin row City and State/Province 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>City, State/Province</h6>
                 </div>
-                <div class="small-8 columns">
+                <div class="col-xs-8">
 
                     <!-- BEGIN internal row to separate City and State/Province -->
                     <div class="row">
-                        <div class="small-6 columns">
-                            <input name="cityname" type="text" required placeholder="city" id="cityname" value="<?=$strCityName_DB?>" maxlength="50" />
-                            <small class="error">City is required</small>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <input class="form-control" name="cityname" type="text" required placeholder="city" id="cityname" value="<?=$strCityName_DB?>" maxlength="50" />
+                            </div>
                         </div>
-                        <div class="small-6 columns">
-                            <input name="state" type="text" required placeholder="state/province" id="state" value="<?=$strState_DB?>" maxlength="50" />
-                            <small class="error">S is required</small>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <input class="form-control" name="state" type="text" required placeholder="state/province" id="state" value="<?=$strState_DB?>" maxlength="50" />
+                            </div>
                         </div>
                     </div>
                     <!-- END internal row to separate City and State/Province -->
                     
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row City and State/Province -->
             
             
-            <!-- Begin row Display Country based on Country Code selected and Postal Code 3+8+1 Columns -->
+            <!-- Begin row Display Country based on Country Code selected and Postal Code 3+8+1 -->
             <div class="row">
-                <div class="small-3 columns">
+                <div class="col-xs-3">
                     <h6>Country</h6>
                 </div>
-                <div class="small-8 columns">
+                <div class="col-xs-8">
                     <!-- BEGIN internal row to separate Country and Postal Code -->
                     <div class="row">
-                        <div class="small-6 columns">
+                        <div class="col-xs-6">
                             <?=$strCountryName_DB_top?>
                         </div>
-                        <div class="small-6 columns">
-                            <input name="postal" type="text" required placeholder="postal code" id="postalcode" value="<?=$strPostal_DB?>" maxlength="50" />
-                            <small class="error">Postal Code is required</small>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <input class="form-control" name="postal" type="text" required placeholder="postal code" id="postalcode" value="<?=$strPostal_DB?>" maxlength="50" />
+                            </div>
                         </div>
                     </div>
                     <!-- END internal row to separate Country and Postal Code  -->
                 </div>
-                <div class="small-1 columns">
+                <div class="col-xs-1">
                 </div>
             </div>
             <!-- End row Display Country and Postal Code -->
+
             
-            
-            <!-- Begin row Bitcoin Wallet Address 3+8+1 Columns -->
-<!--            <div class="row">
-                <div class="small-3 columns">
-                    <h6>Bitcoin Wallet Address</h6>
-                </div>
-                <div class="small-8 columns">
-                    <input name="btcaddress" type="text" placeholder="your outside bitcoin wallet address - optional" id="name" value="<?=$strBitCoinAddress?>" maxlength="50" />
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>
-            <!-- End row Bitcoin Wallet Address -->
-            
-            
-            <!-- Begin row Bitcoin Transaction Fee 3+8+1 Columns -->
-<!--            <div class="row">
-                <div class="small-3 columns">
-                    <h6>Bitcoin Miner Fee (goes to the network)</h6>
-                </div>
-                <div class="small-8 columns">
-                    <select name="miningfee" >
-                        <option value="<?=MININGFEE_NORMAL?>"<?php if($intMinerFee == MININGFEE_NORMAL) { echo " selected " ;} ?>>Normal <?=MININGFEE_NORMAL?></option>
-                        <option value="<?=MININGFEE_SLOW?>"<?php if($intMinerFee == MININGFEE_SLOW) { echo " selected " ;} ?>>Slow <?=number_format(MININGFEE_SLOW,5)?></option>
-                        <option value="<?=MININGFEE_FAST?>"<?php if($intMinerFee == MININGFEE_FAST) { echo " selected " ;} ?>>Generous <?=MININGFEE_FAST?></option>
-                    </select>
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>
-            <!-- End row Bitcoin Wallet Address -->
-            
-            
-            <!-- Begin row Bank Account # 3+8+1 Columns -->
-<!--            <div class="row">
-                <div class="small-3 columns">
-                    <h6>Bank Account #</h6>
-                </div>
-                <div class="small-8 columns">
-                    <input name="bankaccount" type="text" placeholder="your bank account number - optional" id="website" value="<?=$strBankAccount?>" maxlength="50">
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>
-            <!-- End row Bank Account # -->
-            
-            
-            <!-- Begin row Bank Routing # 3+8+1 Columns -->
-<!--            <div class="row">
-                <div class="small-3 columns">
-                    <h6>Bank Routing #</h6>
-                </div>
-                <div class="small-8 columns">
-                    <input name="bankrouting" type="text" placeholder="your bank account routing - optional" id="website" value="<?=$strBankRouting?>" maxlength="50">
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>
-            <!-- End row Bank Routing # -->
-            
-            
-<!--            <div class="row">
-                <div class="small-3 columns">
-                    <h6>PayPal Email</h6>
-                </div>
-                <div class="small-8 columns">
-                    <input name="paypalemail" type="text" placeholder="paypal email - optional" value="<?=$strPayPalAddress?>" maxlength="50">
-                </div>
-                <div class="small-1 columns">
-                </div>
-            </div>-->
-            
-            
-            <!-- Begin row Update Account Button 12 Columns Centered -->
-            <div class="row">
-                <center>
-                    <div class="small-12 columns">
-                        <input name="countryid" id="countryid" type="hidden" value="<?=$intCountryID_DB?>" />
-                        <button type="submit" class="button" style="width:200px;">Update Account</button>
-                    </div>
-                </center>
-            </div>
+            <!-- Begin row Update Account Button 12 Centered -->
+            <p></p>
+            <input class="form-control" name="countryid" id="countryid" type="hidden" value="<?=$intCountryID_DB?>" />
+            <button type="submit" class="btn btn-primary btn-block" >Update Account</button>
+
 
 
 	</div>
-    <!-- END MAIN CONTENT AREA 8 OF 12 COLUMNS -->
+    <!-- END MAIN CONTENT AREA 8 OF 12 -->
 
+
+    </div>
+    </div>
     
     
     
-	<!-- BEGIN SIDEBARK CONTENT AREA 4 OF 12 COLUMNS -->
-	<div class="small-12 medium-4 columns">
+	<!-- BEGIN SIDEBARK CONTENT AREA 4 OF 12 -->
+	<div class="col-xs-12 col-md-4">
 		
 <!--		<? if($strVerificationLevel){ ?>
 		<div class="panel callout radius">
@@ -618,7 +555,7 @@ if($intUserID=="") {
 				<div class="panel radius">
 					<div class="confirm_email">
 					    <label>Confirm Email </label>
-					    <input name="emailcode" type="text" placeholder="email code">
+					    <input class="form-control" name="emailcode" type="text" placeholder="email code">
 						<span class="txtError"><?=$strError_confirmemail?></span>
 						<button type="submit">Confirm Email</button><br>
 						<?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>
@@ -658,11 +595,11 @@ if($intUserID=="") {
 					*/
 					?>
 						<div class="row">
-							<div class="small-1 columns">
-							    <input name="phone_countrycode" type="text" required style="width:50px;" value="<?=$strCellPhone_code?>">
+							<div class="col-xs-1">
+							    <input class="form-control" name="phone_countrycode" type="text" required style="width:50px;" value="<?=$strCellPhone_code?>">
 							</div>
-							<div class="small-9 columns">
-								<input name="phone" type="text" required placeholder="cellphone #" style="width:150px;" value="<?=$strCellPhone?>">
+							<div class="col-xs-9">
+								<input class="form-control" name="phone" type="text" required placeholder="cellphone #" style="width:150px;" value="<?=$strCellPhone?>">
 							</div>
 						</div>
 					    
@@ -682,7 +619,7 @@ if($intUserID=="") {
 	            <div class="panel radius">
 					<div class="confirmphone">
 					    <label>Confirm Phone <small></small></label>
-					    <input name="phonecode" type="text" placeholder="enter code sent to phone">
+					    <input class="form-control" name="phonecode" type="text" placeholder="enter code sent to phone">
 						<span class="txtError"><?=$strError_confirmphone?></span>
 						<button type="submit">Confirm Phone Code</button><br>
 					</div>
@@ -690,89 +627,72 @@ if($intUserID=="") {
 			</form>	
 			<? } ?>
 -->
-			<a name="passwordupdate"></a><br><br><br><br>
-			<form action="<?=CODE_DO?>?do=updatepassword" name="passwordupdate" method="POST">
-				<div class="panel radius">
-					<div class="password">
-					    <label>Password</label>
-					    <h4><?=$strErrorPassword?></h4>
-					    <div class="small-12 columns">
-					    <input name="passwordold" type="password" required id="passwordold" placeholder="current password">
-                        </div>
-                        <div class="small-12 columns">
-					    <input name="password" type="password" required id="password" placeholder="new password">
-                        </div>
-                        <div class="small-12 columns">
-						<input name="password2" type="password" required id="password2" placeholder="confirm new password">
-                        </div>
-					    
-						<?php if($strError_passwordupdate){ echo $strError_passwordupdate." <br>" ; } ?>
-						<a href="javascript:;" class="button" onClick="validateForm_passwordupdate();">Update Password</a><br>
-					</div>
-	            </div>
-			</form>			
 
-		
-		<?php //include __ROOT__."/inc/side_contact.php"; ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">Change Password</h4>
+            </div>
+            <div class="panel-body">
 
-		
-		<!--
-		
-		<div class="mediabutton" onMouseOver="this.style.borderColor='#000';" onMouseOut="this.style.borderColor='grey';" style="position:relative; top:50px;">
-			<IFRAME id="uploadbulk_iframe" src="/scripts/blueimp-jquery/custom.php?upload=avatar&userid1=<?=DETECT_USERID?>&un=<?=DETECT_USERNAME?>&ki=" style="position:absolute; left:0px; top:0px;  z-index:1; overflow-y: auto; overflow-x: hidden;">
-			</IFRAME>
-			<img id="avatarimg" style="z-index:0;" src="<?=$strProfilePicURL?>?d=<?=createRandomKey(4)?>" width="100%" height="100%" />
-		</div>
-		
-		-->	
-		
-		<!--
-		
-		<a href="javascript:confirmDelete('delete.page?id=1')" style="text-decoration:none;">
-			<div class="mediabutton" style="height:70px;" onMouseOver="this.style.borderColor='#000';" onMouseOut="this.style.borderColor='grey';">
-				<span class="txtRPG_Views" style="text-align:center">Delete Account</span>
-				<img src="/images/bomb.png" width="48" height="48" border="0">
-			</div>
-		</a>
-		
-		-->
+            <a name="passwordupdate"></a>
+                <form role="form" action="<?=CODE_DO?>?do=updatepassword" name="passwordupdate" method="POST">
+                    <div class="panel">
+                        <div class="password">
 
-        
+                            <h4><?=$strErrorPassword?></h4>
+
+                            <div class="form-group">
+                                <input class="form-control" name="passwordold" type="password" required id="passwordold" placeholder="current password">
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" name="password" type="password" required id="password" placeholder="new password">
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" name="password2" type="password" required id="password2" placeholder="confirm new password">
+                            </div>
+
+                            <?php if($strError_passwordupdate){ echo $strError_passwordupdate." <br>" ; } ?>
+                            <a href="javascript:;" class="btn btn-primary btn-block" onClick="validateForm_passwordupdate();">Update Password</a>
+
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
 
 
         
 		
 	</div>
-	<!-- END SIDEBARK CONTENT AREA 4 OF 12 COLUMNS -->
+	<!-- END SIDEBARK CONTENT AREA 4 OF 12 -->
 
 </div>
-<!-- END MAIN+SIDEBAR CONTENT AREA 8+4 COLUMNS -->
+<!-- END MAIN+SIDEBAR CONTENT AREA 8+4 -->
 
 
-<div id="emailconfirm" class="reveal-modal medium" data-reveal> 
-	<h4>Your email is now confirmed. Please fill in the fields below.</h4>
-	<a class="close-reveal-modal">&#215;</a> 
+<!-- Modal - send success-->
+<div class="modal fade" id="emailconfirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Your email is now confirmed. Please fill in the fields below.</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<script src="js/foundation.min.js"></script>
-<script src="js/foundation/foundation.abide.js"></script>
-<script src="js/foundation/foundation.reveal.js"></script>
-<script>
-  $(document)
-  .foundation()
-  .foundation('abide', {
-    patterns: {
-		alpha: /[a-zA-Z]+/,
-	    alpha_numeric : /[a-zA-Z0-9]+/,
-	    integer: /-?\d+/,
-	    number: /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/,
+</div>
 
-	    // generic password: upper-case, lower-case, number/special character, and min 8 characters
-	    //password : /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
-
-    }
-  });
-</script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/bootstrapValidator.min.js"></script>
 
 </body>
 </html>

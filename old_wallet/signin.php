@@ -20,39 +20,95 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="img/favicon.png" />
+
 	<meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width">
-   
-	<? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
 
-    <link rel="stylesheet" href="css/foundation.css" />
-    <script src="js/modernizr.js"></script>
-	
-<SCRIPT LANGUAGE="JavaScript">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootswatch.less" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
+
+    <? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
+
+
+    <SCRIPT LANGUAGE="JavaScript">
+
+    $(document).ready(function() {
+        $('#signin').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+
+                password: {
+                    message: 'The password is not valid',
+                    validators: {
+                        notEmpty: {
+                            message: 'The password is required and cannot be empty'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: 'The password must be more than 6 and less than 30 characters long'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_!@#$%^^&*]+$/,
+                            message: 'The password can only consist of alphabetical, number and symbols like !@#$%^&*'
+                        }
+                    }
+                },
+
+                email: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The email is required and cannot be empty'
+                        },
+                        emailAddress: {
+                            message: 'The input is not a valid email address'
+                        }
+                    }
+                }
+
+            }
+        });
+
+
+        $('#forgot').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+
+                forgot_email: {
+                    validators: {
+                        notEmpty: {
+                            message: 'The email is required and cannot be empty'
+                        },
+                        emailAddress: {
+                            message: 'The input is not a valid email address'
+                        }
+                    }
+                }
+
+            }
+        });
+
+
+
+    });
+
+
+
 	<!--
-	function jsfunct_join() {
-
-		var okSoFar=true
-
-		if (document.signup.email.value=="") {
-			alert("Enter your email address please.")
-			document.signup.email.focus(); okSoFar=false; return false;
-		}
-
-		if (document.signup.password.value=="") {
-			alert("Enter a Password Please.")
-			document.signup.password.focus(); okSoFar=false; return false;
-		}
-
-		if (okSoFar==true) {
-			document.getElementById('signup').submit();
-		}
-		
-	  return true;
-	}
 	
 	function validateForgotPasswordForm() {
 
@@ -73,7 +129,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 	//-->
 </SCRIPT>
     
-	<title>Sign In<?=TITLE_END?></title>
+	<title>Sign In<?=WEBSITENAME?></title>
     
 </head>
 
@@ -81,102 +137,93 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
 <?php require "hud.php"; ?>
 
-<p></p>
+<div class="container-fluid">
 
-<!-- BEGIN MAIN AREA 8+4 COLUMNS -->
-<div class="row">
+    <!-- BEGIN MAIN AREA 8+4 COLUMNS -->
+    <div class="row">
 
-    <!-- LEFT SIDE USERNAME AND PASSWORD AREA -->
-	<div class="small-12 medium-8 columns">
-	
-		<h3>Sign in to <?=WEBSITENAME?></h3>
-		<h4 style="color:darkred;"><?=$strError?></h4>
-		
-		<form name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=login&page=signin.php">
-            <div class="row">
-                <div class="small-8 medium-6 columns">
-                    <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
-                    <input name="password" type="password" required id="password" placeholder="select password">
+        <!-- LEFT SIDE USERNAME AND PASSWORD AREA -->
+        <div class="col-xs-12 col-md-8">
+avbar
+            <h3>Sign in to <?=WEBSITENAME?></h3>
+            <h4 style="color:darkred;"><?=$strError?></h4>
 
-                    <?
-                    if(SECURITY_CAPCHACHECK){
-                    	include __ROOT__.'/inc/capcha/recaptchalib.php' ;
-						$publickey = SECURITY_CAPCHA_PUBLICKEY ;
-						echo recaptcha_get_html($publickey);
-					}
-                    ?>
+            <form role="form" name="signin" id="signin" method="post" action="<?=CODE_DO?>?do=login&page=signin.php">
+                <div class="row">
+                    <div class="col-xs-8 col-md-6">
+                        <div class="form-group">
+                            <input class="form-control" name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="password" type="password" required id="password" placeholder="select password">
+                        </div>
 
-                    <button type="submit" onClick="return jsfunct_join();">Sign In </button>
-                    <strong style="color:#FFF;"><?=$strError?></strong>
-                    <br><h3>Don't have an account? <a href="signup.php">Sign up</a></h3>
-                </div>
-                <div class="small-4 medium-6 columns">
-                </div>
-            </div>
-		</form>
-		
-		
-		
-		
-		<p></p><br><p></p>
-		
+                        <?
+                        if(SECURITY_CAPCHACHECK){
+                            include __ROOT__.'/inc/capcha/recaptchalib.php' ;
+                            $publickey = SECURITY_CAPCHA_PUBLICKEY ;
+                            echo recaptcha_get_html($publickey);
+                        }
+                        ?>
+                        <br>
 
-		<h4>Forgot Password ?</h4>
+                        <button class="btn btn-primary btn-block" type="submit" onClick="return jsfunct_join();">Sign In </button>
 
-             <form action="<?=CODE_DO."?do=forgotpassword"?>&page=signin.php" method="POST" name="forgot" id="forgot">
-                
-                 <div class="row">
-				    <div class="large-6 columns">
-                        <input type="text" required placeholder="email" name="forgot_email" id="forgot_email" style="" autocomplete="true" value="<?=$FormRegEmail?>">
-                        
-                        <strong class="txtError"><?=$strError_forgot?></strong>
-                        <h5 id="error_forgot"></h5>
-                        
 
-                        
-                        <a href="javascript:;" onClick="return validateForgotPasswordForm();" style="text-decoration:none;">
-                            <input type="submit" class="button" value="Forgot password" style="" />
-                        </a>
+                        <strong style="color:#FFF;"><?=$strError?></strong>
+                        <br>
+                        <h3>Don't have an account? <a href="signup.php">Sign up</a></h3>
+                    </div>
+                    <div class="col-xs-4 col-md-6 columns">
                     </div>
                 </div>
-             </form>
-		
-	
-	</div>	
-    <!-- END LEFT SIDE USERNAME AND PASSWORD AREA -->
-	
-	
-    <!--SIDEBAR AREA-->
-	<div class="small-12 medium-4 columns">
-        <a href="signup.php"><img src="img/wallet.png" /></a>
-	</div>
-    <!--END SIDEBAR AREA-->
-	
-	
+            </form>
+
+
+            <p></p><br><p></p>
+
+
+            <h4>Forgot Password ?</h4>
+
+                 <form role="form" action="<?=CODE_DO."?do=forgotpassword"?>&page=signin.php" method="POST" name="forgot" id="forgot">
+
+                     <div class="row">
+                        <div class="col-xs-6">
+
+                            <div class="form-group">
+                                <input class="form-control" type="text" required placeholder="email" name="forgot_email" id="forgot_email" style="" autocomplete="true" value="<?=$FormRegEmail?>">
+                            </div>
+
+                            <strong class="txtError"><?=$strError_forgot?></strong>
+                            <h5 id="error_forgot"></h5>
+
+                            <a href="javascript:;" onClick="return validateForgotPasswordForm();" style="text-decoration:none;">
+                                <input type="submit" class="btn btn-primary btn-block" value="Forgot password" style="" />
+                            </a>
+                        </div>
+                    </div>
+                 </form>
+
+
+        </div>
+        <!-- END LEFT SIDE USERNAME AND PASSWORD AREA -->
+
+
+        <!--SIDEBAR AREA-->
+        <div class="col-xs-12 col-md-4">
+            <a href="signup.php"><img src="img/wallet.png" /></a>
+        </div>
+        <!--END SIDEBAR AREA-->
+
+
+    </div>
+    <!-- END MAIN AREA 8+4 COLUMNS -->
+
 </div>
-<!-- END MAIN AREA 8+4 COLUMNS -->
 
-
-
-<script src="js/jquery.min.js"></script>
-<script src="js/foundation.min.js"></script>
-<script src="js/foundation/foundation.abide.js"></script>
-<script>
-  $(document)
-  .foundation()
-  .foundation('abide', {
-    patterns: {
-		alpha: /[a-zA-Z]+/,
-	    alpha_numeric : /[a-zA-Z0-9]+/,
-	    integer: /-?\d+/,
-	    number: /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/,
-
-	    // generic password: upper-case, lower-case, number/special character, and min 8 characters
-	    //password : /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
-
-    }
-  });
-</script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/bootstrapValidator.min.js"></script>
 
 
 </body>

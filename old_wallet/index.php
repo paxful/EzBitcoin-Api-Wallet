@@ -22,44 +22,55 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
 
 ?>
 
-<!doctype html>
-<html class="no-js" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Buy Bitcoins<?=TITLE_END?></title>
+    <title><?=WEBSITENAME?></title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
 
-    <link rel="stylesheet" href="css/foundation.css" />
-    <link rel="stylesheet" href="css/custom.css" />
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <link href="css/bootswatch.less" rel="stylesheet">
+      <link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
 
-    <script src="js/modernizr.js"></script>
-    <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
+      <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
+
+
     <script>
-
-      <?php /* HOME PAGE JS SETUP - TODO: MOVE TO INCLUDE 'home.js' */ ?>
 
       $(document).ready(function(){
         <? if(MODE_UPGRADE){ ?>
-          $('#upgrademodal').foundation('reveal', 'open');
+          $('#upgrademodal').modal('show');
         <? } ?>
       });
 
-      function jsfunct_join() {
-        document.getElementById('checkout').action = '<?=CODE_DO?>?do=join';
-        var okSoFar=true
-        if (document.checkout.password.value=="") {
-          okSoFar=false
-          //alert("Enter a Password Please. at least 8 characters, 1 upper case, 1 number, 1 symbol")
-          document.checkout.password.focus()
-          return false;
-        }
-        if (okSoFar==true) {
-          document.getElementById('checkout').submit();
-        }
-      }
+      $(document).ready(function() {
+          $('#registerForm').bootstrapValidator({
+              message: 'This value is not valid',
+              feedbackIcons: {
+                  valid: 'glyphicon glyphicon-ok',
+                  invalid: 'glyphicon glyphicon-remove',
+                  validating: 'glyphicon glyphicon-refresh'
+              },
+              fields: {
+
+                  email: {
+                      validators: {
+                          notEmpty: {
+                              message: 'The email is required and cannot be empty'
+                          },
+                          emailAddress: {
+                              message: 'The input is not a valid email address'
+                          }
+                      }
+                  }
+
+              }
+          });
+      });
 
     </script>
 
@@ -68,28 +79,27 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
 
     <?php require "hud.php"; ?>
 
-    <p><br></p><br>
-
-
-    <div class="row">
+    <div class="row container-fluid">
 
       <!-- BEGIN 1st COLUMN 5 WIDE -->
-      <div class="medium-4 columns hide-for-small-only">
+      <div class="col-xs-4  hide-for-small-only">
         <img src="img/wallet.png" width="300" height="300" />
       </div>
       <!-- END 1st COLUMN -->
 
       <!-- BEGIN 2nd COLUMN 5 WIDE -->
-      <div class="small-8 medium-8 columns">
+      <div class="col-xs-8 col-md--8">
 
         <h3>Get your free wallet</h3>
 
-        <small>Already registered? <a href="/signin.php">Sign in</a></small><br><br>
+        <small>Already registered? <a href="<?php echo PAGE_SIGNIN ; ?>">Sign in</a></small><br><br>
 
-        <form data-abide name="checkout" id="checkout" method="post" action="<?=CODE_DO?>?do=join">
-          <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
-          <small class="error">Please enter a proper email.</small>
-          <button type="submit" class="button small">Create Free Wallet</button><br>
+        <form role="form" name="registerForm" id="registerForm" method="post" action="<?=CODE_DO?>?do=join">
+          <div class="form-group">
+          <input class="form-control" name="email" type="text" id="email" placeholder="your email" value="<?=$strEmail?>">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Create Free Wallet</button><br>
           <strong style="color:#FFF;"><?=$strError?></strong>
         </form>
 
@@ -145,8 +155,6 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
               <li>Donate to the cause </li>
           </ul>
 
-
-
       </div>
       <!-- END 2nd COLUMN -->
 
@@ -156,24 +164,12 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
 
     <!--MAIN CONTENT AREA-->
 
-    <br><br><br><br><br><br> 
+    <br><br><br><br><br><br>
 
-    <script src="js/foundation.min.js"></script>
-    <script src="js/foundation/foundation.abide.js"></script>
-    <script>
-      $(document)
-        .foundation()
-        .foundation('abide', {
-          patterns: {
-          alpha: /[a-zA-Z]+/,
-            alpha_numeric : /[a-zA-Z0-9]+/,
-            integer: /-?\d+/,
-            number: /-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?/,
-            // generic password: upper-case, lower-case, number/special character, and min 8 characters
-            password : /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
-          }
-        });
-    </script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/angular.min.js"></script>
+    <script src="js/bootstrapValidator.min.js"></script>
 
   </body>
 </html>

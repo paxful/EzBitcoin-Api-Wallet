@@ -86,7 +86,7 @@ function funct_Billing_NewWalletAddress( $strLabel, $strCrypto_Code ){ //create 
 	$firstpassword=urlencode(JSONRPC_API_PASSWORD);
 	$strLabel = urlencode($strLabel);
 	$json_url = JSONRPC_API_MERCHANT_URL."".$guid."/new_address?password=$firstpassword&label=$strLabel&cryptotype=$strCrypto_Code";
-	echo "$json_url <br>";
+	//echo "$json_url <br>";
 	//site just spits our normal code now not json...
 	$json_data = file_get_contents($json_url);
 	$json_feed = json_decode($json_data);
@@ -353,9 +353,10 @@ function funct_Billing_UpdateRate_Fiat($strFiat){
 	$intTimeDiffRate = time() - $intTimeLast ; 
 	//echo "rate data is $intTimeDiffRate seconds old <br>";
 	//if not there or too old then call it fresh OR If rate in database is 60 seconds old then get new rate
-	if(!$intRateUSD OR $intTimeDiffRate>RATE_REFRESH_FIAT_SECONDS){
+	if(!$intRateUSD OR $intTimeDiffRate>RATE_REFRESH_FIAT_SECONDS){ //RATEFIAT_REFRESH_SECONDS
 		//call right function for exchange
-		$intRateUSD= funct_Billing_GetFiat_Rate_Google("USD",$strFiat) ;
+		$intRateUSD= funct_Billing_GetFiat_Rate_Yahoo("USD",$strFiat) ;
+        //echo "fiat funct: $intRateUSD <br>";
 	}
 	
 	if(!$intRateBTC){	//get BTC rate as well
@@ -363,7 +364,7 @@ function funct_Billing_UpdateRate_Fiat($strFiat){
 		//echo "Rate Select SQL = " . $query .  "<br>";
 		$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error());
 		if(mysqli_num_rows($rs)>0){ $row=mysqli_fetch_array($rs);
-			$intRateBTC =					$row["rate"];
+			$intRateBTC =				$row["rate"];
 		}else{ $intRateBTC = 0; }
 	}
 	
@@ -395,6 +396,33 @@ function funct_Billing_GetFiat_Rate_Google($strCurrency1,$strCurrency2){
 }
 
 
+function funct_Billing_GetFiat_Rate_Yahoo($from,$to){
+    $url = 'http://finance.yahoo.com/d/quotes.csv?e=.csv&f=sl1d1t1&s='. $from . $to .'=X';
+    $handle = @fopen($url, 'r');
+
+    if($handle)
+    {
+        $result = fgets($handle, 4096);
+        fclose($handle);
+    }
+
+    $currencyData = explode(',',$result);
+    return $currencyData[1];
+}
+
+
+function funct_Billing_GetFiat_Rate_OpenEx($strCurrency1,$strCurrency2){
+
+    //Request: http://rate-exchange.appspot.com/currency?from=USD&to=EUR
+    //Response: {"to": "EUR", "rate": 0.76911244400000001, "from": "USD"}
+
+    if(!$strCurrency1){$strCurrency1="USD";}
+    $strUrl = 'https://openexchangerates.org/api/convert/$strCurrency1/$strCurrency2/latest.json?app_id=dabdd39be8064bfd82bcc94c44e40421';
+    $json_string = file_get_contents($strUrl);//get json response
+    $data = json_decode($json_string, TRUE);
+    $strValue = $data['rate'];
+    return $strValue ;
+}
 
 
 
@@ -436,7 +464,7 @@ function funct_CreateQRcode($strHashPaymentAddress, $pngFilePath){
 
     // generating from php qr code lib
     QRcode::png($strHashPaymentAddress, $pngAbsoluteFilePath, "H",25,8); //25x8 = 980px
-    echo "called QRcode::png - $pngAbsoluteFilePath  <br>";
+    //echo "called QRcode::png - $pngAbsoluteFilePath  <br>";
 
     if (file_exists($pngAbsoluteFilePath)) { //if file is not found then fall back onto a second method- google
         return $pngFilePath ;

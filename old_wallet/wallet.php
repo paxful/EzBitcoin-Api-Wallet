@@ -18,6 +18,16 @@ $strError_send = 				funct_GetandCleanVariables($_GET["error_send"]);
 $strWallet_Address_preload = 	funct_GetandCleanVariables($_GET["code"]);
 $strWallet_Address_preload2 = 	funct_GetandCleanVariables($_GET["qr"]);
 
+$strCryptoCode  = 	funct_GetandCleanVariables($_GET["crypto"]);
+if(!$strCryptoCode){$strCryptoCode="btc";}
+
+$strFiatCode  = 	funct_GetandCleanVariables($_GET["fiat"]);
+if(!$strFiatCode){$strFiatCode="usd";}
+
+
+
+
+
 
 //#### Get the qr code , label and amount from qrcode scanning app
 
@@ -72,11 +82,6 @@ $intEmailConfirmed=					$row["verification_email"];
 if(!$intEmailConfirmed){ $strShowEmailConfirmFlag=true ;}
 
 $intWalletReceiveOn = 				$row["wallet_receive_on"];
-$intBalance_BTC= number_format($row["balance_btc"],8) ; //balance of BTC
-
-$intRate_BTC_USD = funct_Billing_GetRate("btc"); //get usd value of BTC - coindesk, gox, bitstamp
-$intBalance_BTC_usd = $intBalance_BTC * $intRate_BTC_USD;
-
 $strWallet_MainAddress=		    	$row["wallet_address"]; //bitcoin wallet address
 $strQRcodeIMG = PATH_QRCODES.$strWallet_MainAddress.".png";
 //echo "wallet: $strWallet_MainAddress <br>" ;
@@ -96,6 +101,57 @@ if(!file_exists(__ROOT__.$strQRcodeIMG)){
     echo "no qr image.. writing file... $strError - $strQRcodeIMG <br>";
 }
 //#####################################################################################
+
+
+//get balance for crypto
+$query="SELECT * FROM " . TBL_WALLET_BALANCES . " WHERE userid = ". $intUserID1." AND currency_code='".$strCryptoCode."' AND currency_type='crypto' " ;
+//echo "SQL STMNT = " . $query .  "<br>";
+$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+$intBalance=						$row["balance"];
+$intBalance= number_format($intBalance,8) ; //balance of BTC
+
+
+//get bitcoin rate
+if($strCryptoCode=="btc"){
+    $intRate_BTC_USD = funct_Billing_GetRate("btc"); //get usd value of BTC - coindesk, gox, bitstamp
+    $intCrypto2Fiat_rate = $intRate_BTC_USD ;
+    $intBalance_Fiat = money_format($intBalance * $intRate_BTC_USD,2);
+}
+
+
+
+
+//convert to other fiat if not dollars
+if($strFiatCode!="usd"){
+
+    //get fiat rate
+    $intBalance_Fiat2USD = funct_Billing_UpdateRate_Fiat($strFiatCode);
+
+    //echo "fiat $strFiatCode - $intBalance_Fiat2USD <br>";
+
+    //get other crypto rate
+    //$intCrypto2Fiat_rate = $intRate_BTC_USD ;
+    $intCrypto2Fiat_rate = $intBalance_Fiat2USD * $intRate_BTC_USD ;
+
+    //no rate found so stick to dollars
+    if(!$intBalance_Fiat2USD){
+
+        //set crypto back to usd
+        $strFiatCode = "usd";
+
+    }
+}
+
+//get fiat info
+$query="SELECT * FROM " . TBL_CURRENCY . " WHERE currency_code='".$strFiatCode."'" ;
+//echo "SQL STMNT = " . $query .  "<br>";
+$rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+$intFiat_id=						$row["currency_id"];
+$strFiat_name=						$row["currency_name"];
+$strFiat_code=                      $row["currency_code"];
+$intFiat_rate_usd=					$row["currency_rate_USD"];
+$strFiat_rate_btc=					$row["currency_rate_BTC"];
+$intFiat_countryic=					$row["countryid"];
 
 
 
@@ -226,11 +282,12 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 <meta name="description" content="<?=$strPageTitle?>">
 <meta name="viewport" content="width=device-width">
 
-<!-- Favicon -->
-<link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
 
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
+    <link href="css/bootstrapValidator.min.css" rel="stylesheet" />
+
 
 <style type="text/css">
     .loader_anim {
@@ -252,8 +309,8 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 			
 //			jsfunct_Alert('Welcome to your free web wallet. ',5000);
         	$('#welcomemodal').foundation('reveal', 'open');
-//        	$('#myModal').foundation('reveal', 'close');
-			
+            $('#welcomemodal').modal('show');
+
 		<? } ?>
 		
 
@@ -266,6 +323,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		<? if($strDO=="sendSuccess"){ ?>
 
         	$('#sendsuccessmodal').foundation('reveal', 'open');
+            $('#sendsuccessmodal').modal('show');
 
 		<? } ?>
 		
@@ -278,7 +336,8 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		?>
 			//load important info html from 
 			$( "#walletnotice_html" ).load( "walletnotice.php" );
-			$('#walletnotice').foundation('reveal', 'open');
+			//$('#walletnotice').foundation('reveal', 'open');
+            $('#walletnotice').modal('show');
 		<? 
 			}
 		} ?>
@@ -287,7 +346,8 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 			if($strErrorClaim){
 		?>
 		$( "#walletnotice_html" ).html('<?=$strErrorClaim?>'); //load( "walletnotice.php" );
-		$('#walletnotice').foundation('reveal', 'open');
+		//$('#walletnotice').foundation('reveal', 'open');
+        $('#walletnotice').modal('show');
 		
 		<? } ?>
 		
@@ -309,7 +369,16 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 				
 			}
 		}); //close $(window).scroll(function(){
-		
+
+
+        $('#fiat_type').change(function(e){
+            var locAppend = $(this).find('option:selected').val(),
+                locSnip   = window.location.href.split('?')[0];
+
+            window.location.href = locSnip + locAppend;
+        });
+
+
 	}); //close ready function
 
 	
@@ -364,18 +433,19 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		//update balance with dynamic var
 		functjs_Refresh_Balance();
 	}
-	
+
+
 	function functjs_Refresh_Balance(){
 		//
-		$.get("<?=CODE_DOAJAX?>?do=getbalance&userid=<?=$intUserID1?>" , function(data){
+		$.get("<?=CODE_DO?>?do=getbalance&userid=<?=$intUserID1?>" , function(data){
 			if (data != "") {
 
 				var arrayResponse = data.split(",");
 				var intCryptoBalance = arrayResponse[0];
 				var intFiatBalance = arrayResponse[1];
 				
-				document.getElementById('txtBTCbalance').innerHTML = intCryptoBalance + ' BTC' ; //crypto balance
-				//document.getElementById('txtFIATbalance').innerHTML = '$' + intFiatBalance  ;//update fiat value too txtFIATbalance
+				document.getElementById('txtCryptoBalance').innerHTML = intCryptoBalance + ' BTC' ; //crypto balance
+				//document.getElementById('txtFiatBalance').innerHTML = '$' + intFiatBalance  ;//update fiat value too txtFiatBalance
 				
 			}
 		});
@@ -389,7 +459,6 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		alert('newstrec=' + intNewestID);
 		jsfunctGetLatest();
 	}
-	
 		
 	<? if(REFRESH_WALLET_SEC){ ?> 
 	var auto_refresh = setInterval( function () { jsfunctGetLatest(); }, <?=REFRESH_WALLET_SEC * 1000 ?>); // refresh every * milliseconds 10000= 10 seconds
@@ -402,22 +471,37 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 <?php require "hud.php"; ?>
 
+<div class="container-fluid">
 
+    <!--MAIN CONTENT AREA-->
+    <div class="row">
 
-
-<!--MAIN CONTENT AREA-->
-
-<div class="row">
-
-    <div class="col-xs-12">
-		<!--balance-->
-            <div style="text-align:right;">
-                <h3><strong id="txtBTCbalance"><?=$intBalance_BTC?> BTC</strong></h3>
-<!-- 				<br><small id="txtFIATbalance"><small>(approx. $<?=number_format($intBalance_BTC_usd,2)?> USD)</small></small></h3> -->
+        <div class="col-sm-7">
+            <!--balance-->
+            <div style="text-align:left;">
+                <h2><strong id="txtCryptoBalance"><?=$intBalance?> BTC</strong>  <small id="txtFiatBalance"><?php echo $intBalance_Fiat." ".$strFiatCode ?> (<em><?php echo $intCrypto2Fiat_rate ?></em>)</small></h2>
+                <!--<br><small id="txtFIATbalance"><small>(approx. $<?=number_format($intBalance_Fiat,2)?> USD)</small></small></h3> -->
             </div>
-	</div>
+        </div>
 
-</div>
+        <div class="col-sm-5" style="padding-top: 20px; ">
+            <select id="fiat_type" class="form-control">
+                <?php
+                $query=	"SELECT * FROM " .TBL_CURRENCY. " ORDER BY sortid ASC, currency_name ASC";
+                $rsCountry= mysqli_query($DB_LINK, $query) or die(mysqli_error());
+                while ($row=mysqli_fetch_array($rsCountry))
+                {
+                $intFiatCurrency_id=			$row["currency_id"];
+                $strFiatCurrency_Code=	        $row["currency_code"];
+                $strFiatCurrency_Name=			$row["currency_name"];
+
+                ?>
+                <option value="?fiat=<?php echo $strFiatCurrency_Code ?>" <?php if($strFiatCode==$strFiatCurrency_Code){ echo ' selected ' ; } ?>  ><?php echo $strFiatCurrency_Code." - ".$strFiatCurrency_Name ?></option>
+                <?php } ?>
+            </select>
+        </div>
+
+    </div>
 
 
 
@@ -431,7 +515,22 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
         <!-- ############################## RECEIVE MODULE -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">My Bitcoin Account</h4>
+                <h4 class="panel-title">My Account</h4>
+
+                <select id="crypto_type" class="form-control">
+                    <?php
+                    $query=	"SELECT * FROM " .TBL_CURRENCY_CRYPTO. " ORDER BY crypto_name ASC";
+                    $rsCountry= mysqli_query($DB_LINK, $query) or die(mysqli_error());
+                    while ($row=mysqli_fetch_array($rsCountry))
+                    {
+                        $strCryptoCurrency_Code=	        $row["crypto_code"];
+                        $strCryptoCurrency_Name=			$row["crypto_name"];
+
+                        ?>
+                        <option value="<?php echo $strFiatCurrency_Code ?>"><?php echo $strCryptoCurrency_Name ?></option>
+                    <?php } ?>
+                </select>
+
             </div>
             <div class="panel-body">
 				<?php
@@ -439,7 +538,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 				if(!$strWallet_MainAddress){
 				?>
                     <!-- BEGIN email verify AREA -->
-                    <form  role="form" action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
+                    <form role="form" action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
                         <div class="confirm_email">
                             <h5>To activate your receive wallet address. Please check your email and click the confirmation link. <br>Tip: check your Spam folder.</h5>
                             <h3><?=$strError?></h3>
@@ -459,7 +558,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 				if($strWallet_MainAddress){
 				?>
 				    <input name="wallethash" type="text" class="form-control" id="wallethash" value="<?=$strWallet_MainAddress?>"><script> $("#wallethash").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
-					<img src="<?=$strQRcodeIMG?>" width="300" height="300" />
+					<img src="<?=$strQRcodeIMG?>" class="img-responsive" />
 				<?php
 				}else{ //no btc wallet address in members table so
 
@@ -483,7 +582,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 
 
-            
+
 <!-- ############################## SEND MODULE -->
 			<? if($intSendLocked){ ?>
 				Your sending privileges have been locked.... sorry please contact <?=SUPPORT_EMAIL?><br><br>
@@ -497,15 +596,15 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 						<div class="hide-for-large-up">
 							<?php
-							
+
 							//Detect special conditions devices
 							$iPod    = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
 							$iPhone  = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
 							$iPad    = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
 							$Android = stripos($_SERVER['HTTP_USER_AGENT'],"Android");
 							$webOS   = stripos($_SERVER['HTTP_USER_AGENT'],"webOS");
-						
-							//do something with this information 
+
+							//do something with this information
 							if( $iPod || $iPhone || $iPad ){ //browser reported as an iPhone/iPod touch -- do something here
 								$strScanURL = QRSCANAPP_IOS_URINAME. "?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN';
 								//$strScanAhref = "javascript:jsfunct_DetectApp();";
@@ -513,32 +612,29 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 								$strAppURL = QRSCANAPP_IOS_URL;
 						    ?>
 							<a href="<?=$strAppURL?>">First Download This app to scan.</a><br>
-							<? 
+							<?
 							}else if($Android){ //browser reported as an Android device -- do something here
 								$strScanURL = QRSCANAPP_DROID_URINAME."?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN' ; //%7BCODE%7D
 								$strScanAhref = $strScanURL ;
 								$strAppURL = QRSCANAPP_DROID_URL;
 							?>
-							<a href="javascript:;" onClick="jsfunct_DetectApp();">First Download This app to scan.</a><br>  
+							<a href="javascript:;" onClick="jsfunct_DetectApp();">First Download This app to scan.</a><br>
 							<? } ?>
-							<center><a href="<?=$strScanAhref?>" class="button small expand">Scan QR</a></center>
+							<center><a href="<?=$strScanAhref?>" class="btn btn-info btn-sm btn-block" >Scan QR</a></center>
 						</div>
-						  	
+
 							<form role="form" name="sendbtc" id="sendbtc" method="post" action="#">
 								<div class="row">
 									<div class="col-xs-12">
 									   <input name="send_address" type="alpha_numeric" required id="send_address" placeholder="send to bitcoin address" class="form-control" style="width:100%;" value="<?=$strWallet_Address_preload?>">
-									   <small class="error">Please enter a Bitcoin address.</small>
 								   </div>
 								</div><br>
 								<div class="row">
 								   <div class="col-xs-6">
 								        <input name="send_amount_crypto" id="send_amount_crypto" type="number" placeholder="amount BTC" class="form-control" style="width:100%;" value="<?=$intWallet_Crypto_Amt_preload?>">
-										<small class="error">BTC amount must be a number</small>
 								   </div>
 								   <div class="col-xs-6">
 								        <input name="send_amount_fiat" id="send_amount_fiat" type="number" placeholder="or amount $" class="form-control" style="width:100%;" value="<?=$intAmountFiat?>">
-										<small class="error">USD $ amount must be a number</small>
 								   </div>
 								</div>
 								<div class="row">
@@ -549,21 +645,21 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 								<br>
 								<div id="window_send_alert_error" class="alertwindow_error" style="display:none; position: relative; width:300px; min-height:60px; z-index:10;"><span id="window_send_alert_error_txt" class="txtRPG_Actions"></span></div>
 								<div id="window_send_alert" class="alertwindow" style="display:none; position: relative; width:300px; min-height:60px; z-index:10;"><span id="window_send_alert_txt" class="txtRPG_Actions"></span></div>
-								
+
 								<div class="row">
 									<div class="col-xs-12">
 <!-- 										<button type="button small" style="width:100%;" id="button_send" onClick="jsfunct_SentUpdate();">Send Now</button> -->
-										<center><button class="btn btn-primary" id="button_send" onClick="jsfunct_SentUpdate();">Send Now</button></center>
+										<center><button class="btn btn-primary btn-block" id="button_send" onClick="jsfunct_SentUpdate();">Send Now</button></center>
 									</div>
 								</div>
 								<strong style="color:#C00;"><?=$strError_send?></strong>
 							</form>
                         </div>
 					</div>
-					
 
-								
-			
+
+
+
 			<? } ?>
 <!-- ############################## SEND MODULE END-->
 
@@ -578,7 +674,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 	<!--MAIN-->
         <div class="col-xs-12 col-md-8">
 			<div id="window_get_alert" class="alertwindow" style="display:none; position: relative; width:300px; min-height:60px; z-index:10;"><span id="window_get_alert_txt" class="txtRPG_Actions"></span></div>
-	
+
 			<!--ledger-->
 				 <table class="table table-striped">
 					<thead>
@@ -592,78 +688,125 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 			        </tr>
 			  		</thead>
 					<tbody id="tabledata">
-					<?php 
+					<?php
 					if($intUserID_db){ //chestid specified and not a new chest
 						$strDo= 			"include";
 						$sortby=			"top";
 						$intType = 			"transactions"; //files - get from top
-						//$intLastMSGID = 	0; 
+						//$intLastMSGID = 	0;
 						$intMaxRecords = 100 ; //MAXCHAR_RECORDS_TRANSACTIONS ;//get from top
 						$intRecID = false;
-						$intUserID_viewer = $intUserID_db ; 
+						$intUserID_viewer = $intUserID_db ;
 						if($intShowEditMod){$intMod="1";}
 						include __ROOT__.MOD_LOADCONTENT ;
 					}
 					?>
 					</tbody>
 			    </table>
-			    
+
 			</div>
 		</div>
-		
-		
+
+
 	<p></p><p></p><p></p>
-	
-	
 
-	
-	<div id="myModal" class="reveal-modal" data-reveal> 
-		<h2>Transaction Details</h2> 
-		<p class="lead">loading...</p> 
-		<a class="close-reveal-modal">&#215;</a> 
-	</div>
-	
 
-	<div id="emailverifiedmodal" class="reveal-modal medium" data-reveal> 
-		<h4>Your email is verified!</h4>
-	    <p>Now just update your password ( pick a tough one ) and you can turn on your wallet and start getting bitcoins!</p>
-	    <p>Thanks again and enjoy!<br>Coin Cafe</p>
-		<a class="close-reveal-modal">&#215;</a> 
-	</div>	
-	
-	<div id="sendsuccessmodal" class="reveal-modal medium" data-reveal> 
-		<h4>Bitcoin sent!</h4>
-	    <p>You have successfully authorized your send.</p>
-		<a class="close-reveal-modal">&#215;</a> 
-	</div>
+    <!-- Modal - loading transactions-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Transaction Details</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="lead">loading...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div id="askpassword" class="reveal-modal medium" data-reveal> 
-		<h4 id="password_header_txt">Please enter your password</h4>
 
-		<div class="row">
-		   <div class="large-4 columns">
-		        <input name="input_password" type="password" required id="input_password" placeholder="password" value="">
-				<small id="password_error"></small><br>
-				<button type="button" id="button_submitpassword" onClick="jsfunct_SubmitPassword();">Submit</button>
-		   </div>
-		</div>
-		<script>
-			//fire password function on enter of password form
-			document.getElementById('input_password').onkeypress = function(e) { 
-				if (e.keyCode == 13){   
-			        jsfunct_SubmitPassword(); 
-			    } 
-			}
-		</script>
-		<a class="close-reveal-modal">&#215;</a> 
-	</div>
-	
-	
-	<div id="bitcoinsend" class="reveal-modal" data-reveal> 
-		<h2>Transaction Status</h2> 
-		<p class="lead" id="bitcoinsend_errormsg">sending bitcoin...</p> 
-		<a class="close-reveal-modal">&#215;</a> 
-	</div>
+    <!-- Modal - email verified-->
+    <div class="modal fade" id="emailverifiedmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>Your email is verified!</h4>
+                    <p>Now just update your password ( pick a tough one ) and you can turn on your wallet and start getting bitcoins!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal - send success-->
+    <div class="modal fade" id="sendsuccessmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>Bitcoin sent!</h4>
+                    <p>You have successfully authorized your send.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal - ask password-->
+    <div class="modal fade" id="askpassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4 id="password_header_txt">Please enter your password</h4>
+
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <input name="input_password" type="password" required id="input_password" placeholder="password" class="form-control" value="">
+                            <button type="button" class="btn btn-primary" id="button_submitpassword" onClick="jsfunct_SubmitPassword();">Submit</button>
+                        </div>
+                    </div>
+                    <script>
+                        //fire password function on enter of password form
+                        document.getElementById('input_password').onkeypress = function(e) {
+                            if (e.keyCode == 13){
+                                jsfunct_SubmitPassword();
+                            }
+                        }
+                    </script>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal - send success-->
+    <div class="modal fade" id="sendsuccessmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h2>Transaction Status</h2>
+                    <p class="lead" id="bitcoinsend_errormsg">sending bitcoin...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 	
 	<div style="height:50px;"></div>	
@@ -675,6 +818,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		</div></center>
 	</div>
 
+</div>
 
 <script>
 
@@ -750,7 +894,8 @@ function jsfunct_SentUpdate(){ //sends bitcoin via ajax
         $("#password_header_txt").html("Please enter your password");
 
         //prompt for password
-        $('#askpassword').foundation('reveal', 'open');
+        //$('#askpassword').foundation('reveal', 'open');
+        $('#askpassword').modal('show');
 
         //set password to nothing to prevent browser prefill
         document.getElementById("input_password").value = '' ;
@@ -799,8 +944,11 @@ function jsfunct_SubmitPassword(){
 
                     document.getElementById("password_error").innerHTML = 'GOOD!.. Checking One Last Time. Please wait.... .... ..' ;
                     //document.getElementById("password_error").innerHTML = '' ;
+
                     //close modal window
-                    $('#askpassword').foundation('reveal', 'close');
+                    //$('#askpassword').foundation('reveal', 'close');
+                    $('#askpassword').modal('hide')
+
 
                     //disable button to send
 
@@ -929,6 +1077,9 @@ function jsfunctSendCrypto(strPassword){
 
 <script src="js/bootstrap.min.js"></script>
 <script src="js/angular.min.js"></script>
+<script type="text/javascript" src="js/bootstrapValidator.min.js"></script>
+
+
 
 </body>
 </html>

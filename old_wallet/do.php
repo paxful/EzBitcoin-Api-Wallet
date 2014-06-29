@@ -14,8 +14,6 @@ $intUserID = 		funct_GetandCleanVariables(DETECT_USERID);
 //echo "strDo= " . $strDo;
 switch ($strDo){
 
-
-
     //making a new address - called from
     //!CASE newpublickey
     case "newpublickey": //send email confirm code
@@ -123,13 +121,16 @@ switch ($strDo){
         $intBalanceCrypto=				$row["balance_btc"];
 
         //get balances
-        $intBalance = $intBalanceCrypto ;
 
-        //get fiat / crypto symbol
-        $intCryptoRate = funct_Billing_GetRate($strCryptoType);
-        $intFiatBalance = $intBalance * $intCryptoRate ;
+            //if crypto set then get crypto balance from balances table
+            $intBalance = $intBalanceCrypto ;
+
+            //if fiat set then get fiat balance
+            $intCryptoRate = funct_Billing_GetRate($strCryptoType);
+            $intFiatBalance = $intBalance * $intCryptoRate ;
 
         echo $intBalance.",".$intFiatBalance ;
+
 
     break;
 
@@ -758,7 +759,7 @@ switch ($strDo){
 		//mysqli_query($DB_LINK, $query);
 		functLogOutUser();
 
-		header( 'Location: /' );
+		header( 'Location: '.PAGE_HOME );
 		die(); //Make sure code after is not executed
 
 	break;
