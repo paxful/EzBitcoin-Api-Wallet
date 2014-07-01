@@ -384,7 +384,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 	
 	function jsfunct_LoadMoreRecords(){
 		$("#loader_bottom").fadeIn(1000);
-		strPostString = "<?=ADMIN_MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL ;
+		strPostString = "<?=MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL ;
 		//"<?=MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL
 		//alert('at bottom');
 		
@@ -407,7 +407,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 				}
 				//$('div#last_msg_loader').empty();
 		}); $("#loader_bottom").fadeOut(2000);
-	}; //close last_msg_funtion		
+	}; //close last_msg_funtion
 	
 	
 	function jsfunctGetLatest(){ 
@@ -437,16 +437,21 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 	function functjs_Refresh_Balance(){
 		//
-		$.get("<?=CODE_DO?>?do=getbalance&userid=<?=$intUserID1?>" , function(data){
+        strURLgetbalance = "<?=CODE_DO?>?do=getbalance&userid=<?php echo $intUserID1?>&crypto=<?php echo $strCryptoCode?>&fiat=<?php echo $strFiatCode?>" ;
+        //alert(strURLgetbalance);
+		$.get(strURLgetbalance , function(data){
 			if (data != "") {
 
 				var arrayResponse = data.split(",");
 				var intCryptoBalance = arrayResponse[0];
 				var intFiatBalance = arrayResponse[1];
-				
-				document.getElementById('txtCryptoBalance').innerHTML = intCryptoBalance + ' BTC' ; //crypto balance
-				//document.getElementById('txtFiatBalance').innerHTML = '$' + intFiatBalance  ;//update fiat value too txtFiatBalance
-				
+                var intCryptoFiatRate = arrayResponse[2];
+
+                //alert('crypto ' + intCryptoBalance + ' fiat ' + intFiatBalance + ' rate ' + intCryptoFiatRate);
+
+				document.getElementById('txtCryptoBalance').innerHTML = intCryptoBalance  ; //crypto balance
+				document.getElementById('txtFiatBalance').innerHTML =  intFiatBalance  ;//update fiat value too txtFiatBalance
+                document.getElementById('txtCryptoFiatRate').innerHTML =  intCryptoFiatRate  ;
 			}
 		});
 	}
@@ -479,7 +484,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
         <div class="col-sm-7">
             <!--balance-->
             <div style="text-align:left;">
-                <h2><strong id="txtCryptoBalance"><?=$intBalance?> BTC</strong>  <small id="txtFiatBalance"><?php echo $intBalance_Fiat." ".$strFiatCode ?> (<em><?php echo $intCrypto2Fiat_rate ?></em>)</small></h2>
+                <h2><div id="txtCryptoBalance"><?=$intBalance?> BTC</div>  <small id="txtFiatBalance"><?php echo number_format($intBalance_Fiat,2)." ".$strFiatCode ?></small> (<em id="txtCryptoFiatRate"><?php echo $intCrypto2Fiat_rate ?></em>)</h2>
                 <!--<br><small id="txtFIATbalance"><small>(approx. $<?=number_format($intBalance_Fiat,2)?> USD)</small></small></h3> -->
             </div>
         </div>
@@ -820,6 +825,8 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 </div>
 
+
+
 <script>
 
 $(document).ready(function(){
@@ -912,7 +919,6 @@ function jsfunct_SubmitPassword(){
 
     document.getElementById("password_header_txt").innerHTML = 'Now sending. Do NOT click twice! Please wait...' ;
 
-
     var okSoFar=true
 
     if (document.getElementById('input_password').value==""){
@@ -978,8 +984,6 @@ function pausecomp(ms) {
 
 
 function jsfunctSendCrypto(strPassword){
-
-
 
     //disable send button while sending
     $('#button_send').click(false);

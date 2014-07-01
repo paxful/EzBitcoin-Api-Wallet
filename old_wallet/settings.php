@@ -122,7 +122,7 @@ if($intUserID=="") {
 	<link rel="icon" type="image/png" href="img/favicon.png" />
 
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/bootswatch.less" rel="stylesheet" />
+    <link href="css/custom.css" rel="stylesheet" />
     <link href="css/bootstrapValidator.min.css" rel="stylesheet" />
 
 	<script src="<?=JQUERYSRC?>" type="text/javascript"></script>

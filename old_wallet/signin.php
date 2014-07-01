@@ -28,7 +28,7 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
     <link rel="icon" type="image/png" href="img/favicon.png" />
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootswatch.less" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
 
     <? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>

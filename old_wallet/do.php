@@ -101,18 +101,7 @@ switch ($strDo){
         $strCryptoType = 				(funct_GetandCleanVariables($_GET["crypto"])) ;
         $intOwnerID = 					(funct_GetandCleanVariables($_GET["userid"])) ;
 
-        if($intOwnerID != $intUserID_fromcode){
-            // 401 redirect
-            if($intUserID_fromcode == ''){
-                error_log('AUTH ISSUE: balance requested from user who is not logged in');
-                // todo: ajax fail should redirect to login page
-            } else {
-                error_log('AUTH ISSUE: balance requested from unauthorized user');
-                // todo: ajax fail should redirect to login page
-            }
-            header("HTTP/1.1 401 Unauthorized");
-            exit();
-        }
+        if(!$intOwnerID){ $intOwnerID = DETECT_USERID ;}
 
         //get usr info
         $query="SELECT * FROM " . TBL_USERS . " WHERE id = ". $intOwnerID ;
@@ -120,16 +109,26 @@ switch ($strDo){
         $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
         $intBalanceCrypto=				$row["balance_btc"];
 
-        //get balances
+        //get balances , rate
 
             //if crypto set then get crypto balance from balances table
-            $intBalance = $intBalanceCrypto ;
+            //get balance for crypto
+            $query="SELECT * FROM " . TBL_WALLET_BALANCES . " WHERE userid = ". $intOwnerID." AND currency_code='".$strCryptoType."' AND currency_type='crypto' " ;
+            //echo "SQL STMNT = " . $query .  "<br>";
+            $rs = mysqli_query($DB_LINK, $query) or die(mysqli_error()); $row=mysqli_fetch_array($rs) ;
+            $intBalance=				$row["balance"];
+            $intBalance= number_format($intBalance,8) ; //balance of BTC
+            //$intBalance = $intBalanceCrypto ;
 
             //if fiat set then get fiat balance
-            $intCryptoRate = funct_Billing_GetRate($strCryptoType);
+            $intCryptoRate = funct_Billing_GetRate($strCryptoType); //funct_Billing_UpdateRate_Fiat
             $intFiatBalance = $intBalance * $intCryptoRate ;
 
-        echo $intBalance.",".$intFiatBalance ;
+            //get crypto 2 fiat rate
+            //$intCryptoRate = "" ;
+
+
+        echo $intBalance.",".$intFiatBalance.",".$intCryptoRate  ;
 
 
     break;
