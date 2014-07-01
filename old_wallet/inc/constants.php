@@ -7,14 +7,17 @@ Features:
 
 //##############################
 //Wallet Settings
-define("WEBSITENAME",                       "Ez Wallet");
+define("WEBSITENAME",                       "EzBit");
 define("LOGIN_ONJOIN",                      1);//login them in automatically when they join
 define("LOGIN_SENDEMAILCODE",               1);//send them email when they join
 define("CREATEADDRESS_ONJOIN",              0);//make a receiving address for members on wallet... otherwise give them one when they verify their email.
 define("BANNEDWALLETREASONTXT",             "This address has been linked to illegal activities and has been banned."); //
+
 define("RATE_HUD_EXCHANGE",                 "bitstamp"); //show rate in hud from coindesk bitstamp etc..
 define("RATE_REFRESH_SECONDS",              "60"); //refresh crypto rate in hud every x secs -  60 seconds=1 minute
-define("REFRESH_WALLET_SEC",                "30"); // how many seconds to refresh the wallet transactions
+define("RATE_REFRESH_FIAT_SECONDS",          "6000"); //refresh crypto rate in hud every x secs -  60 seconds=1 minute
+define("REFRESH_WALLET_SEC",                "7"); // how many seconds to refresh the wallet transactions
+
 define("MAXCHAR_RECORDS_TRANSACTIONS",      25);// how many wallet transactions to show each time.
 define("QRSCANAPP_IOS_URINAME",             "pic2shop://scan");//
 define("QRSCANAPP_IOS_URL",                 "https://itunes.apple.com/us/app/pic2shop-barcode-scanner-qr/id308740640?mt=8");//
@@ -93,6 +96,7 @@ define("PATH_QRCODES",                      SITEROOT."/media/qrcodes/"); //avail
 //Server Environment Settings .. add case statements here for different dev environments and production environments, staging etc...
 require "server.php"; //for server specific data $strServer value
 define("SERVERTAG",                 $strServer); //from above included file
+//echo "server $strServer ";
 switch ($strServer){ // Server SiteWide Vars
     case "dev":
     define("MODE_UPGRADE",              0);
@@ -120,6 +124,7 @@ if( ! $DB_LINK = mysqli_connect(DB_SERVER,DB_USER,DB_PASS,DB_NAME) ){
     error_log("Failed to connect to MySQL: ".mysqli_error());
     die('no db');
 }
+
 //Main content tables
 define("TBL_USERS",                         "tbl_member");                  //holds all user records
 define("TBL_WALLET_ADDRESSES",              "tbl_wallet_addresses");        //logging addresses for each user across crypto wallets
@@ -143,7 +148,7 @@ define("PAGE_SIGNUP",                       "signup.php");
 define("PAGE_WALLET",                       "wallet.php");
 define("PAGE_SETTINGS",                     "settings.php");
 define("CODE_DO",                           "do.php");
-define("CODE_DOAJAX",                       "ajax_do.php");
+define("CODE_DOAJAX",                       "do.php");
 define("CODE_PROCESSORDER",                 "processorder2.php");
 define("MOD_SENDCRYPTO",                    "sendcrypto.php");
 define("MOD_LOADCONTENT",                   "loadcontent.php");

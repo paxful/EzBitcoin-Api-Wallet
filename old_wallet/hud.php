@@ -8,6 +8,7 @@ if(DETECT_USERID){
 <!--TOP NAVIGATION BAR-->
 <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
+
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -22,7 +23,7 @@ if(DETECT_USERID){
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Wallet</a></li>
+                <li class="active"><a href="<?php echo PAGE_WALLET ;?>">Wallet</a></li>
             </ul>
 
 
@@ -46,9 +47,8 @@ if(DETECT_USERID){
 
             ?>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">Hi <?php echo $Email_hud ?></a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret"></span></a>
+                    <a href="<?php echo PAGE_SETTINGS ?>" class="dropdown-toggle" data-toggle="dropdown">Hi <?php echo $Email_hud ?> <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo PAGE_SETTINGS ?>">Settings</a></li>
                         <li class="divider"></li>
@@ -59,8 +59,9 @@ if(DETECT_USERID){
             <?php }else{ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="signin.php">Sign In</a></li>
+                <!--
                 <li class="divider"></li>
-                <li><a href="signup.php">Create Account</a></li>
+                <li><a href="signup.php">Create Account</a></li>-->
             </ul>
             <?php } ?>
 
