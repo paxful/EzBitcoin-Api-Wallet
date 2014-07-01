@@ -243,6 +243,9 @@ May have to do in folder -> sudo update-rc.d runbitcoind defaults
     bitcoind listtransactions
 
 
+###move files outside of directory they are in
+
+    mv * .[^.]* ..
 
 
 ### If you get errors installing
