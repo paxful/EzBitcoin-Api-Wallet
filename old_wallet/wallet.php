@@ -18,10 +18,10 @@ $strError_send = 				funct_GetandCleanVariables($_GET["error_send"]);
 $strWallet_Address_preload = 	funct_GetandCleanVariables($_GET["code"]);
 $strWallet_Address_preload2 = 	funct_GetandCleanVariables($_GET["qr"]);
 
-$strCryptoCode  = 	funct_GetandCleanVariables($_GET["crypto"]);
+$strCryptoCode  = 	            funct_GetandCleanVariables($_GET["crypto"]);
 if(!$strCryptoCode){$strCryptoCode="btc";}
 
-$strFiatCode  = 	funct_GetandCleanVariables($_GET["fiat"]);
+$strFiatCode  = 	            funct_GetandCleanVariables($_GET["fiat"]);
 if(!$strFiatCode){$strFiatCode="usd";}
 
 
@@ -95,10 +95,12 @@ if(!$strWallet_MainAddress){
     $strWallet_MainAddress = funct_MakeWalletAddressUpdate($intUserID1, $strCrypto_Code);
 }
 
-//if no qr code image is detected then create one
-if(!file_exists(__ROOT__.$strQRcodeIMG)){
-    $strError = funct_Billing_GetQRCodeImage($strWallet_MainAddress, $strQRcodeIMG ); //save img to disk
-    echo "no qr image.. writing file... $strError - $strQRcodeIMG <br>";
+if($strWallet_MainAddress){
+    //if no qr code image is detected then create one
+    if(!file_exists(__ROOT__.$strQRcodeIMG)){
+        $strError = funct_Billing_GetQRCodeImage($strWallet_MainAddress, $strQRcodeIMG ); //save img to disk
+        echo "no qr image.. writing file... $strError - $strQRcodeIMG <br>";
+    }
 }
 //#####################################################################################
 
@@ -271,7 +273,7 @@ $intFiat_countryic=					$row["countryid"];
 
 
 //get current BTC rate
-$intRate = funct_Billing_GetRate($strCrypto,$strExchange); 
+//$intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
