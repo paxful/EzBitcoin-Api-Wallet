@@ -113,7 +113,7 @@ $intBalance= number_format($intBalance,8) ; //balance of BTC
 
 //get bitcoin rate
 if($strCryptoCode=="btc"){
-    $intRate_BTC_USD = funct_Billing_GetRate("btc"); //get usd value of BTC - coindesk, gox, bitstamp
+    $intRate_BTC_USD = funct_Billing_GetRate("btc", 'coindesk'); //get usd value of BTC - coindesk, gox, bitstamp
     $intCrypto2Fiat_rate = $intRate_BTC_USD ;
     $intBalance_Fiat = money_format($intBalance * $intRate_BTC_USD,2);
 }
@@ -299,36 +299,36 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 </style>
 
 <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
-<? $intJquerySoundManager=1;?><script src="js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = 'js/soundmanager2.swf'; soundManager.onready(function() {});</script>
+<?php $intJquerySoundManager=1;?><script src="js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = 'js/soundmanager2.swf'; soundManager.onready(function() {});</script>
 
 <script>
 
 	$(document).ready(function(){
 		
-		<? if($strDO=="justjoined"){ ?>
+		<?php if($strDO=="justjoined"){ ?>
 			
 //			jsfunct_Alert('Welcome to your free web wallet. ',5000);
         	$('#welcomemodal').foundation('reveal', 'open');
             $('#welcomemodal').modal('show');
 
-		<? } ?>
+		<?php } ?>
 		
 
-		<? if($strDO=="emailverified"){ ?>
+		<?php if($strDO=="emailverified"){ ?>
 
         	//$('#emailverifiedmodal').foundation('reveal', 'open');
 			
-		<? } ?>
+		<?php } ?>
 
-		<? if($strDO=="sendSuccess"){ ?>
+		<?php if($strDO=="sendSuccess"){ ?>
 
         	$('#sendsuccessmodal').foundation('reveal', 'open');
             $('#sendsuccessmodal').modal('show');
 
-		<? } ?>
+		<?php } ?>
 		
 		
-		<? if(WALLET_NOTICE){ 
+		<?php if(WALLET_NOTICE){ 
 			//show a notice for wallet users ex. blackout etc... db down
 			
 			//only show if they have a balance greater than zero
@@ -338,18 +338,18 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 			$( "#walletnotice_html" ).load( "walletnotice.php" );
 			//$('#walletnotice').foundation('reveal', 'open');
             $('#walletnotice').modal('show');
-		<? 
+		<?php 
 			}
 		} ?>
 		
-		<? 
+		<?php 
 			if($strErrorClaim){
 		?>
 		$( "#walletnotice_html" ).html('<?=$strErrorClaim?>'); //load( "walletnotice.php" );
 		//$('#walletnotice').foundation('reveal', 'open');
         $('#walletnotice').modal('show');
 		
-		<? } ?>
+		<?php } ?>
 		
 		var bSuppressScroll = false ;
 		intLastRecord = 0 ;
@@ -465,9 +465,9 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 		jsfunctGetLatest();
 	}
 		
-	<? if(REFRESH_WALLET_SEC){ ?> 
+	<?php if(REFRESH_WALLET_SEC){ ?> 
 	var auto_refresh = setInterval( function () { jsfunctGetLatest(); }, <?=REFRESH_WALLET_SEC * 1000 ?>); // refresh every * milliseconds 10000= 10 seconds
-	<? } ?>
+	<?php } ?>
 
 </script>
 </head>
@@ -589,9 +589,9 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 
 <!-- ############################## SEND MODULE -->
-			<? if($intSendLocked){ ?>
+			<?php if($intSendLocked){ ?>
 				Your sending privileges have been locked.... sorry please contact <?=SUPPORT_EMAIL?><br><br>
-			<? }else{ //show send code ?>
+			<?php }else{ //show send code ?>
 
                 <div class="panel panel-default">
                 <div class="panel-heading">
@@ -624,7 +624,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 								$strAppURL = QRSCANAPP_DROID_URL;
 							?>
 							<a href="javascript:;" onClick="jsfunct_DetectApp();">First Download This app to scan.</a><br>
-							<? } ?>
+							<?php } ?>
 							<center><a href="<?=$strScanAhref?>" class="btn btn-info btn-sm btn-block" >Scan QR</a></center>
 						</div>
 
@@ -665,7 +665,7 @@ $intRate = funct_Billing_GetRate($strCrypto,$strExchange);
 
 
 
-			<? } ?>
+			<?php } ?>
 <!-- ############################## SEND MODULE END-->
 
         </div>
@@ -852,13 +852,13 @@ $(document).ready(function(){
             document.getElementById("send_amount_crypto").value = ( Math.abs(document.getElementById("send_amount_fiat").value) / intRate ).toFixed(8) ;
         }
     });
-    <? if($strWallet_Address_preload){ //if returning from scanner then scroll to send part #get ?>
+    <?php if($strWallet_Address_preload){ //if returning from scanner then scroll to send part #get ?>
     $('html, body').animate({
         scrollTop: $("#get").offset().top
     }, 2000);
     soundManager.play('select','/sounds/messagesent.mp3');//play sound
 
-    <? } ?>
+    <?php } ?>
 
 
 
