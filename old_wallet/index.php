@@ -94,7 +94,7 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
 
         <small>Already registered? <a href="<?php echo PAGE_SIGNIN ; ?>">Sign in</a></small><br><br>
 
-        <form role="form" name="registerForm" id="registerForm" method="post" action="<?php CODE_DO?>?do=join">
+        <form role="form" name="registerForm" id="registerForm" method="post" action="<?php echo CODE_DO?>?do=join">
           <div class="form-group">
           <input class="form-control" name="email" type="text" id="email" placeholder="your email" value="<?php $strEmail?>">
           </div>
