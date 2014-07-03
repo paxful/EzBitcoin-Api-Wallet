@@ -27,7 +27,7 @@ if($strDo=="ajax" || $strDo=="iframe"){
 	if($strDo=="iframe"){ ?>
 		<link href="css/web.css" media="screen" rel="stylesheet" type="text/css">
         <script src="js/web.js" type="text/javascript"></script>
-	<? }
+	<?php }
 
 }else{ //file is being included and values are preset 
 	
@@ -232,7 +232,7 @@ switch ($intType){
 		if($intRecID){	//Pulling up single transaction details for modal
     ?>
 	<div class="row">
-		<h4>Transaction ID: <strong><?=$strTransactionHash?></strong></h4> <br>
+		<h4>Transaction ID: <strong><?php $strTransactionHash?></strong></h4> <br>
 
         <div class="small-4 columns">
       
@@ -247,29 +247,29 @@ switch ($intType){
 			CoinCafe ID: <br>
         </div>
 		<div class="small-8 columns">
-			<strong style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong><br>
-			<?=$intCryptoMiningFee?><br>
-			<?=$strCryptoType?><br>
-			$<?=money_format('%i', $intFiatValue) ?><br>
-			<?=$intFiatRate?><br>
-			<?=$strWalletFrom?><br>
-			<?=$strWalletSentTo?><br>
-			<?=$strDate_formatted?><br>
+			<strong style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong><br>
+			<?php $intCryptoMiningFee?><br>
+			<?php $strCryptoType?><br>
+			$<?php money_format('%i', $intFiatValue) ?><br>
+			<?php $intFiatRate?><br>
+			<?php $strWalletFrom?><br>
+			<?php $strWalletSentTo?><br>
+			<?php $strDate_formatted?><br>
 			
-			<? if($strTransactionHash){ ?>
-			<input id="transactionhash_<?=$intTransactionID?>" type="text" class="" style="display:inline-block; width:200px; height:25px; font-size:12px; padding:5px; border-width:0px;" value="<?=$strTransactionHash?>" size="16" maxlength="50" />
-			<script> $("#transactionhash_<?=$intTransactionID?>").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
-			<? }else{ 
+			<?php if($strTransactionHash){ ?>
+			<input id="transactionhash_<?php $intTransactionID?>" type="text" class="" style="display:inline-block; width:200px; height:25px; font-size:12px; padding:5px; border-width:0px;" value="<?php $strTransactionHash?>" size="16" maxlength="50" />
+			<script> $("#transactionhash_<?php $intTransactionID?>").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
+			<?php }else{
 				//no transaction id so instead give them a link to a block explorer so they can track it down themselves
 			?>
-			<a href="https://blockchain.info/address/<?=$strWalletSentTo?>" target="_blank">find transaction id here</a>
-			<? } ?>
+			<a href="https://blockchain.info/address/<?php $strWalletSentTo?>" target="_blank">find transaction id here</a>
+			<?php } ?>
 			
         </div>
 
     </div>
 
-	<? }else{ // Regular activity/transactions list on wallet.php 
+	<?php }else{ // Regular activity/transactions list on wallet.php
 		
 		if($intTransactionID<=2625){
 			
@@ -283,24 +283,24 @@ switch ($intType){
 		
 	?>
 	    <tr>
-			<td align="left"><medium><?=$strDate_formatted?> ET</medium> <br><small>(<?=$strDate_formatted_nice?>)</small></td>
-			<td align="left"><a href="<?=$strLink?>"<?=$strLinkModal?>><?=$strLinkText?></a><br>
-			<?=$strLabel?>
-			<? if($strTransactionHash){ ?>
-			<input id="transactionhash_<?=$intTransactionID?>" type="text" class="" style="display:inline-block; width:200px; height:25px; font-size:12px; padding:5px; border-width:0px;" value="<?=$strTransactionHash?>" size="16" maxlength="50" />
-			<script> $("#transactionhash_<?=$intTransactionID?>").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
-			<? }else{ 
+			<td align="left"><medium><?php $strDate_formatted?> ET</medium> <br><small>(<?php $strDate_formatted_nice?>)</small></td>
+			<td align="left"><a href="<?php $strLink?>"<?php $strLinkModal?>><?php $strLinkText?></a><br>
+			<?php $strLabel?>
+			<?php if($strTransactionHash){ ?>
+			<input id="transactionhash_<?php $intTransactionID?>" type="text" class="" style="display:inline-block; width:200px; height:25px; font-size:12px; padding:5px; border-width:0px;" value="<?php $strTransactionHash?>" size="16" maxlength="50" />
+			<script> $("#transactionhash_<?php $intTransactionID?>").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
+			<?php }else{
 				//no transaction id so instead give them a link to a block explorer so they can track it down themselves
 			?>
-			<a href="https://blockchain.info/address/<?=$strWalletSentTo?>" target="_blank"><small>find transaction id here</small></a>
-			<? } ?>
+			<a href="https://blockchain.info/address/<?php $strWalletSentTo?>" target="_blank"><small>find transaction id here</small></a>
+			<?php } ?>
 			</td>
-<!--			<td align="left"><a href="<?=$strLink?>"<?=$strLinkModal?>><?=$strLinkText?></a><br><?=$strLabel?></td>-->
+<!--			<td align="left"><a href="<?php $strLink?>"<?php $strLinkModal?>><?php $strLinkText?></a><br><?php $strLabel?></td>-->
 
 <!-- 			COMMENTING THIS OUT TO HIDE THE USD VALUE IN THE TRANSACTIONS LIST -John -->
-			<td align="left"><span style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=number_format($strCryptoAmt,8)?> </span></td>
+			<td align="left"><span style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php number_format($strCryptoAmt,8)?> </span></td>
 			<td align="left"><span style="color:#000000;"><?php if($balance_curr!=0){$balance_curr_display=number_format($balance_curr,8); echo "$balance_curr_display";} else {echo "";}?></span></td>
-<!-- 			<td align="left"><strong style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?></strong></td> -->
+<!-- 			<td align="left"><strong style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?></strong></td> -->
 	    </tr>
 	<?
 		}//end if intRecID
@@ -316,15 +316,15 @@ switch ($intType){
 if($strDo!="iframe" AND !$intRecID){ ?>	
 	<script>
     $(document).ready(function(){ 
-		<? if($intNewstID){ ?>intNewestID = <?=$intNewstID?>;<? } ?>
-		<? if($intRecID){ ?>intLastRecord=<?=$intRecID?>;<? } ?>
-		<? if($b){ ?>intLastRecord=<?=$b?>;<? } ?>
-		<? if($nr0){ //set total records on txt  ?>intTotalRecords=<?=$nr0?> ;<? } ?>
-		<? /*
+		<?php if($intNewstID){ ?>intNewestID = <?php $intNewstID?>;<?php } ?>
+		<?php if($intRecID){ ?>intLastRecord=<?php $intRecID?>;<?php } ?>
+		<?php if($b){ ?>intLastRecord=<?php $b?>;<?php } ?>
+		<?php if($nr0){ //set total records on txt  ?>intTotalRecords=<?php $nr0?> ;<?php } ?>
+		<?php /*
 		jsfunct_Alert_Debug( 'strLoadContentAjaxURL= ' + strLoadContentAjaxURL
 			+ ' <br> intLastRecord='+ intLastRecord
 			+ ' <br> intTotalRecord='+ intTotalRecords );
 		*/ ?>
     });
     </script>	
-<? } ?>
+<?php } ?>

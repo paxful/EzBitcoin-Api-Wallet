@@ -27,24 +27,24 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?=WEBSITENAME?></title>
+    <title><?php echo WEBSITENAME?></title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="img/favicon.png" />
+      <script src="<?php echo JQUERYSRC?>" type="text/javascript"></script>
 
       <link href="css/bootstrap.min.css" rel="stylesheet">
       <link href="css/custom.css" rel="stylesheet" />
       <link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
 
-      <script src="<?=JQUERYSRC?>" type="text/javascript"></script>
 
 
     <script>
 
       $(document).ready(function(){
-        <? if(MODE_UPGRADE){ ?>
+        <?php if(MODE_UPGRADE){ ?>
           $('#upgrademodal').modal('show');
-        <? } ?>
+        <?php } ?>
       });
 
       $(document).ready(function() {
@@ -94,13 +94,13 @@ $strError = (funct_GetandCleanVariables($_GET['error']));
 
         <small>Already registered? <a href="<?php echo PAGE_SIGNIN ; ?>">Sign in</a></small><br><br>
 
-        <form role="form" name="registerForm" id="registerForm" method="post" action="<?=CODE_DO?>?do=join">
+        <form role="form" name="registerForm" id="registerForm" method="post" action="<?php CODE_DO?>?do=join">
           <div class="form-group">
-          <input class="form-control" name="email" type="text" id="email" placeholder="your email" value="<?=$strEmail?>">
+          <input class="form-control" name="email" type="text" id="email" placeholder="your email" value="<?php $strEmail?>">
           </div>
 
           <button type="submit" class="btn btn-primary btn-block">Create Free Wallet</button><br>
-          <strong style="color:#FFF;"><?=$strError?></strong>
+          <strong style="color:#FFF;"><?php echo $strError?></strong>
         </form>
 
           <h4>Open Source BitCoin  Wallet</h4>

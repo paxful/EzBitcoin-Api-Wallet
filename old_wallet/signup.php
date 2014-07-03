@@ -18,7 +18,7 @@ $strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width">
    
-	<? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
+	<?php if(!$intJquery){ $intJquery=1;?><script src="<?php JQUERYSRC?>" type="text/javascript"></script><?php } ?>
 
     <link rel="stylesheet" href="css/foundation.css" />
     <script src="js/modernizr.js"></script>
@@ -78,7 +78,7 @@ $strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg
     
 </head>
 
-<body onload="<?=$strOnBodyLoadJS?>">
+<body onload="<?php $strOnBodyLoadJS?>">
 
 <?php require "hud.php"; ?>
 
@@ -87,31 +87,31 @@ $strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg
 <div class="row">
 	<div class="small-12 medium-8 columns">
 	
-		<h3>Sign Up for <?=WEBSITENAME?></h3>
-        <h4 style="color:darkred;"><?=$strError?></h4>
+		<h3>Sign Up for <?php WEBSITENAME?></h3>
+        <h4 style="color:darkred;"><?php $strError?></h4>
 
-        <form data-abide name="signup" id="signup" method="post" action="<?=CODE_DO?>?do=join&page=signup.php">
+        <form data-abide name="signup" id="signup" method="post" action="<?php CODE_DO?>?do=join&page=signup.php">
 			<div class="row">
 			    <div class="small-8 medium-6 columns">
 
                     <!--
                     <div class="firstname-field">
-                      <input name="firstname" type="text" required id="firstname" placeholder="first name (must match your ID)" value="<?=$strFirst?>">
+                      <input name="firstname" type="text" required id="firstname" placeholder="first name (must match your ID)" value="<?php $strFirst?>">
                       <small class="error">Enter first name</small>
                     </div>
                     <div class="lastname-field">
-                      <input name="lastname" type="text" required id="lastname" placeholder="last name (must match your ID)" value="<?=$strLast?>">
+                      <input name="lastname" type="text" required id="lastname" placeholder="last name (must match your ID)" value="<?php $strLast?>">
                       <small class="error">Enter last name</small>
                     </div>
                     <div class="phone-field">
-                      <input name="phonenumber" type="text" required id="phonenumber" placeholder="mobile phone number" value="<?=$strPhone?>">
+                      <input name="phonenumber" type="text" required id="phonenumber" placeholder="mobile phone number" value="<?php $strPhone?>">
                       <small class="error">Enter valid phone</small>
                     </div>
-                    <input name="address" type="text" required id="address" placeholder="address" value="<?=$strAddress?>">
+                    <input name="address" type="text" required id="address" placeholder="address" value="<?php $strAddress?>">
                     -->
 
                     <div class="email-field">
-                      <input name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
+                      <input name="email" type="email" required id="email" placeholder="your email" value="<?php $strEmail?>">
                       <small class="error">Enter valid email</small>
                     </div>
                     <div class="password-field">
@@ -123,7 +123,7 @@ $strAddress = 			(funct_GetandCleanVariables($_GET["address"])); //set error msg
                       <small class="error">Passwords must match.</small>
                     </div>
                     <button type="submit" class="small">Sign Up & Create Free Wallet</button>
-        <!--             <strong style="color:#FFF;"><?=$strError?></strong> -->
+        <!--             <strong style="color:#FFF;"><?php $strError?></strong> -->
                     <br><small>Already have an account? <a href="signin.php">Sign in</a></small>
 
 

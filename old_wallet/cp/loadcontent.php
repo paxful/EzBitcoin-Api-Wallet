@@ -35,7 +35,7 @@ if($strDo=="ajax" || $strDo=="iframe"){
 	if($strDo=="iframe"){ ?>
 		<link href="/wallet/css/web.css" media="screen" rel="stylesheet" type="text/css">
         <script src="/wallet/js/web.js" type="text/javascript"></script>
-	<? }
+	<?php }
 
 }else{ //file is being included and values are preset
 
@@ -206,7 +206,7 @@ switch ($intType){
 		if($intRecID){	//Pulling up single transaction details for modal
     ?>
 	<div class="row">
-		<h4>Transaction ID: <?=$intTransactionID?></h4><br>
+		<h4>Transaction ID: <?php $intTransactionID?></h4><br>
 
         <div class="small-4 columns">
 			Crypto Amount: <br>
@@ -220,31 +220,31 @@ switch ($intType){
 			Transaction Hash: <br>
         </div>
 		<div class="small-8 columns">
-			<strong style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong><br>
-			<?=$intCryptoMiningFee?><br>
-			<?=$strCryptoType?><br>
-			$<?=money_format('%i', $intFiatValue) ?><br>
-			<?=$intFiatRate?><br>
-			<?=$strWalletFrom?><br>
-			<?=$strWalletSentTo?><br>
-			<?=$date_joined_formatted?><br>
-			<?=$strTransactionHash?> <br>
+			<strong style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong><br>
+			<?php $intCryptoMiningFee?><br>
+			<?php $strCryptoType?><br>
+			$<?php money_format('%i', $intFiatValue) ?><br>
+			<?php $intFiatRate?><br>
+			<?php $strWalletFrom?><br>
+			<?php $strWalletSentTo?><br>
+			<?php $date_joined_formatted?><br>
+			<?php $strTransactionHash?> <br>
         </div>
 
     </div>
 
-	<? }else{ // Regular activity/transactions list on wallet.php ?>
+	<?php }else{ // Regular activity/transactions list on wallet.php ?>
 	    <tr>
-			<td align="left"><strong><?=$intTransactionID?></strong></td>
-			<td align="left"><strong><?=$strType?></strong></td>
-			<td align="left"><?=$intOrderID?></td>
-			<td align="left"><medium><?=$date_joined_formatted?> ET</medium> <small>(<?=$date_joined_formatted_nice?>)</small><br><a href="<?=$strLink?>"<?=$strLinkModal?>><?=$strLinkText?></a><br><?=$strLabel?></td>
-<!--			<td align="left"><a href="<?=$strLink?>"<?=$strLinkModal?>><?=$strLinkText?></a><br><?=$strLabel?></td>-->
+			<td align="left"><strong><?php $intTransactionID?></strong></td>
+			<td align="left"><strong><?php $strType?></strong></td>
+			<td align="left"><?php $intOrderID?></td>
+			<td align="left"><medium><?php $date_joined_formatted?> ET</medium> <small>(<?php $date_joined_formatted_nice?>)</small><br><a href="<?php $strLink?>"<?php $strLinkModal?>><?php $strLinkText?></a><br><?php $strLabel?></td>
+<!--			<td align="left"><a href="<?php $strLink?>"<?php $strLinkModal?>><?php $strLinkText?></a><br><?php $strLabel?></td>-->
 <!-- 			COMMENTING THIS OUT TO HIDE THE USD VALUE IN THE TRANSACTIONS LIST -John -->
-<!-- 			<td align="left"><strong style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong> <br> $<?=money_format('%i', $intFiatValue) ?></td> -->
-			<td align="left"><a href="ajax_do.php?do=setstatus1&txid=<?=$intTransactionID?>"><?=$intStatus?></a></td>
-			<td align="left"><?=$status_name?></td>
-			<td align="left"><span style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?></span></td>
+<!-- 			<td align="left"><strong style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong> <br> $<?php money_format('%i', $intFiatValue) ?></td> -->
+			<td align="left"><a href="ajax_do.php?do=setstatus1&txid=<?php $intTransactionID?>"><?php $intStatus?></a></td>
+			<td align="left"><?php $status_name?></td>
+			<td align="left"><span style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?></span></td>
 	    </tr>
 	<?
 		}//end if intRecID
@@ -405,7 +405,7 @@ switch ($intType){
 		if($intRecID){	//Pulling up single transaction details for modal
     ?>
 	<div class="row">
-		<h4>Transaction ID: <?=$intTransactionID?></h4><br>
+		<h4>Transaction ID: <?php $intTransactionID?></h4><br>
 
         <div class="small-4 columns">
 
@@ -420,33 +420,33 @@ switch ($intType){
 			Transaction Hash: <br>
         </div>
 		<div class="small-8 columns">
-			<strong style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong><br>
-			<?=$intCryptoMiningFee?><br>
-			<?=$strCryptoType?><br>
-			$<?=money_format('%i', $intFiatValue) ?><br>
-			<?=$intFiatRate?><br>
-			<?=$strWalletFrom?><br>
-			<?=$strWalletSentTo?><br>
-			<?=$date_joined_formatted?><br>
-			<?=$strTransactionHash?> <br>
+			<strong style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong><br>
+			<?php $intCryptoMiningFee?><br>
+			<?php $strCryptoType?><br>
+			$<?php money_format('%i', $intFiatValue) ?><br>
+			<?php $intFiatRate?><br>
+			<?php $strWalletFrom?><br>
+			<?php $strWalletSentTo?><br>
+			<?php $date_joined_formatted?><br>
+			<?php $strTransactionHash?> <br>
         </div>
 
     </div>
 
-	<? }else{ // Regular activity/transactions list on wallet.php ?>
+	<?php }else{ // Regular activity/transactions list on wallet.php ?>
 	    <tr>
-			<td align="left"><strong><?=$intTransactionID?></strong></td>
-			<td align="left"><medium><?=$date_joined_formatted?> ET</medium> <small>(<?=$date_joined_formatted_nice?>)</small><br><a href="<?=$strLink?>"<?=$strLinkModal?>><?=$strLinkText?></a><br><?=$strLabel?></td>
-<!--			<td align="left"><a href="<?=$strLink?>"<?=$strLinkModal?>><?=$strLinkText?></a><br><?=$strLabel?></td>-->
-			<td align="left"><?=$credit?></td>
-			<td align="left"><?=$balance_prev?></td>
-			<td align="left"><?=$balance_curr?></td>
+			<td align="left"><strong><?php $intTransactionID?></strong></td>
+			<td align="left"><medium><?php $date_joined_formatted?> ET</medium> <small>(<?php $date_joined_formatted_nice?>)</small><br><a href="<?php $strLink?>"<?php $strLinkModal?>><?php $strLinkText?></a><br><?php $strLabel?></td>
+<!--			<td align="left"><a href="<?php $strLink?>"<?php $strLinkModal?>><?php $strLinkText?></a><br><?php $strLabel?></td>-->
+			<td align="left"><?php $credit?></td>
+			<td align="left"><?php $balance_prev?></td>
+			<td align="left"><?php $balance_curr?></td>
 
 <!-- 			COMMENTING THIS OUT TO HIDE THE USD VALUE IN THE TRANSACTIONS LIST -John -->
-<!-- 			<td align="left"><strong style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong> <br> $<?=money_format('%i', $intFiatValue) ?></td> -->
-			<td align="left"><a href="ajax_do.php?do=setstatus1&txid=<?=$intTransactionID?>"><?=$intStatus?></a></td>
-			<td align="left"><?=$status_name?></td>
-			<td align="left"><span style="color:<?=$strCyptoColor?>;"><?=$strCryptoText?><?=rtrim(number_format($strCryptoAmt,8),0)?></span></td>
+<!-- 			<td align="left"><strong style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?> BTC</strong> <br> $<?php money_format('%i', $intFiatValue) ?></td> -->
+			<td align="left"><a href="ajax_do.php?do=setstatus1&txid=<?php $intTransactionID?>"><?php $intStatus?></a></td>
+			<td align="left"><?php $status_name?></td>
+			<td align="left"><span style="color:<?php $strCyptoColor?>;"><?php $strCryptoText?><?php rtrim(number_format($strCryptoAmt,8),0)?></span></td>
 	    </tr>
 	<?
 		}//end if intRecID
@@ -647,25 +647,25 @@ switch ($intType){
 	    ?>
 
 		<tr>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>" target="_blank"><?=$intOrderID?></a><br><a href="/receipt.php?c=<?=$strOrderCode?>"><?=$strOrderCode?></a></td>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>"><?=$status_text?></a></td>
-			<td align="left" align="center"><?=$no_receipts_uploaded?><br>
-				<a href="<?=$strReceiptImgSrc_link?>" target="_blank"><img src="<?=$strReceiptImgSrc?>" width="32" height="32" /></a>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>" target="_blank"><?php $intOrderID?></a><br><a href="/receipt.php?c=<?php $strOrderCode?>"><?php $strOrderCode?></a></td>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>"><?php $status_text?></a></td>
+			<td align="left" align="center"><?php $no_receipts_uploaded?><br>
+				<a href="<?php $strReceiptImgSrc_link?>" target="_blank"><img src="<?php $strReceiptImgSrc?>" width="32" height="32" /></a>
 			</td>
-<!--             <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br><?=date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
-            <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?></td>
-            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?=$intFromUserID?>"><?=$intFromUserID?></a> <?=$first_name?> <?=$last_name?><br><?=$strType?></td>
-          	<td align="left">Revenue: <?=$revenue?><br>Sold: <?=$crypto_sold?></td>
-<!--             <td align="left"><?=$strType?> <?=$strBankName?><br><?=$bank_fee?> tip: <?=$intTipUSD?></td> -->
-          	<td align="left"><?=$fiat_to_deposit?></td>
+<!--             <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br><?php date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
+            <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?></td>
+            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?php $intFromUserID?>"><?php $intFromUserID?></a> <?php $first_name?> <?php $last_name?><br><?php $strType?></td>
+          	<td align="left">Revenue: <?php $revenue?><br>Sold: <?php $crypto_sold?></td>
+<!--             <td align="left"><?php $strType?> <?php $strBankName?><br><?php $bank_fee?> tip: <?php $intTipUSD?></td> -->
+          	<td align="left"><?php $fiat_to_deposit?></td>
 <!--        <td align="left">B or U</td> -->
-          	<td align="left">est <?=$crypto_est_at_time_of_order?><br>est <?=$rate_at_time_of_order?></td>
-<!--           	<td align="left">curr <?=$BTCcurrentAmt?><br>curr <?=$intCurrentBTCrate?></td> -->
+          	<td align="left">est <?php $crypto_est_at_time_of_order?><br>est <?php $rate_at_time_of_order?></td>
+<!--           	<td align="left">curr <?php $BTCcurrentAmt?><br>curr <?php $intCurrentBTCrate?></td> -->
             <!-- The final values are calculated or typed in from the Order Details page -->
-<!--             <td align="left">Sold <?=$crypto_sold?><br>at <?=$rate_sold_at?></td> -->
-<!--           	<td align="left"><?=$sold_from_account?><br>miner <?=$BTCMinerFee?></td> -->
-<!--           	<td align="left"><?=$BTCoutflow?></td> -->
-<!--           	<td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
+<!--             <td align="left">Sold <?php $crypto_sold?><br>at <?php $rate_sold_at?></td> -->
+<!--           	<td align="left"><?php $sold_from_account?><br>miner <?php $BTCMinerFee?></td> -->
+<!--           	<td align="left"><?php $BTCoutflow?></td> -->
+<!--           	<td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
         </tr>
 	<?
 	}// while loop end
@@ -838,12 +838,12 @@ switch ($intType){
 	    ?>
 
 		<tr>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>" target="_blank"><?=$intOrderID?></a></td>
-			<td align="left"><?=$exfill_date?> ET</td>
-			<td align="left"><?=$exfill_btc?></td>
-			<td align="left"><?=$rate_bitstamp?></td>
-			<td align="left"><?=$cumberland_offer?></td>
-			<td align="left"><?=$cumberland_total?></td>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>" target="_blank"><?php $intOrderID?></a></td>
+			<td align="left"><?php $exfill_date?> ET</td>
+			<td align="left"><?php $exfill_btc?></td>
+			<td align="left"><?php $rate_bitstamp?></td>
+			<td align="left"><?php $cumberland_offer?></td>
+			<td align="left"><?php $cumberland_total?></td>
         </tr>
 	<?
 	}// while loop end
@@ -934,15 +934,15 @@ switch ($intType){
     ?>
 	<tr>
 		<td align="left">
-			<? if(!$strTransaction_txid){ ?>
-			<a href="do.php?do=authorizeque&queid=<?=$intQueID?>">Authorize <?=$intTransactionAmount?> BTC</a>
-			<? } else {echo "$intTransactionAmount";} ?>
+			<?php if(!$strTransaction_txid){ ?>
+			<a href="do.php?do=authorizeque&queid=<?php $intQueID?>">Authorize <?php $intTransactionAmount?> BTC</a>
+			<?php } else {echo "$intTransactionAmount";} ?>
 		</td>
-		<td align="left"><?=$intQueID?> QueID</td>
-		<td align="left"><?=$intTransactionID?> <?=$strTransactionType?></td>
-		<td align="left">user: <a href="member_details.php?id=<?=$intUserID?>"><?=$intUserID?></a></td>
-		<td align="left"><?=$intStatusID?> (<?=$strTransaction_txid?>)<br><?=$strTransaction_address?></td>
-		<td align="left"><?=$strDate?><br><?=$strLocation?></td>
+		<td align="left"><?php $intQueID?> QueID</td>
+		<td align="left"><?php $intTransactionID?> <?php $strTransactionType?></td>
+		<td align="left">user: <a href="member_details.php?id=<?php $intUserID?>"><?php $intUserID?></a></td>
+		<td align="left"><?php $intStatusID?> (<?php $strTransaction_txid?>)<br><?php $strTransaction_address?></td>
+		<td align="left"><?php $strDate?><br><?php $strLocation?></td>
     </tr>
 	<?
 
@@ -1014,7 +1014,7 @@ switch ($intType){
 
 
     ?>
-	    <img src="<?=$strImgPath?>" width="100" height="100" />
+	    <img src="<?php $strImgPath?>" width="100" height="100" />
 	<?
 
 	}// while loop end
@@ -1081,8 +1081,8 @@ switch ($intType){
 
 
 		/* ?>
-		<h4>Total Rows Found: <?=$nr0?></h4><br>
-		<? */
+		<h4>Total Rows Found: <?php $nr0?></h4><br>
+		<?php */
 		$intRowCount=0;
 
 		//begin loop
@@ -1110,12 +1110,12 @@ switch ($intType){
             if ($balance_btc==0) {$balance_btc="";}
         ?>
         <tr><!-- SHOW USER_ID, NAME, EMAIL, PHONE, BTC BALANCE, AND DATE JOINED -->
-			<td align="left"><a href="member_details.php?id=<?=$user_id?>"><?=$user_id?></a></td>
-			<td align="left"><a href="<?=$strImageSrcKYC?>" target="_new"><?=$verification_id?><!--<img src="<?=$strImageSrcKYC?> " width="100" height="100" />--></a></td>
-			<td align="left"><a href="member_details.php?id=<?=$user_id?>"><h4><?=$first_name?> <?=$last_name?> </h4></a></td>
-			<td align="left"><a href="mailto:<?=$email_address?>;"><?=$email_address?></a> / <?=$cellphone?></td>
-			<td align="left"><strong><?=number_format($balance_btc,8) ?></strong></td>
-			<td align="left"><?=$date_joined?> <?=$strDo?></td>
+			<td align="left"><a href="member_details.php?id=<?php $user_id?>"><?php $user_id?></a></td>
+			<td align="left"><a href="<?php $strImageSrcKYC?>" target="_new"><?php $verification_id?><!--<img src="<?php $strImageSrcKYC?> " width="100" height="100" />--></a></td>
+			<td align="left"><a href="member_details.php?id=<?php $user_id?>"><h4><?php $first_name?> <?php $last_name?> </h4></a></td>
+			<td align="left"><a href="mailto:<?php $email_address?>;"><?php $email_address?></a> / <?php $cellphone?></td>
+			<td align="left"><strong><?php number_format($balance_btc,8) ?></strong></td>
+			<td align="left"><?php $date_joined?> <?php $strDo?></td>
         </tr>
 		<?php
 
@@ -1186,8 +1186,8 @@ switch ($intType){
 
 
 		/* ?>
-		<h4>Total Rows Found: <?=$nr0?></h4><br>
-		<? */
+		<h4>Total Rows Found: <?php $nr0?></h4><br>
+		<?php */
 		$intRowCount=0;
 
 		//begin loop
@@ -1217,9 +1217,9 @@ switch ($intType){
 
         ?>
         <tr><!-- SHOW USER_ID, NAME, ID UPLOADS, VERIFY LINK, EXCEPTION LINK -->
-			<td align="left"><a href="member_details.php?id=<?=$user_id?>" target="_blank"><?=$user_id?></a></td>
-			<td align="left"><?=$customer_name?></td>
-			<td align="left"><?=$email_address?></td>
+			<td align="left"><a href="member_details.php?id=<?php $user_id?>" target="_blank"><?php $user_id?></a></td>
+			<td align="left"><?php $customer_name?></td>
+			<td align="left"><?php $email_address?></td>
 			<td align="left"><?php
 
 
@@ -1241,14 +1241,14 @@ switch ($intType){
 			?>
 
 
-			<a href="<?=$filename?>" target="_new">ID </a>
+			<a href="<?php $filename?>" target="_new">ID </a>
 			<?php
 				} //end while
 			?>
 			</td>
-			<td align="left"><a href="javascript:jsfunct_verifykyc('<?=$user_id?>');">Verify</a></td>
+			<td align="left"><a href="javascript:jsfunct_verifykyc('<?php $user_id?>');">Verify</a></td>
 			<td align="left"><a href="#">Exception</a></td>
-<!-- 			<td align="left"><?=$date_joined?> <?=$strDo?></td> -->
+<!-- 			<td align="left"><?php $date_joined?> <?php $strDo?></td> -->
         </tr>
 		<?php
 
@@ -1448,10 +1448,10 @@ switch ($intType){
 		<tr>
 			<!-- 			
 			-->
-			<td align="left"><?=$fiat_deposit_date_display?></td>
-			<td align="left"><?=$status_text?></td>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>" target="_blank"><?=$intOrderID?></a><br><a href="/receipt.php?c=<?=$strOrderCode?>"><?=$strOrderCode?></a></td>
-			<td align="left"><?=$strType?></td>
+			<td align="left"><?php $fiat_deposit_date_display?></td>
+			<td align="left"><?php $status_text?></td>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>" target="_blank"><?php $intOrderID?></a><br><a href="/receipt.php?c=<?php $strOrderCode?>"><?php $strOrderCode?></a></td>
+			<td align="left"><?php $strType?></td>
 			<td align="left" align="center">
 
 				<?php
@@ -1472,7 +1472,7 @@ switch ($intType){
 						if($strExt=="pdf"){$strFileSrc = "/img/files/pdf.png";}
 					}else{ $strFilePath="#"; $strFileSrc="/img/x_red.png";}
 		        ?>
-				<a href="<?=$strFilePath?>" target="_new"><img src="<?=$strFileSrc?>" width="50" height="50" /></a>
+				<a href="<?php $strFilePath?>" target="_new"><img src="<?php $strFileSrc?>" width="50" height="50" /></a>
 				<?php
 
 				}//end while
@@ -1484,23 +1484,23 @@ switch ($intType){
 				?>
 
 			</td>
-<!--             <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br><?=date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
+<!--             <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br><?php date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
           	
-          	<td align="left"><?=$fiat_to_deposit?></td>
-            <td align="left">$<?=$fiat_deposited_user?></td>
+          	<td align="left"><?php $fiat_to_deposit?></td>
+            <td align="left">$<?php $fiat_deposited_user?></td>
             
             
-            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?=$intFromUserID?>"><?=$intFromUserID?></a> <?=$first_name?> <?=$last_name?></td>
-<!--           	<td align="left">Revenue: <?=$revenue?><br>Sold: <?=$crypto_sold?></td> -->
-<!--             <td align="left"><?=$strType?> <?=$strBankName?><br><?=$bank_fee?> tip: <?=$intTipUSD?></td> -->
+            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?php $intFromUserID?>"><?php $intFromUserID?></a> <?php $first_name?> <?php $last_name?></td>
+<!--           	<td align="left">Revenue: <?php $revenue?><br>Sold: <?php $crypto_sold?></td> -->
+<!--             <td align="left"><?php $strType?> <?php $strBankName?><br><?php $bank_fee?> tip: <?php $intTipUSD?></td> -->
 <!--        <td align="left">B or U</td> -->
-          	<td align="left">est <?=$crypto_est_at_time_of_order?><br>est <?=$rate_at_time_of_order?></td>
-<!--           	<td align="left">curr <?=$BTCcurrentAmt?><br>curr <?=$intCurrentBTCrate?></td> -->
+          	<td align="left">est <?php $crypto_est_at_time_of_order?><br>est <?php $rate_at_time_of_order?></td>
+<!--           	<td align="left">curr <?php $BTCcurrentAmt?><br>curr <?php $intCurrentBTCrate?></td> -->
             <!-- The final values are calculated or typed in from the Order Details page -->
-<!--             <td align="left">Sold <?=$crypto_sold?><br>at <?=$rate_sold_at?></td> -->
-<!--           	<td align="left"><?=$sold_from_account?><br>miner <?=$BTCMinerFee?></td> -->
-<!--           	<td align="left"><?=$BTCoutflow?></td> -->
-<!--           	<td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
+<!--             <td align="left">Sold <?php $crypto_sold?><br>at <?php $rate_sold_at?></td> -->
+<!--           	<td align="left"><?php $sold_from_account?><br>miner <?php $BTCMinerFee?></td> -->
+<!--           	<td align="left"><?php $BTCoutflow?></td> -->
+<!--           	<td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
         </tr>
 	<?
 	}// while loop end
@@ -1708,8 +1708,8 @@ switch ($intType){
 	    ?>
 
 		<tr>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>" target="_blank"><?=$intOrderID?></a><br><a href="/receipt.php?c=<?=$strOrderCode?>"><?=$strOrderCode?></a></td>
-			<td align="left"><?=$status_text?></td>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>" target="_blank"><?php $intOrderID?></a><br><a href="/receipt.php?c=<?php $strOrderCode?>"><?php $strOrderCode?></a></td>
+			<td align="left"><?php $status_text?></td>
 			<td align="left" align="center">
 
 				<?php
@@ -1730,7 +1730,7 @@ switch ($intType){
 						if($strExt=="pdf"){$strFileSrc = "/img/files/pdf.png";}
 					}else{ $strFilePath="#"; $strFileSrc="/img/x_red.png";}
 		        ?>
-				<a href="<?=$strFilePath?>" target="_new"><img src="<?=$strFileSrc?>" width="50" height="50" /></a>
+				<a href="<?php $strFilePath?>" target="_new"><img src="<?php $strFileSrc?>" width="50" height="50" /></a>
 				<?php
 
 				}//end while
@@ -1742,21 +1742,21 @@ switch ($intType){
 				?>
 
 			</td>
-<!--             <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br><?=date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
-          	<td align="left"><?=$strType?></td>
-          	<td align="left"><?=$fiat_to_deposit?></td>
-            <td align="left">$<?=$fiat_deposited?><br><?=$fiat_deposit_date_display?></td>
-            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?=$intFromUserID?>"><?=$intFromUserID?></a> <?=$first_name?> <?=$last_name?></td>
-<!--           	<td align="left">Revenue: <?=$revenue?><br>Sold: <?=$crypto_sold?></td> -->
-<!--             <td align="left"><?=$strType?> <?=$strBankName?><br><?=$bank_fee?> tip: <?=$intTipUSD?></td> -->
+<!--             <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br><?php date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
+          	<td align="left"><?php $strType?></td>
+          	<td align="left"><?php $fiat_to_deposit?></td>
+            <td align="left">$<?php $fiat_deposited?><br><?php $fiat_deposit_date_display?></td>
+            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?php $intFromUserID?>"><?php $intFromUserID?></a> <?php $first_name?> <?php $last_name?></td>
+<!--           	<td align="left">Revenue: <?php $revenue?><br>Sold: <?php $crypto_sold?></td> -->
+<!--             <td align="left"><?php $strType?> <?php $strBankName?><br><?php $bank_fee?> tip: <?php $intTipUSD?></td> -->
 <!--        <td align="left">B or U</td> -->
-          	<td align="left">est <?=$crypto_est_at_time_of_order?><br>est <?=$rate_at_time_of_order?></td>
-<!--           	<td align="left">curr <?=$BTCcurrentAmt?><br>curr <?=$intCurrentBTCrate?></td> -->
+          	<td align="left">est <?php $crypto_est_at_time_of_order?><br>est <?php $rate_at_time_of_order?></td>
+<!--           	<td align="left">curr <?php $BTCcurrentAmt?><br>curr <?php $intCurrentBTCrate?></td> -->
             <!-- The final values are calculated or typed in from the Order Details page -->
-<!--             <td align="left">Sold <?=$crypto_sold?><br>at <?=$rate_sold_at?></td> -->
-<!--           	<td align="left"><?=$sold_from_account?><br>miner <?=$BTCMinerFee?></td> -->
-<!--           	<td align="left"><?=$BTCoutflow?></td> -->
-<!--           	<td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
+<!--             <td align="left">Sold <?php $crypto_sold?><br>at <?php $rate_sold_at?></td> -->
+<!--           	<td align="left"><?php $sold_from_account?><br>miner <?php $BTCMinerFee?></td> -->
+<!--           	<td align="left"><?php $BTCoutflow?></td> -->
+<!--           	<td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
         </tr>
 	<?
 	}// while loop end
@@ -1825,7 +1825,7 @@ switch ($intType){
 		<div class="row">
 		
 			<div class="medium-9 small-12 columns">
-				All Pictures for ORDERID: <?=$intOrderID?><br>
+				All Pictures for ORDERID: <?php $intOrderID?><br>
 				<?
 				
 				//list all uploads 
@@ -1849,7 +1849,7 @@ switch ($intType){
 						$strFilePath="#"; $strFileSrc="/img/x_red.png";
 					}
 		        ?>
-				<a href="<?=$strFilePath?>" target="_new"><img src="<?=$strFileSrc?>" width="" height="" /></a>
+				<a href="<?php $strFilePath?>" target="_new"><img src="<?php $strFileSrc?>" width="" height="" /></a>
 				<?php
 				}
 				?>
@@ -1861,12 +1861,12 @@ switch ($intType){
 			<div class="medium-3 small-12 columns">
 				
 				<div class="panel radius">
-					<form data-abide name="checkout" id="checkout" method="post" action="?do=addstatus&id=<?=$orderid?>">
+					<form data-abide name="checkout" id="checkout" method="post" action="?do=addstatus&id=<?php $orderid?>">
 					<h3>Add Status</h3>
 	
-						<input name="amount" id="amount" type="text" value="<?=$fiat_deposited?>" placeholder="Amount Deposited"> 
+						<input name="amount" id="amount" type="text" value="<?php $fiat_deposited?>" placeholder="Amount Deposited">
 														
-						<input name="orderid" type="hidden" value="<?=$intOrderID?>">
+						<input name="orderid" type="hidden" value="<?php $intOrderID?>">
 
 					    
 		                <select name="statustype">
@@ -1887,7 +1887,7 @@ switch ($intType){
 							$status_type=						$row3["status_type"];
 						    $status_name=						$row3["status_name"];
 				        ?>
-		<!-- 						<input type="radio" name="statustype" value="<?=$status_id?>" id="<?=$status_id?>" required><label for="<?=$status_id?>"><?=$status_name?></label><br> -->
+		<!-- 						<input type="radio" name="statustype" value="<?php $status_id?>" id="<?php $status_id?>" required><label for="<?php $status_id?>"><?php $status_name?></label><br> -->
 						
 						
 						<option value="<?php echo $status_id ?>"><?php echo $status_type." - ".$status_name ?></option>
@@ -1915,7 +1915,7 @@ switch ($intType){
 							<button type="submit" class="tiny">Add Status </button>
 						</div>
 					</div>
-					<strong style="color:#FFF;"><?=$strError?></strong>
+					<strong style="color:#FFF;"><?php $strError?></strong>
 				</form>
 				</div>
 			</div>
@@ -2152,36 +2152,36 @@ switch ($intType){
 	    ?>
 
 		<tr>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>"><?=$status_text?></a></td>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>"><?php $status_text?></a></td>
 <!--
-			<td align="left" align="center"><?=$no_receipts_uploaded?><br>
-				<a href="<?=$strReceiptImgSrc_link?>" target="_blank"><img src="<?=$strReceiptImgSrc?>" width="32" height="32" /></a>
+			<td align="left" align="center"><?php $no_receipts_uploaded?><br>
+				<a href="<?php $strReceiptImgSrc_link?>" target="_blank"><img src="<?php $strReceiptImgSrc?>" width="32" height="32" /></a>
 			</td>
 -->
-<!--             <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br><?=date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
-<!--             <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?></td> -->
-<!--             <td align="left"><?if($intFromUserID){ }?><?=$intFromUserID?> <?=$first_name?> <?=$last_name?><br><a href="member_details.php?id=<?=$intFromUserID?>"><?=$strType?></a></td> -->
-<!--           	<td align="left">BTC <?=$crypto_est_at_time_of_order?></td> -->
-          	<td align="left"><?=$crypto_est_at_time_of_order?><br>$ <?=$fiat_to_deposit?></td>
-          	<td align="left"><?if($intFromUserID){ }?><?=$intFromUserID?> <a href="member_details.php?id=<?=$intFromUserID?>"><?=$first_name?></a> <?=$last_name?></td>
-<!--           	<td align="left">Conv: <?=$actual_fiat_to_convert?></td> -->
-			<td align="left"><?=$strType?></td>
-			<td align="left">Order <a href="orders_details.php?id=<?=$intOrderID?>"><?=$intOrderID?></a></td>
-          	<td align="left"><?=$exfill_date?></td>
-          	<td align="left"><?=$exchange?></td>
-          	<td align="left"><?=$exfill_btc?></td>
-          	<td align="left"><?=$profit_usd?> (<?=$profit_margin_usd?>%)</td>
-          	<td align="left"><?=$profit_btc?> <?=$displayprofit?></td>
-<!--             <td align="left"><?=$strType?> <?=$strBankName?><br><?=$bank_fee?> tip: <?=$intTipUSD?></td> -->
-<!--           	<td align="left">Dep: <?=$fiat_to_deposit?><br>Conv: <?=$intUSDtoConvert?></td> -->
+<!--             <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br><?php date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
+<!--             <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?></td> -->
+<!--             <td align="left"><?if($intFromUserID){ }?><?php $intFromUserID?> <?php $first_name?> <?php $last_name?><br><a href="member_details.php?id=<?php $intFromUserID?>"><?php $strType?></a></td> -->
+<!--           	<td align="left">BTC <?php $crypto_est_at_time_of_order?></td> -->
+          	<td align="left"><?php $crypto_est_at_time_of_order?><br>$ <?php $fiat_to_deposit?></td>
+          	<td align="left"><?if($intFromUserID){ }?><?php $intFromUserID?> <a href="member_details.php?id=<?php $intFromUserID?>"><?php $first_name?></a> <?php $last_name?></td>
+<!--           	<td align="left">Conv: <?php $actual_fiat_to_convert?></td> -->
+			<td align="left"><?php $strType?></td>
+			<td align="left">Order <a href="orders_details.php?id=<?php $intOrderID?>"><?php $intOrderID?></a></td>
+          	<td align="left"><?php $exfill_date?></td>
+          	<td align="left"><?php $exchange?></td>
+          	<td align="left"><?php $exfill_btc?></td>
+          	<td align="left"><?php $profit_usd?> (<?php $profit_margin_usd?>%)</td>
+          	<td align="left"><?php $profit_btc?> <?php $displayprofit?></td>
+<!--             <td align="left"><?php $strType?> <?php $strBankName?><br><?php $bank_fee?> tip: <?php $intTipUSD?></td> -->
+<!--           	<td align="left">Dep: <?php $fiat_to_deposit?><br>Conv: <?php $intUSDtoConvert?></td> -->
 <!--        <td align="left">B or U</td> -->
-<!--           	<td align="left">est <?=$crypto_est_at_time_of_order?><br>est <?=$rate_at_time_of_order?></td> -->
-<!--           	<td align="left">curr <?=$BTCcurrentAmt?><br>curr <?=$intCurrentBTCrate?></td> -->
+<!--           	<td align="left">est <?php $crypto_est_at_time_of_order?><br>est <?php $rate_at_time_of_order?></td> -->
+<!--           	<td align="left">curr <?php $BTCcurrentAmt?><br>curr <?php $intCurrentBTCrate?></td> -->
             <!-- The final values are calculated or typed in from the Order Details page -->
-<!--             <td align="left">Sold <?=$crypto_sold?><br>at <?=$rate_sold_at?></td> -->
-<!--           	<td align="left"><?=$sold_from_account?><br>miner <?=$BTCMinerFee?></td> -->
-<!--           	<td align="left"><?=$BTCoutflow?></td> -->
-<!--           	<td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
+<!--             <td align="left">Sold <?php $crypto_sold?><br>at <?php $rate_sold_at?></td> -->
+<!--           	<td align="left"><?php $sold_from_account?><br>miner <?php $BTCMinerFee?></td> -->
+<!--           	<td align="left"><?php $BTCoutflow?></td> -->
+<!--           	<td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
         </tr>
 	<?
 	}// while loop end
@@ -2383,27 +2383,27 @@ switch ($intType){
 	    ?>
 
 		<tr>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>" target="_blank"><?=$intOrderID?></a><br><a href="/receipt.php?c=<?=$strOrderCode?>"><?=$strOrderCode?></a></td>
-			<td align="left"><a href="orders_details.php?id=<?=$intOrderID?>"><?=$status_text?></a></td>
-			<td align="left" align="center"><?=$no_receipts_uploaded?><br>
-				<a href="<?=$strReceiptImgSrc_link?>" target="_blank"><img src="<?=$strReceiptImgSrc?>" width="32" height="32" /></a>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>" target="_blank"><?php $intOrderID?></a><br><a href="/receipt.php?c=<?php $strOrderCode?>"><?php $strOrderCode?></a></td>
+			<td align="left"><a href="orders_details.php?id=<?php $intOrderID?>"><?php $status_text?></a></td>
+			<td align="left" align="center"><?php $no_receipts_uploaded?><br>
+				<a href="<?php $strReceiptImgSrc_link?>" target="_blank"><img src="<?php $strReceiptImgSrc?>" width="32" height="32" /></a>
 			</td>
-<!--             <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br><?=date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
-            <td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?></td>
-            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?=$intFromUserID?>" target="_blank"><?=$intFromUserID?></a> <?=$first_name?> <?=$last_name?></td>
-            <td align="left"><?=$strType?><br><a href="orders_details.php?id=<?=$intOrderID?>" target="_blank"><?=$intOrderID?></a></td>
-<!--           	<td align="left">Revenue: <?=$revenue?><br>Sold: <?=$crypto_sold?></td> -->
-<!--             <td align="left"><?=$strType?> <?=$strBankName?><br><?=$bank_fee?> tip: <?=$intTipUSD?></td> -->
-<!--           	<td align="left">Dep: <?=$fiat_to_deposit?><br>Conv: <?=$intUSDtoConvert?></td> -->
+<!--             <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br><?php date("Y-m-d H:i", strtotime($date_joinedUploaded))?></td> -->
+            <td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?></td>
+            <td align="left"><?if($intFromUserID){ }?><a href="member_details.php?id=<?php $intFromUserID?>" target="_blank"><?php $intFromUserID?></a> <?php $first_name?> <?php $last_name?></td>
+            <td align="left"><?php $strType?><br><a href="orders_details.php?id=<?php $intOrderID?>" target="_blank"><?php $intOrderID?></a></td>
+<!--           	<td align="left">Revenue: <?php $revenue?><br>Sold: <?php $crypto_sold?></td> -->
+<!--             <td align="left"><?php $strType?> <?php $strBankName?><br><?php $bank_fee?> tip: <?php $intTipUSD?></td> -->
+<!--           	<td align="left">Dep: <?php $fiat_to_deposit?><br>Conv: <?php $intUSDtoConvert?></td> -->
 <!--        <td align="left">B or U</td> -->
-          	<td align="left">Dep: <?=$fiat_deposited?></td>
-          	<td align="left"><?=$fiat_to_deposit?></td>
-<!--           	<td align="left">curr <?=$BTCcurrentAmt?><br>curr <?=$intCurrentBTCrate?></td> -->
+          	<td align="left">Dep: <?php $fiat_deposited?></td>
+          	<td align="left"><?php $fiat_to_deposit?></td>
+<!--           	<td align="left">curr <?php $BTCcurrentAmt?><br>curr <?php $intCurrentBTCrate?></td> -->
             <!-- The final values are calculated or typed in from the Order Details page -->
-<!--             <td align="left">Sold <?=$crypto_sold?><br>at <?=$rate_sold_at?></td> -->
-<!--           	<td align="left"><?=$sold_from_account?><br>miner <?=$BTCMinerFee?></td> -->
-<!--           	<td align="left"><?=$BTCoutflow?></td> -->
-<!--           	<td align="left"><?=date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
+<!--             <td align="left">Sold <?php $crypto_sold?><br>at <?php $rate_sold_at?></td> -->
+<!--           	<td align="left"><?php $sold_from_account?><br>miner <?php $BTCMinerFee?></td> -->
+<!--           	<td align="left"><?php $BTCoutflow?></td> -->
+<!--           	<td align="left"><?php date("Y-m-d H:i", strtotime($date_joined))?><br>confs</td> -->
         </tr>
 	<?
 	}// while loop end
@@ -2430,16 +2430,16 @@ switch ($intType){
     $(document).ready(function(){
 
 		<?if($strDo!="iframe"){ ?>
-			<? if($intNewstID){ ?>intNewestID = <?=$intNewstID?>;<? } ?>
-			<? if($intLastMSGID){ ?>intLastRecord=<?=$intLastMSGID?>;<? } ?>
-			<? if($b){ ?>intLastRecord=<?=$b?>; //alert('lastrecordid='+intLastRecord); <? } ?>
-			<? if($nr0){ //set total records txt  ?>intTotalRecords= <?=$nr0?> ; //alert('totalrecords= ' + intTotalRecords );<? } ?>
-			<? if($nr AND $intLastMSGID){ //set records shown txt  ?>intTotalRecordsShowing= intTotalRecordsShowing + <?=$nr?> ; //alert('totalrecords showing= ' + intTotalRecordsShowing );<? } ?>
-		<? } ?>
+			<?php if($intNewstID){ ?>intNewestID = <?php $intNewstID?>;<?php } ?>
+			<?php if($intLastMSGID){ ?>intLastRecord=<?php $intLastMSGID?>;<?php } ?>
+			<?php if($b){ ?>intLastRecord=<?php $b?>; //alert('lastrecordid='+intLastRecord); <?php } ?>
+			<?php if($nr0){ //set total records txt  ?>intTotalRecords= <?php $nr0?> ; //alert('totalrecords= ' + intTotalRecords );<?php } ?>
+			<?php if($nr AND $intLastMSGID){ //set records shown txt  ?>intTotalRecordsShowing= intTotalRecordsShowing + <?php $nr?> ; //alert('totalrecords showing= ' + intTotalRecordsShowing );<?php } ?>
+		<?php } ?>
 
 	    <?if($strDo=="include"){ ?>
-	    	$("#totalrecords").html('<?=$nr0?>');
-	    <? } ?>
+	    	$("#totalrecords").html('<?php $nr0?>');
+	    <?php } ?>
 
     });
     </script>

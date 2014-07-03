@@ -95,13 +95,13 @@ if(!$strWallet_MainAddress){
     $strWallet_MainAddress = funct_MakeWalletAddressUpdate($intUserID1, $strCrypto_Code);
 }
 
-if($strWallet_MainAddress){
+/*if($strWallet_MainAddress){
     //if no qr code image is detected then create one
     if(!file_exists(__ROOT__.$strQRcodeIMG)){
         $strError = funct_Billing_GetQRCodeImage($strWallet_MainAddress, $strQRcodeIMG ); //save img to disk
         echo "no qr image.. writing file... $strError - $strQRcodeIMG <br>";
     }
-}
+}*/
 //#####################################################################################
 
 
@@ -115,9 +115,11 @@ $intBalance= number_format($intBalance,8) ; //balance of BTC
 
 //get bitcoin rate
 if($strCryptoCode=="btc"){
-    $intRate_BTC_USD = funct_Billing_GetRate("btc", 'coindesk'); //get usd value of BTC - coindesk, gox, bitstamp
+    $intRate_BTC_USD = funct_Billing_GetRate("btc"); //get usd value of BTC - coindesk, gox, bitstamp
     $intCrypto2Fiat_rate = $intRate_BTC_USD ;
-    $intBalance_Fiat = money_format($intBalance * $intRate_BTC_USD,2);
+    $total_fiat_balance = (float) ($intBalance * $intRate_BTC_USD);
+//    $intBalance_Fiat = money_format('%i', $total_fiat_balance);
+    $intBalance_Fiat = $total_fiat_balance;
 }
 
 
@@ -279,9 +281,9 @@ $intFiat_countryic=					$row["countryid"];
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Your Wallet - <?=WEBSITENAME?></title>
+<title>Your Wallet - <?php echo WEBSITENAME?></title>
 <meta charset="utf-8">
-<meta name="description" content="<?=$strPageTitle?>">
+<meta name="description" content="<?php $strPageTitle?>">
 <meta name="viewport" content="width=device-width">
 
     <link rel="icon" type="image/png" href="img/favicon.png" />
@@ -300,7 +302,7 @@ $intFiat_countryic=					$row["countryid"];
     }
 </style>
 
-<script src="<?=JQUERYSRC?>" type="text/javascript"></script>
+<script src="<?php echo JQUERYSRC?>" type="text/javascript"></script>
 <?php $intJquerySoundManager=1;?><script src="js/soundmanager2-nodebug-jsmin.js"></script><script> soundManager.url = 'js/soundmanager2.swf'; soundManager.onready(function() {});</script>
 
 <script>
@@ -347,7 +349,7 @@ $intFiat_countryic=					$row["countryid"];
 		<?php 
 			if($strErrorClaim){
 		?>
-		$( "#walletnotice_html" ).html('<?=$strErrorClaim?>'); //load( "walletnotice.php" );
+		$( "#walletnotice_html" ).html('<?php $strErrorClaim?>'); //load( "walletnotice.php" );
 		//$('#walletnotice').foundation('reveal', 'open');
         $('#walletnotice').modal('show');
 		
@@ -360,7 +362,7 @@ $intFiat_countryic=					$row["countryid"];
 		intTotalRecords = 0 ;
 		intTotalRecordsShowing = 0 ;
 		
-		strLoadContentAjaxURL = "&do=ajax&maxrecords=<?=$intMaxRecords?>&c=<?=$intChestID?>&type=<?=$intType?>&genre=<?=$intGenreID?>&sort=<?=$sortby?>&dl=<?=$intDownloadAllowed?>&viewer=<?=DETECT_USERID?><?=$strModFlag?>";
+		strLoadContentAjaxURL = "&do=ajax&maxrecords=<?php $intMaxRecords?>&c=<?php $intChestID?>&type=<?php $intType?>&genre=<?php $intGenreID?>&sort=<?php $sortby?>&dl=<?php $intDownloadAllowed?>&viewer=<?php DETECT_USERID?><?php $strModFlag?>";
 
 		//Call more records on scroll to bottom //  this is jumpy ...
 		$(window).scroll(function(){
@@ -386,8 +388,8 @@ $intFiat_countryic=					$row["countryid"];
 	
 	function jsfunct_LoadMoreRecords(){
 		$("#loader_bottom").fadeIn(1000);
-		strPostString = "<?=MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL ;
-		//"<?=MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL
+		strPostString = "<?php MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL ;
+		//"<?php MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL
 		//alert('at bottom');
 		
 		$.post(strPostString,
@@ -417,7 +419,7 @@ $intFiat_countryic=					$row["countryid"];
 		
 		intNewestID_old=intNewestID ; //store first record id, freshest
 		
-		$.post("<?=MOD_LOADCONTENT?>?do=ajax&newest_msg_id=" + intNewestID + "&type=transactions&sort=new&viewer=<?=DETECT_USERID?>" , function(data){
+		$.post("<?php MOD_LOADCONTENT?>?do=ajax&newest_msg_id=" + intNewestID + "&type=transactions&sort=new&viewer=<?php DETECT_USERID?>" , function(data){
 			if (data != "") {
 				//var $html = $(data);
 				//prepend container
@@ -439,7 +441,7 @@ $intFiat_countryic=					$row["countryid"];
 
 	function functjs_Refresh_Balance(){
 		//
-        strURLgetbalance = "<?=CODE_DO?>?do=getbalance&userid=<?php echo $intUserID1?>&crypto=<?php echo $strCryptoCode?>&fiat=<?php echo $strFiatCode?>" ;
+        strURLgetbalance = "<?php CODE_DO?>?do=getbalance&userid=<?php echo $intUserID1?>&crypto=<?php echo $strCryptoCode?>&fiat=<?php echo $strFiatCode?>" ;
         //alert(strURLgetbalance);
 		$.get(strURLgetbalance , function(data){
 			if (data != "") {
@@ -468,7 +470,7 @@ $intFiat_countryic=					$row["countryid"];
 	}
 		
 	<?php if(REFRESH_WALLET_SEC){ ?> 
-	var auto_refresh = setInterval( function () { jsfunctGetLatest(); }, <?=REFRESH_WALLET_SEC * 1000 ?>); // refresh every * milliseconds 10000= 10 seconds
+	var auto_refresh = setInterval( function () { jsfunctGetLatest(); }, <?php REFRESH_WALLET_SEC * 1000 ?>); // refresh every * milliseconds 10000= 10 seconds
 	<?php } ?>
 
 </script>
@@ -486,8 +488,8 @@ $intFiat_countryic=					$row["countryid"];
         <div class="col-sm-7">
             <!--balance-->
             <div style="text-align:left;">
-                <h2><div id="txtCryptoBalance"><?=$intBalance?> BTC</div>  <small id="txtFiatBalance"><?php echo number_format($intBalance_Fiat,2)." ".$strFiatCode ?></small> (<em id="txtCryptoFiatRate"><?php echo $intCrypto2Fiat_rate ?></em>)</h2>
-                <!--<br><small id="txtFIATbalance"><small>(approx. $<?=number_format($intBalance_Fiat,2)?> USD)</small></small></h3> -->
+                <h2><div id="txtCryptoBalance"><?php echo $intBalance?> BTC</div>  <small id="txtFiatBalance"><?php echo number_format($intBalance_Fiat,2)." ".$strFiatCode ?></small> (<em id="txtCryptoFiatRate"><?php echo $intCrypto2Fiat_rate; ?></em>)</h2>
+                <!--<br><small id="txtFIATbalance"><small>(approx. $<?php number_format($intBalance_Fiat,2)?> USD)</small></small></h3> -->
             </div>
         </div>
 
@@ -545,16 +547,16 @@ $intFiat_countryic=					$row["countryid"];
 				if(!$strWallet_MainAddress){
 				?>
                     <!-- BEGIN email verify AREA -->
-                    <form role="form" action="<?=CODE_DO?>?do=confirmemailcode" method="GET">
+                    <form role="form" action="<?php echo CODE_DO?>?do=confirmemailcode" method="GET">
                         <div class="confirm_email">
                             <h5>To activate your receive wallet address. Please check your email and click the confirmation link. <br>Tip: check your Spam folder.</h5>
-                            <h3><?=$strError?></h3>
+                            <h3><?php echo $strError?></h3>
                                 <input name="emailcode" type="text" placeholder="enter your email code">
                                 <input name="do" type="hidden" value="confirmemailcode">
-                                <span class="txtError"><?=$strError_confirmemail?></span>
+                                <span class="txtError"><?php $strError_confirmemail?></span>
                                 <button type="submit">Confirm Email</button><br>
                                 <?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>
-                            <a href="<?=CODE_DO?>?do=sendemailcode">send code again to your email <?=$strEmail_DB?></a>
+                            <a href="<?php CODE_DO?>?do=sendemailcode">send code again to your email <?php echo $strEmail_DB?></a>
                         </div>
                     </form>
                     <!-- END email verify AREA -->
@@ -564,8 +566,8 @@ $intFiat_countryic=					$row["countryid"];
 				//show receive address and qr code image
 				if($strWallet_MainAddress){
 				?>
-				    <input name="wallethash" type="text" class="form-control" id="wallethash" value="<?=$strWallet_MainAddress?>"><script> $("#wallethash").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
-					<img src="<?=$strQRcodeIMG?>" class="img-responsive" />
+				    <input name="wallethash" type="text" class="form-control" id="wallethash" value="<?php echo $strWallet_MainAddress?>"><script> $("#wallethash").focus(function() { var $this = $(this);$this.select(); $this.mouseup(function() { $this.unbind("mouseup"); return false; });	}); </script>
+					<img src="<?php echo $strQRcodeIMG?>" class="img-responsive" />
 				<?php
 				}else{ //no btc wallet address in members table so
 
@@ -592,7 +594,7 @@ $intFiat_countryic=					$row["countryid"];
 
 <!-- ############################## SEND MODULE -->
 			<?php if($intSendLocked){ ?>
-				Your sending privileges have been locked.... sorry please contact <?=SUPPORT_EMAIL?><br><br>
+				Your sending privileges have been locked.... sorry please contact <?php echo SUPPORT_EMAIL?><br><br>
 			<?php }else{ //show send code ?>
 
                 <div class="panel panel-default">
@@ -613,40 +615,40 @@ $intFiat_countryic=					$row["countryid"];
 
 							//do something with this information
 							if( $iPod || $iPhone || $iPad ){ //browser reported as an iPhone/iPod touch -- do something here
-								$strScanURL = QRSCANAPP_IOS_URINAME. "?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN';
+								$strScanURL = QRSCANAPP_IOS_URINAME. "?callback=".'<?php WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN';
 								//$strScanAhref = "javascript:jsfunct_DetectApp();";
 								$strScanAhref = $strScanURL ;
 								$strAppURL = QRSCANAPP_IOS_URL;
 						    ?>
-							<a href="<?=$strAppURL?>">First Download This app to scan.</a><br>
+							<a href="<?php echo $strAppURL?>">First Download This app to scan.</a><br>
 							<?
 							}else if($Android){ //browser reported as an Android device -- do something here
-								$strScanURL = QRSCANAPP_DROID_URINAME."?callback=".'<?=WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN' ; //%7BCODE%7D
+								$strScanURL = QRSCANAPP_DROID_URINAME."?callback=".'<?php WEBSITEFULLURLHTTPS?>/wallet.php?code=EAN' ; //%7BCODE%7D
 								$strScanAhref = $strScanURL ;
 								$strAppURL = QRSCANAPP_DROID_URL;
 							?>
 							<a href="javascript:;" onClick="jsfunct_DetectApp();">First Download This app to scan.</a><br>
 							<?php } ?>
-							<center><a href="<?=$strScanAhref?>" class="btn btn-info btn-sm btn-block" >Scan QR</a></center>
+							<center><a href="<?php echo $strScanAhref?>" class="btn btn-info btn-sm btn-block" >Scan QR</a></center>
 						</div>
 
 							<form role="form" name="sendbtc" id="sendbtc" method="post" action="#">
 								<div class="row">
 									<div class="col-xs-12">
-									   <input name="send_address" type="alpha_numeric" required id="send_address" placeholder="send to bitcoin address" class="form-control" style="width:100%;" value="<?=$strWallet_Address_preload?>">
+									   <input name="send_address" type="alpha_numeric" required id="send_address" placeholder="send to bitcoin address" class="form-control" style="width:100%;" value="<?php echo $strWallet_Address_preload?>">
 								   </div>
 								</div><br>
 								<div class="row">
 								   <div class="col-xs-6">
-								        <input name="send_amount_crypto" id="send_amount_crypto" type="number" placeholder="amount BTC" class="form-control" style="width:100%;" value="<?=$intWallet_Crypto_Amt_preload?>">
+								        <input name="send_amount_crypto" id="send_amount_crypto" type="number" placeholder="amount BTC" class="form-control" style="width:100%;" value="<?php echo $intWallet_Crypto_Amt_preload?>">
 								   </div>
 								   <div class="col-xs-6">
-								        <input name="send_amount_fiat" id="send_amount_fiat" type="number" placeholder="or amount $" class="form-control" style="width:100%;" value="<?=$intAmountFiat?>">
+								        <input name="send_amount_fiat" id="send_amount_fiat" type="number" placeholder="or amount $" class="form-control" style="width:100%;" value="<?php echo $intAmountFiat?>">
 								   </div>
 								</div>
 								<div class="row">
 								   <div class="col-xs-12">
-								        <input name="label" type="" id="label" placeholder="optional label" style="width:100%;" class="form-control" value="<?=$intWallet_Label_preload?>">
+								        <input name="label" type="" id="label" placeholder="optional label" style="width:100%;" class="form-control" value="<?php echo $intWallet_Label_preload?>">
 								   </div>
 								</div>
 								<br>
@@ -659,7 +661,7 @@ $intFiat_countryic=					$row["countryid"];
 										<center><button class="btn btn-primary btn-block" id="button_send" onClick="jsfunct_SentUpdate();">Send Now</button></center>
 									</div>
 								</div>
-								<strong style="color:#C00;"><?=$strError_send?></strong>
+								<strong style="color:#C00;"><?php echo $strError_send?></strong>
 							</form>
                         </div>
 					</div>
@@ -687,11 +689,11 @@ $intFiat_countryic=					$row["countryid"];
 					<thead>
 			        <tr>
 <!-- 						<td align="left" width="20%"><h5>Date</h5></td> -->
-						<th align="left" width="30%"><h5>Date</h5></td>
-						<th align="left" width="40%"><h5>Description</h5></td>
+						<th align="left" width="30%"><h5>Date</h5></th>
+						<th align="left" width="40%"><h5>Description</h5></th>
 						<!--<td align="left" width="40%"><h5></h5></td>-->
-			          	<th align="left" width="15%"><h5>Amount</h5></td>
-			          	<th align="left" width="15%"><h5>Balance</h5></td>
+			          	<th align="left" width="15%"><h5>Amount</h5></th>
+			          	<th align="left" width="15%"><h5>Balance</h5></th>
 			        </tr>
 			  		</thead>
 					<tbody id="tabledata">
@@ -829,12 +831,12 @@ $intFiat_countryic=					$row["countryid"];
 
 
 
-<script>
+<script type="text/javascript">
 
 $(document).ready(function(){
 
     //get rate from ajax call every 10 seconds
-    var intRate=<?=$intRate?>;
+    var intRate=<?php echo $intRate?>;
 
     //set newest id so pages js does not throw an error if there are now rows
     intNewestID = 0;
@@ -872,27 +874,27 @@ function jsfunct_DetectApp(){
     var now = new Date().valueOf();
     setTimeout(function () {
         if (new Date().valueOf() - now > 100) return;
-        window.location = "<?=$strAppURL?>";
+        window.location = "<?php echo $strAppURL?>";
     }, 25);
-    window.location = "<?=$strScanURL?>";
-    //setTimeout(function () { window.location = "<?=$strAppURL?>"; }, 25);
-    //window.location = "<?=$strAppURL?>";
+    window.location = "<?php echo $strScanURL?>";
+    //setTimeout(function () { window.location = "<?php echo $strAppURL?>"; }, 25);
+    //window.location = "<?php echo $strAppURL?>";
 
 }
 
 
 function jsfunct_SentUpdate(){ //sends bitcoin via ajax
 
-    var okSoFar=true
+    var okSoFar=true;
 
     if (document.getElementById('send_address').value==""){
-        okSoFar=false
-        alert("Please fill in Send Address.")
+        okSoFar=false;
+        alert("Please fill in Send Address.");
         return false;
     }
     if (document.getElementById('send_amount_crypto').value==""){
-        okSoFar=false
-        alert("Please fill in how much coin to send.")
+        okSoFar=false;
+        alert("Please fill in how much coin to send.");
         return false;
     }
 
@@ -921,11 +923,11 @@ function jsfunct_SubmitPassword(){
 
     document.getElementById("password_header_txt").innerHTML = 'Now sending. Do NOT click twice! Please wait...' ;
 
-    var okSoFar=true
+    var okSoFar=true;
 
     if (document.getElementById('input_password').value==""){
-        okSoFar=false
-        alert("Please fill your password")
+        okSoFar=false;
+        alert("Please fill your password");
         return false;
     }
 
@@ -944,7 +946,7 @@ function jsfunct_SubmitPassword(){
         $.ajax({
             type: "POST",
             async: false, //this allows the page called via ajax to write cookies to the user
-            url: "<?=MOD_SENDCRYPTO?>?do=sendcheckpassword",
+            url: "<?php MOD_SENDCRYPTO?>?do=sendcheckpassword",
             data: dataString,
             success: function(result) { //result is the new id of user from db
 
@@ -1014,7 +1016,7 @@ function jsfunctSendCrypto(strPassword){
     $.ajax({
         type: "POST",
         async: false, //this allows the page called via ajax to write cookies to the user
-        url: "<?=MOD_SENDCRYPTO?>?do=sendcrypto",
+        url: "<?php MOD_SENDCRYPTO?>?do=sendcrypto",
         data: dataString,
         success: function(result) { //result is the new id of user from db
             //alert('result= ' + result );
@@ -1081,8 +1083,8 @@ function jsfunctSendCrypto(strPassword){
 </script>
 
 
-<script src="js/bootstrap.min.js"></script>
-<script src="js/angular.min.js"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/angular.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/bootstrapValidator.min.js"></script>
 
 

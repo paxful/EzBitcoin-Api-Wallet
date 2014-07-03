@@ -101,12 +101,12 @@ switch ($strServer){ // Server SiteWide Vars
     case "dev":
     define("MODE_UPGRADE",              0);
     define("DEBUGMODE",                 1);
-    define("WEBSITEURL",                "local.ezapi");
+    define("WEBSITEURL",                "localhost");
     define("WEBSITEFULLURL",            "http://".WEBSITEURL); //"http://".WEBSITEURL ;
     define("WEBSITEFULLURLHTTPS",       "http://".WEBSITEURL); //"https://".WEBSITEURL ;
     define("DB_SERVER",                 "localhost");
     define("DB_USER",                   "root");
-    define("DB_PASS",                   "littles");
+    define("DB_PASS",                   "muhahaha");
     define("DB_NAME",                   "db_wallet");
     define("JQUERYSRC",                 'js/jquery.min.js'); //latest jquery
     break;
@@ -158,7 +158,7 @@ define("MOD_LOADCONTENT",                   "loadcontent.php");
 // Cookie Constants - these are the parameters
 define("COOKIE_EXPIRE",                     1200 * 60 * 24 * 60 + time());  //1200 days by default
 define("COOKIE_PATH",                       "/");  //Available in whole domain
-define("COOKIE_DOMAIN",                     ".".WEBSITEURL);  //Available in whole domain ex .google.com
+define("COOKIE_DOMAIN",                     FALSE);  //Available in whole domain ex .google.com
 define("SESSION_USERID",                    "userid" ); //integer value of use record in database.. for fast lookups
 define("SESSION_USERIDCODE",                "useridcode" ); //long 48 character hash for storing user value in cookie.
 define("SESSION_EMAIL",                     "email" );
@@ -169,6 +169,3 @@ define("SESSION_REMEMBERFLAG",              "rememberflag" );
 define("DETECT_USERIDCODE",                 isset($_COOKIE[SESSION_USERIDCODE]) ? $_COOKIE[SESSION_USERIDCODE] : NULL );
 define("DETECT_EMAIL",                      isset($_COOKIE[SESSION_EMAIL]) ? $_COOKIE[SESSION_EMAIL] : NULL );
 define("DETECT_PASSWORD",                   isset($_COOKIE[SESSION_PASSWORD]) ? $_COOKIE[SESSION_PASSWORD] : NULL );
-
-
-?>

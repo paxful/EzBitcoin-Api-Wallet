@@ -24,7 +24,7 @@ if($strDo=="searchhud"){
 <nav class="top-bar" data-topbar data-options="is_hover: false" style="background-color:#666666;">
     <ul class="title-area" style="background-color:#666666;">
         <li class="name">
-            <h1><a href="<?=PATH_ADMIN?>" style="background-color:#000000;">CC Admin</a></h1>
+            <h1><a href="<?php PATH_ADMIN?>" style="background-color:#000000;">CC Admin</a></h1>
         </li>
         <li class="toggle-topbar menu-icon">
             <a href="#"><span>Menu</span></a>
@@ -41,17 +41,17 @@ if($strDo=="searchhud"){
 		?>
 			
 		
-<!-- 			<li><a href="<?=ADMIN_DASH?>" style="background-color:#2ba6cb;"><strong>DashBoard</strong></a></li> -->
+<!-- 			<li><a href="<?php ADMIN_DASH?>" style="background-color:#2ba6cb;"><strong>DashBoard</strong></a></li> -->
             <li class="divider"></li>
-            <li><a href="<?=PATH_ADMIN."members.php"?>" style=""><strong>Users</strong></a></li>
-            <li><a href="<?=PATH_ADMIN."orders.php"?>" style=""><strong>Orders</strong></a></li>
-            <li><a href="<?=PATH_ADMIN."transactions.php"?>" style=""><strong>TXNS</strong></a></li>
+            <li><a href="<?php PATH_ADMIN."members.php"?>" style=""><strong>Users</strong></a></li>
+            <li><a href="<?php PATH_ADMIN."orders.php"?>" style=""><strong>Orders</strong></a></li>
+            <li><a href="<?php PATH_ADMIN."transactions.php"?>" style=""><strong>TXNS</strong></a></li>
             <li><a href="https://5.153.60.162/list_transactions.php" style="" target="_blank"><strong>Ams</strong></a></li>
 
 
             
             <li class="divider"></li>
-			<li><a href="<?=CODE_DO?>?do=logout" style="background-color:#663300;">Logout</a></li>
+			<li><a href="<?php CODE_DO?>?do=logout" style="background-color:#663300;">Logout</a></li>
 			
 			
 			<li class="has-form right"> 
@@ -60,7 +60,7 @@ if($strDo=="searchhud"){
 	            		
 	            		<div class="row">
 		            		<div class="small-6 columns"> 
-				            	<input name="searchtxt" id="searchtxt" type="text" value="<?=$strSearchText?>" placeholder="Search"> 
+				            	<input name="searchtxt" id="searchtxt" type="text" value="<?php $strSearchText?>" placeholder="Search">
 				            </div> 
 				            <div class="small-4 columns"> 
 			            		<select name="searchtype">
@@ -92,7 +92,7 @@ if($strDo=="searchhud"){
 		$intRate_hud = funct_Billing_GetRate($strCrypto,$strExchange);
 		?>
 
-		<?php if($intRate_hud){ ?><li><a href="<?=PAGE_HOME?>" style="background-color:#663300;" target="_blank"><strong>$<?=number_format($intRate_hud,2)?></strong></a></li><?php } ?>
+		<?php if($intRate_hud){ ?><li><a href="<?php PAGE_HOME?>" style="background-color:#663300;" target="_blank"><strong>$<?php number_format($intRate_hud,2)?></strong></a></li><?php } ?>
 
     </ul>
       

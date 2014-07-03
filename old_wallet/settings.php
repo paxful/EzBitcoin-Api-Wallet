@@ -125,7 +125,7 @@ if($intUserID=="") {
     <link href="css/custom.css" rel="stylesheet" />
     <link href="css/bootstrapValidator.min.css" rel="stylesheet" />
 
-	<script src="<?=JQUERYSRC?>" type="text/javascript"></script>
+	<script src="<?php JQUERYSRC?>" type="text/javascript"></script>
 	
 
 <script language="javaScript">
@@ -135,7 +135,7 @@ if($intUserID=="") {
 		<?php if($strDo=="emailconfirmed"){ ?>
 		//alert('Email Confirmed! Please fill in details');
         $('#emailconfirm').modal('show');
-		<? } ?>
+		<?php } ?>
 	}); //close ready function
 
 
@@ -247,7 +247,7 @@ if($intUserID=="") {
 	  if (confirm("Are you sure ?")) {
 		//document.location = delUrl;
 		
-		openInIFrame_All('hud_items_write_iframe_questlog','hud_items_write_questlog','<?=PAGEDO?>?do=deleteaccount');
+		openInIFrame_All('hud_items_write_iframe_questlog','hud_items_write_questlog','<?php PAGEDO?>?do=deleteaccount');
 	  }
 	} 
 
@@ -277,7 +277,7 @@ if($intUserID=="") {
 		document.getElementById('countryid').value = intCountryID;
 		
 		//update via ajax
-		$.post("<?=PAGEDOAJAX?>?do=updateflag&countryid=" + intCountryID + "&userid=" + <?=$intUserID; //the logged in user detect_userid cookie ?> ,
+		$.post("<?php PAGEDOAJAX?>?do=updateflag&countryid=" + intCountryID + "&userid=" + <?php $intUserID; //the logged in user detect_userid cookie ?> ,
 			function(data){
 				if (data == 'done') {
 	
@@ -299,7 +299,7 @@ if($intUserID=="") {
 </head>
 
 
-<body onLoad="<?=$strOnBodyLoadJS?>">
+<body onLoad="<?php $strOnBodyLoadJS?>">
 
 <?php require "hud.php"; ?>
 <div class="container-fluid">
@@ -312,15 +312,15 @@ if($intUserID=="") {
 
     <div class="panel panel-default">
     <div class="panel-heading">
-        <h4 class="panel-title">Settings <?=$Email_DB?></h4>
+        <h4 class="panel-title">Settings <?php $Email_DB?></h4>
     </div>
     <div class="panel-body">
 
-		<h4><?=$strError?></h4>
+		<h4><?php $strError?></h4>
 
         
         <!-- BEGIN SETTINGS MAIN TABLE -->
-        <form role="form" action="<?=CODE_DO?>?do=update" method="POST" name="update">
+        <form role="form" action="<?php CODE_DO?>?do=update" method="POST" name="update">
             
             <!-- Begin row Country 3+8+1 -->
             <div class="row">
@@ -375,7 +375,7 @@ if($intUserID=="") {
                             $strCurrencyCode=		$row["currency_code"];
                              
                     ?>
-                      <option value="<?php echo $intCurrencyID_DB ?>"<?php if($intCurrencyID == $intCurrencyID_DB) { echo " selected " ;} ?>><?php echo $strCurrencyName ?> - <?=$strCurrencyCode?></option>
+                      <option value="<?php echo $intCurrencyID_DB ?>"<?php if($intCurrencyID == $intCurrencyID_DB) { echo " selected " ;} ?>><?php echo $strCurrencyName ?> - <?php $strCurrencyCode?></option>
                     <?php } //End Record While Loop ?>
                     </select>
                     </div>
@@ -393,7 +393,7 @@ if($intUserID=="") {
                 </div>
                 <div class="col-xs-8">
                     <div class="form-group">
-                      <input class="form-control" name="cellphone" type="text" required placeholder="your mobile phone" value="<?=$strCellPhone?>" maxlength="50">
+                      <input class="form-control" name="cellphone" type="text" required placeholder="your mobile phone" value="<?php $strCellPhone?>" maxlength="50">
                     </div>
                 </div>
                 <div class="col-xs-1">
@@ -409,7 +409,7 @@ if($intUserID=="") {
                 </div>
                 <div class="col-xs-8">
                     <div class="form-group">
-                        <input class="form-control" name="namefirst" type="text" required placeholder="first name" id="namefirst" value="<?=$strNameFirst?>" maxlength="50" />
+                        <input class="form-control" name="namefirst" type="text" required placeholder="first name" id="namefirst" value="<?php $strNameFirst?>" maxlength="50" />
                     </div>
                 </div>
                 <div class="col-xs-1">
@@ -425,7 +425,7 @@ if($intUserID=="") {
                 </div>
                 <div class="col-xs-8">
                     <div class="form-group">
-                        <input class="form-control" name="namelast" type="text" required placeholder="last name" id="namelast" value="<?=$strNameLast?>" maxlength="50" />
+                        <input class="form-control" name="namelast" type="text" required placeholder="last name" id="namelast" value="<?php $strNameLast?>" maxlength="50" />
                     </div>
                 </div>
                 <div class="col-xs-1">
@@ -441,7 +441,7 @@ if($intUserID=="") {
                 </div>
                 <div class="col-xs-8">
                     <div class="form-group">
-                        <input class="form-control" name="address" type="text" required placeholder="address 1" id="address1" value="<?=$strAddress_DB?>" maxlength="50" />
+                        <input class="form-control" name="address" type="text" required placeholder="address 1" id="address1" value="<?php $strAddress_DB?>" maxlength="50" />
                     </div>
                 </div>
                 <div class="col-xs-1">
@@ -457,7 +457,7 @@ if($intUserID=="") {
                 </div>
                 <div class="col-xs-8">
                     <div class="form-group">
-                        <input class="form-control" name="address2" type="text" placeholder="address 2" id="address2" value="<?=$strAddress2_DB?>" maxlength="50" />
+                        <input class="form-control" name="address2" type="text" placeholder="address 2" id="address2" value="<?php $strAddress2_DB?>" maxlength="50" />
                     </div>
                 </div>
                 <div class="col-xs-1">
@@ -477,12 +477,12 @@ if($intUserID=="") {
                     <div class="row">
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <input class="form-control" name="cityname" type="text" required placeholder="city" id="cityname" value="<?=$strCityName_DB?>" maxlength="50" />
+                                <input class="form-control" name="cityname" type="text" required placeholder="city" id="cityname" value="<?php $strCityName_DB?>" maxlength="50" />
                             </div>
                         </div>
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <input class="form-control" name="state" type="text" required placeholder="state/province" id="state" value="<?=$strState_DB?>" maxlength="50" />
+                                <input class="form-control" name="state" type="text" required placeholder="state/province" id="state" value="<?php $strState_DB?>" maxlength="50" />
                             </div>
                         </div>
                     </div>
@@ -504,11 +504,11 @@ if($intUserID=="") {
                     <!-- BEGIN internal row to separate Country and Postal Code -->
                     <div class="row">
                         <div class="col-xs-6">
-                            <?=$strCountryName_DB_top?>
+                            <?php $strCountryName_DB_top?>
                         </div>
                         <div class="col-xs-6">
                             <div class="form-group">
-                                <input class="form-control" name="postal" type="text" required placeholder="postal code" id="postalcode" value="<?=$strPostal_DB?>" maxlength="50" />
+                                <input class="form-control" name="postal" type="text" required placeholder="postal code" id="postalcode" value="<?php $strPostal_DB?>" maxlength="50" />
                             </div>
                         </div>
                     </div>
@@ -522,7 +522,7 @@ if($intUserID=="") {
             
             <!-- Begin row Update Account Button 12 Centered -->
             <p></p>
-            <input class="form-control" name="countryid" id="countryid" type="hidden" value="<?=$intCountryID_DB?>" />
+            <input class="form-control" name="countryid" id="countryid" type="hidden" value="<?php $intCountryID_DB?>" />
             <button type="submit" class="btn btn-primary btn-block" >Update Account</button>
 
 
@@ -539,33 +539,33 @@ if($intUserID=="") {
 	<!-- BEGIN SIDEBARK CONTENT AREA 4 OF 12 -->
 	<div class="col-xs-12 col-md-4">
 		
-<!--		<? if($strVerificationLevel){ ?>
+<!--		<?php if($strVerificationLevel){ ?>
 		<div class="panel callout radius">
-			<? if($strVerificationEmail){ echo "Email verified! <br>" ; } ?>
-			<? if($strVerificationPhone){ echo "Phone verified!" ; } ?>
+			<?php if($strVerificationEmail){ echo "Email verified! <br>" ; } ?>
+			<?php if($strVerificationPhone){ echo "Phone verified!" ; } ?>
 			
 		</div>
-		<? } ?>
+		<?php } ?>
 
         
         
         
-           <? if(!$strVerificationEmail){ ?>
-			<form data-abide action="<?=CODE_DO?>?do=confirmemailcode" method="POST">
+           <?php if(!$strVerificationEmail){ ?>
+			<form data-abide action="<?php CODE_DO?>?do=confirmemailcode" method="POST">
 				<div class="panel radius">
 					<div class="confirm_email">
 					    <label>Confirm Email </label>
 					    <input class="form-control" name="emailcode" type="text" placeholder="email code">
-						<span class="txtError"><?=$strError_confirmemail?></span>
+						<span class="txtError"><?php $strError_confirmemail?></span>
 						<button type="submit">Confirm Email</button><br>
 						<?php if($strError_emailconfirm){ echo $strError_emailconfirm." <br>" ; } ?>
-						<a href="<?=CODE_DO?>?do=sendemailcode">send code to email</a>
+						<a href="<?php CODE_DO?>?do=sendemailcode">send code to email</a>
 					</div>
 	            </div>
 			</form>
-			<? } ?>
+			<?php } ?>
 
-			<form data-abide action="<?=CODE_DO?>?do=sendphonecode" method="POST">
+			<form data-abide action="<?php CODE_DO?>?do=sendphonecode" method="POST">
 	            <div class="panel radius">
 					<div class="testphone">
 					    <label>Test Phone <small></small></label>
@@ -596,15 +596,15 @@ if($intUserID=="") {
 					?>
 						<div class="row">
 							<div class="col-xs-1">
-							    <input class="form-control" name="phone_countrycode" type="text" required style="width:50px;" value="<?=$strCellPhone_code?>">
+							    <input class="form-control" name="phone_countrycode" type="text" required style="width:50px;" value="<?php $strCellPhone_code?>">
 							</div>
 							<div class="col-xs-9">
-								<input class="form-control" name="phone" type="text" required placeholder="cellphone #" style="width:150px;" value="<?=$strCellPhone?>">
+								<input class="form-control" name="phone" type="text" required placeholder="cellphone #" style="width:150px;" value="<?php $strCellPhone?>">
 							</div>
 						</div>
 					    
 						<button type="submit">Send Test MSG to Phone</button>
-						<span class="txtError"><?=$strError_testphone?></span><br>
+						<span class="txtError"><?php $strError_testphone?></span><br>
 -->						<!--
 						full international phone number please:<br> 
 						USA example 1 6461111234 <br> 
@@ -614,18 +614,18 @@ if($intUserID=="") {
 	            </div> -->
 			</form>
 <!--			
-			<? if(!$strVerificationPhone){ ?>
-			<form data-abide action="<?=CODE_DO?>?do=confirmphonecode" method="POST">
+			<?php if(!$strVerificationPhone){ ?>
+			<form data-abide action="<?php CODE_DO?>?do=confirmphonecode" method="POST">
 	            <div class="panel radius">
 					<div class="confirmphone">
 					    <label>Confirm Phone <small></small></label>
 					    <input class="form-control" name="phonecode" type="text" placeholder="enter code sent to phone">
-						<span class="txtError"><?=$strError_confirmphone?></span>
+						<span class="txtError"><?php $strError_confirmphone?></span>
 						<button type="submit">Confirm Phone Code</button><br>
 					</div>
 	            </div>
 			</form>	
-			<? } ?>
+			<?php } ?>
 -->
 
         <div class="panel panel-default">
@@ -635,11 +635,11 @@ if($intUserID=="") {
             <div class="panel-body">
 
             <a name="passwordupdate"></a>
-                <form role="form" action="<?=CODE_DO?>?do=updatepassword" name="passwordupdate" method="POST">
+                <form role="form" action="<?php CODE_DO?>?do=updatepassword" name="passwordupdate" method="POST">
                     <div class="panel">
                         <div class="password">
 
-                            <h4><?=$strErrorPassword?></h4>
+                            <h4><?php $strErrorPassword?></h4>
 
                             <div class="form-group">
                                 <input class="form-control" name="passwordold" type="password" required id="passwordold" placeholder="current password">

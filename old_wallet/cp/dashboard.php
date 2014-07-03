@@ -17,7 +17,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 	<meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
    
-	<? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
+	<?php if(!$intJquery){ $intJquery=1;?><script src="<?php JQUERYSRC?>" type="text/javascript"></script><?php } ?>
 
     <link rel="stylesheet" href="/wallet/css/foundation.css" />
 <link rel="stylesheet" href="/wallet/css/custom.css" />
@@ -35,7 +35,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
     
 </head>
 
-<body onload="<?=$strOnBodyLoadJS?>">
+<body onload="<?php $strOnBodyLoadJS?>">
 
 <?php include __ROOT__.PATH_ADMIN."hud.php"; ?>
 
@@ -44,8 +44,8 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 
 	<div class="row">
 		<div class="medium-9 small-12 columns">
-			<h3>Welcome <?=$strFirstName_hud?></h3>
-			<h4><?=$strErrorMSG?></h4>
+			<h3>Welcome <?php $strFirstName_hud?></h3>
+			<h4><?php $strErrorMSG?></h4>
 			<p></p>
 
 	<!-- 			Search fields -->
@@ -53,7 +53,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 			<div class="small-4 columns">
 	    		<form name="searchform" id="searchformuserid" method="get" action="hud.php?do=search" target="_blank">
 	    			<label>User ID:</label>
-		        	<input name="searchtxt" type="text" value="<?=$strSearchText?>" placeholder="User ID"> 
+		        	<input name="searchtxt" type="text" value="<?php $strSearchText?>" placeholder="User ID">
 		        	<input name="searchtype" type="hidden" value="userid"> 
 					<input name="do" type="hidden" value="searchhud">
 	    		</form>
@@ -61,7 +61,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 			<div class="small-4 columns">
 				<form name="searchform" id="searchformname" method="get" action="hud.php?do=search" target="_blank">
 	    			<label>Customer Name:</label>
-	            	<input name="searchtxt" type="text" value="<?=$strSearchText?>" placeholder="Customer Name"> 
+	            	<input name="searchtxt" type="text" value="<?php $strSearchText?>" placeholder="Customer Name">
 	            	<input name="searchtype" type="hidden" value="name"> 
 					<input name="do" type="hidden" value="searchhud">
 				</form>
@@ -74,7 +74,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 			<div class="small-4 columns"> 
 	    		<form name="searchform" id="searchformorderid" method="get" action="orders_details.php">
 	    			<label>Order ID:</label>
-		        	<input name="id" type="text" value="<?=$strSearchText?>" placeholder="Order ID"> 
+		        	<input name="id" type="text" value="<?php $strSearchText?>" placeholder="Order ID">
 <!--
 		        	<input name="searchtype" type="hidden" value="orderid"> 
 					<input name="do" type="hidden" value="searchhud">
@@ -84,7 +84,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 			<div class="small-4 columns"> 
 	    		<form name="searchform" id="searchformdepositamt" method="get" action="hud.php?do=search" target="_blank">
 	    			<label>Deposit Amount:</label>
-			    	<input name="searchtxt" type="text" value="<?=$strSearchText?>" placeholder="Deposit Amount"> 
+			    	<input name="searchtxt" type="text" value="<?php $strSearchText?>" placeholder="Deposit Amount">
 			    	<input name="searchtype" type="hidden" value="depositamt"> 
 					<input name="do" type="hidden" value="searchhud">
 	    		</form>
@@ -92,7 +92,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 			<div class="small-4 columns"> 
 	    		<form name="searchform" id="searchformstatus" method="get" action="/cp/orders.php" target="_blank">
 	    			<label>Status:</label>
-			    	<input name="searchtxt" type="text" value="<?=$strSearchText?>" placeholder="Order Status"> 
+			    	<input name="searchtxt" type="text" value="<?php $strSearchText?>" placeholder="Order Status">
 			    	<input name="searchtype" type="hidden" value="status"> 
 	    		</form>
 	        </div>
@@ -130,7 +130,7 @@ include __ROOT__.PATH_ADMIN."checklogin.php";
 		<!--SIDEBAR AREA-->        
 		<div class="medium-3 columns">
 			<h4>Wallet Server</h4>
-			<p>Balance: <?=funct_Billing_GetBalance();?></p>
+			<p>Balance: <?php funct_Billing_GetBalance();?></p>
 			<?php
 				
 				

@@ -67,7 +67,7 @@ if($strDo=="login"){
 	<meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
    
-	<? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
+	<?php if(!$intJquery){ $intJquery=1;?><script src="<?php JQUERYSRC?>" type="text/javascript"></script><?php } ?>
 
     <link rel="stylesheet" href="/wallet/css/foundation.css" />
 <link rel="stylesheet" href="/wallet/css/custom.css" />
@@ -84,7 +84,7 @@ if($strDo=="login"){
     
 </head>
 
-<body onload="<?=$strOnBodyLoadJS?>">
+<body onload="<?php $strOnBodyLoadJS?>">
 
 <?php // include __ROOT__."/inc/hud.php"; ?>
 
@@ -93,14 +93,14 @@ if($strDo=="login"){
 
 	<div class="medium-8 small-12 columns">
 		<h1>Administration</h1>
-		<h4><?=$errorMSG?></h4>
+		<h4><?php $errorMSG?></h4>
 		<form name="checkout" id="checkout" method="post" action="?do=login">
-		<h4><?=$strErrorMSG?></h4>
-		<form name="checkout" id="checkout" method="post" action="<?=CODE_DO?>?do=login&page=/cp/">
+		<h4><?php $strErrorMSG?></h4>
+		<form name="checkout" id="checkout" method="post" action="<?php CODE_DO?>?do=login&page=/cp/">
 			<p></p>
 			<div class="row">
 			    <div class="small-4 columns">
-		          <input name="email" type="text" required id="email" placeholder="username" value="<?=$strEmail?>" style="width:200px;">
+		          <input name="email" type="text" required id="email" placeholder="username" value="<?php $strEmail?>" style="width:200px;">
 			    </div>
 			</div>
 			<div class="row">

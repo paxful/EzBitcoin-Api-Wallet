@@ -42,16 +42,16 @@ $strTXID = "d3de9c8d5ed75ca9d265f5b4581795d002234246f19dafe4d83b17661a4e3473";
 ?>
 <h1>testing blockchain api via bitcoind rpc</h1><br>
 
-<a href="/merchant/?do=getbalance&account=<?//=$strAddress?><?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=getbalance&account=<?//=$strAddress?><?php $strAuth?>" target="_blank">
 getbalance</a><br><br>
 
-<a href="/merchant/?do=validate_transaction&txid=<?=$strTXID?><?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=validate_transaction&txid=<?php $strTXID?><?php $strAuth?>" target="_blank">
 validate_transaction</a><br><br>
 
-<a href="/merchant/?do=validate_address&address=<?=$strAddress?><?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=validate_address&address=<?php $strAddress?><?php $strAuth?>" target="_blank">
 validate_address</a><br><br>
 
-<a href="/merchant/?do=new_address&address=&label=testing public note&label2=testing note2&label3=testingnote3<?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=new_address&address=&label=testing public note&label2=testing note2&label3=testingnote3<?php $strAuth?>" target="_blank">
 make new address</a><br><br>
 
 <?
@@ -59,14 +59,14 @@ $intAmount = "0.0002";
 $strAddressSend = "1GmEVipzfyBGQDWDije9FhvySSKHz1RjXL"; //ray@easybitz.com production 16dPhqxEiVhK38ctJRp6mj6oQqhJSJeNG7  // keychests BCI 1GmEVipzfyBGQDWDije9FhvySSKHz1RjXL
 $strLabel = "test send";
 ?>
-<a href="/merchant/?do=sendtoaddress&address=<?=$strAddressSend?>&amount=<?=$intAmount?>&comment=<?=$strLabel?>&commentto=to test<?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=sendtoaddress&address=<?php $strAddressSend?>&amount=<?php $intAmount?>&comment=<?php $strLabel?>&commentto=to test<?php $strAuth?>" target="_blank">
 send</a><br><br>
-<a href="/merchant/?do=sendfromaddress&address=19LgQ83sFkudy9qmA5Ub9zbG1SVDYVmqsK&amount=200&from=1GQ3cstjtPrhf9yJwp9332QjDaQoSpyb82&comment=from coincafe&commentto=toray<?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=sendfromaddress&address=19LgQ83sFkudy9qmA5Ub9zbG1SVDYVmqsK&amount=200&from=1GQ3cstjtPrhf9yJwp9332QjDaQoSpyb82&comment=from coincafe&commentto=toray<?php $strAuth?>" target="_blank">
 send from</a><br><br>
 
 
 
-<a href="/merchant/?do=callback&txid=<?=$strTXID?><?=$strAuth?>" target="_blank">
+<a href="/merchant/?do=callback&txid=<?php $strTXID?><?php $strAuth?>" target="_blank">
 callback</a><br><br>
 
 <a href="/list_transactions.php">View Transactions</a><br><br>

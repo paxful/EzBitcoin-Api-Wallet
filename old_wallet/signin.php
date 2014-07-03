@@ -31,10 +31,10 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
     <link href="css/custom.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
 
-    <? if(!$intJquery){ $intJquery=1;?><script src="<?=JQUERYSRC?>" type="text/javascript"></script><? } ?>
+    <?php if(!$intJquery){ $intJquery=1;?><script src="<?php echo JQUERYSRC?>" type="text/javascript"></script><?php } ?>
 
 
-    <SCRIPT LANGUAGE="JavaScript">
+    <SCRIPT LANGUAGE="JavaScript" type="text/javascript">
 
     $(document).ready(function() {
         $('#signin').bootstrapValidator({
@@ -106,34 +106,13 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
 
     });
 
-
-
-	<!--
-	
-	function validateForgotPasswordForm() {
-
-		var okSoFar=true
-
-		if (document.forgot.forgot_email.value=="") {
-			alert("Enter your email address please.")
-			document.forgot.forgot_email.focus(); okSoFar=false; return false;
-		}
-
-		if (okSoFar==true) {
-			document.getElementById('forgot').submit();
-		}
-		
-	  return true;
-	}
-	
-	//-->
 </SCRIPT>
     
-	<title>Sign In<?=WEBSITENAME?></title>
+	<title>Sign In | <?php echo WEBSITENAME?></title>
     
 </head>
 
-<body onload="<?=$strOnBodyLoadJS?>">
+<body onload="<?php echo $strOnBodyLoadJS?>">
 
 <?php require "hud.php"; ?>
 
@@ -145,14 +124,14 @@ if(!$strEmail){ $strEmail= $_COOKIE[SESSION_EMAIL] ; }
         <!-- LEFT SIDE USERNAME AND PASSWORD AREA -->
         <div class="col-xs-12 col-md-8">
 avbar
-            <h3>Sign in to <?=WEBSITENAME?></h3>
-            <h4 style="color:darkred;"><?=$strError?></h4>
+            <h3>Sign in to <?php echo WEBSITENAME?></h3>
+            <h4 style="color:darkred;"><?php echo $strError?></h4>
 
-            <form role="form" name="signin" id="signin" method="post" action="<?=CODE_DO?>?do=login&page=signin.php">
+            <form role="form" name="signin" id="signin" method="post" action="<?php CODE_DO?>?do=login&page=signin.php">
                 <div class="row">
                     <div class="col-xs-8 col-md-6">
                         <div class="form-group">
-                            <input class="form-control" name="email" type="email" required id="email" placeholder="your email" value="<?=$strEmail?>">
+                            <input class="form-control" name="email" type="email" required id="email" placeholder="your email" value="<?php $strEmail?>">
                         </div>
                         <div class="form-group">
                             <input class="form-control" name="password" type="password" required id="password" placeholder="select password">
@@ -170,7 +149,7 @@ avbar
                         <button class="btn btn-primary btn-block" type="submit" onClick="return jsfunct_join();">Sign In </button>
 
 
-                        <strong style="color:#FFF;"><?=$strError?></strong>
+                        <strong style="color:#FFF;"><?php echo $strError?></strong>
                         <br>
                         <h3>Don't have an account? <a href="signup.php">Sign up</a></h3>
                     </div>
@@ -185,16 +164,16 @@ avbar
 
             <h4>Forgot Password ?</h4>
 
-                 <form role="form" action="<?=CODE_DO."?do=forgotpassword"?>&page=signin.php" method="POST" name="forgot" id="forgot">
+                 <form role="form" action="<?php echo CODE_DO."?do=forgotpassword"?>&page=signin.php" method="POST" name="forgot" id="forgot">
 
                      <div class="row">
                         <div class="col-xs-6">
 
                             <div class="form-group">
-                                <input class="form-control" type="text" required placeholder="email" name="forgot_email" id="forgot_email" style="" autocomplete="true" value="<?=$FormRegEmail?>">
+                                <input class="form-control" type="text" required placeholder="email" name="forgot_email" id="forgot_email" style="" autocomplete="true" value="<?php echo $FormRegEmail?>">
                             </div>
 
-                            <strong class="txtError"><?=$strError_forgot?></strong>
+                            <strong class="txtError"><?php echo $strError_forgot?></strong>
                             <h5 id="error_forgot"></h5>
 
                             <a href="javascript:;" onClick="return validateForgotPasswordForm();" style="text-decoration:none;">

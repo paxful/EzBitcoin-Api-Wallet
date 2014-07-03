@@ -75,7 +75,7 @@ if($strDO=="update"){
 <link rel="stylesheet" href="/wallet/css/foundation.css" />
 <script src="/wallet/js/modernizr.js"></script>
 
-<script src="<?=JQUERYSRC?>" type="text/javascript"></script>
+<script src="<?php JQUERYSRC?>" type="text/javascript"></script>
 <link rel="stylesheet" href="/wallet/css/web.css" />
 
 
@@ -91,7 +91,7 @@ if($strDO=="update"){
 		intTotalRecords = 0 ;
 		intTotalRecordsShowing = 0 ;
 		
-		strLoadContentAjaxURL = "&do=ajax&maxrecords=<?=$intMaxRecords?>&type=<?=$intType?>&f=<?=$strFilter?>&sort=<?=$sortby?>&searchtxt=<?=$strSearchTXT?>&searchtype=<?=$strSearchType?>";
+		strLoadContentAjaxURL = "&do=ajax&maxrecords=<?php $intMaxRecords?>&type=<?php $intType?>&f=<?php $strFilter?>&sort=<?php $sortby?>&searchtxt=<?php $strSearchTXT?>&searchtype=<?php $strSearchType?>";
 
 
 		//Call more records on scroll to bottom //  this is jumpy ...
@@ -105,7 +105,7 @@ if($strDO=="update"){
 		}); //close $(window).scroll(function(){
 		
 		//autorefresh 
-		//var auto_refresh = setInterval( function () { jsfunct_LoadLatestRecords(); }, <?=REFRESH_WALLET_SEC * 1000 ?>); // refresh every * milliseconds 10000= 10 seconds
+		//var auto_refresh = setInterval( function () { jsfunct_LoadLatestRecords(); }, <?php REFRESH_WALLET_SEC * 1000 ?>); // refresh every * milliseconds 10000= 10 seconds
 
 	
 	}); //close ready function
@@ -116,7 +116,7 @@ if($strDO=="update"){
 	//!function LoadMoreRecords to load more records at end
 	function jsfunct_LoadMoreRecords(){
 		$("#loader_bottom").fadeIn(1000);
-		strPostString = "<?=ADMIN_MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL ;
+		strPostString = "<?php ADMIN_MOD_LOADCONTENT?>?last_msg_id=" + intLastRecord + strLoadContentAjaxURL ;
 		//alert(strPostString);
 		
 		$.post(strPostString,
@@ -153,7 +153,7 @@ if($strDO=="update"){
 		//alert('newestid= ' + intNewestID);
 		if(intNewestID){ intNewestID_old=intNewestID ;} //store first record id, freshest
 		
-		$.post("<?=ADMIN_MOD_LOADCONTENT?>?do=ajax&newest_msg_id=" + intNewestID + strLoadContentAjaxURL , function(data){
+		$.post("<?php ADMIN_MOD_LOADCONTENT?>?do=ajax&newest_msg_id=" + intNewestID + strLoadContentAjaxURL , function(data){
 			if (data != "") {
 				//var $html = $(data);
 				//prepend container
@@ -179,13 +179,13 @@ if($strDO=="update"){
 
 </head>
 
-<body onLoad="<?=$strOnBodyLoadJS?>" class="" style="">
+<body onLoad="<?php $strOnBodyLoadJS?>" class="" style="">
 
 
 	<div class="row">
 		<div class="small-12 columns"> 
 			<form name="searchform" id="searchform" method="get" action="?do=search">
-	        	<input style="width:30%;" name="searchtxt" id="searchtxt" type="text" value="<?=$strSearchText?>" placeholder="Search"> 
+	        	<input style="width:30%;" name="searchtxt" id="searchtxt" type="text" value="<?php $strSearchText?>" placeholder="Search">
 	    		<select name="searchtype" style="width:20%;">
 		          <option value="txid">TXID</option>
 		          <option value="userid">userid</option>
@@ -205,15 +205,15 @@ if($strDO=="update"){
     <div class="small-12 columns"> 
 		
 		<h5>Filter: 
-	    <a href="?f=all&sort=<?=$sortby?>">All</a> - 
+	    <a href="?f=all&sort=<?php $sortby?>">All</a> -
 	    
-	    <a href="?f=receives&sort=<?=$sortby?>"><strong>Gets</strong></a> - 
-	    <a href="?f=sends&sort=<?=$sortby?>"><strong>Sends</strong></a> 
+	    <a href="?f=receives&sort=<?php $sortby?>"><strong>Gets</strong></a> -
+	    <a href="?f=sends&sort=<?php $sortby?>"><strong>Sends</strong></a>
 	
 	    <br>Sort: 
-	    <a href="?sort=datenew&f=<?=$strFilter?>">Date New</a> / <a href="?sort=dateold&filter=<?=$strFilter?>">Old</a> --- 
-	    <a href="?sort=amthigh2low&f=<?=$strFilter?>">Amt High</a> / <a href="?sort=amtlow2high&filter=<?=$strFilter?>">Low</a> ---
-	    <a href="?sort=namea&f=<?=$strFilter?>">Name A</a> / <a href="?sort=namez&filter=<?=$strFilter?>">Name Z</a>
+	    <a href="?sort=datenew&f=<?php $strFilter?>">Date New</a> / <a href="?sort=dateold&filter=<?php $strFilter?>">Old</a> ---
+	    <a href="?sort=amthigh2low&f=<?php $strFilter?>">Amt High</a> / <a href="?sort=amtlow2high&filter=<?php $strFilter?>">Low</a> ---
+	    <a href="?sort=namea&f=<?php $strFilter?>">Name A</a> / <a href="?sort=namez&filter=<?php $strFilter?>">Name Z</a>
 		</h5>
 		<h4> Records: <span id="totalrecords"></span> <span id="totalrecordsshowing"></span> </h4>
 	    
