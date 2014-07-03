@@ -6,8 +6,8 @@
 
 <body>
 
-<div class="container-fluid">
-    <?php $this->load->view('includes/menu'); ?>
+<?php $this->load->view('includes/menu'); ?>
+<div class="container" role="main">
     <div class="row">
         <div class="col-lg-12">
             <?php if (! empty($message)) { ?>

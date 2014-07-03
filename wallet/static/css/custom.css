@@ -1,0 +1,45 @@
+body {
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+.navbar {
+    background: url(../img/goldbg.png) repeat-x transparent;
+    border:none;
+    border-radius: 0;
+}
+.navbar-inverse .navbar-brand {
+    color: #ffffff;
+    background-color: #F7931A;
+}
+.navbar-inverse .navbar-nav > li > a { color: #fff; }
+.navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
+    background-color: #F7931A;
+}
+.btn-primary {
+    background-color: #F7931A;
+    border-color: #DE8417;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary {
+    background-color: #DE8417;
+    border-color: #C87715;
+}
+
+#authentication-container { margin-top: 36px; }
+@media (min-width: 768px) {
+    #authentication-container #login-container { border-right: 1px solid #CAC9C9; }
+}
+#documentation-container { margin-top: 36px; }
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #forgotten_password, #resend_activation {
+        white-space: normal;
+        width: 142px;
+    }
+}
+@media (min-width: 992px) and (max-width: 1099px) {
+    #forgotten_password, #resend_activation {
+        white-space: normal;
+        width: 198px;
+    }
+}

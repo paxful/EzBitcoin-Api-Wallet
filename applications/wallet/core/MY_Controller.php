@@ -70,6 +70,12 @@ class MY_Controller extends CI_Controller {
         {
             $this->load->model('auth_model');
             $this->auth_model->login();
+        } else if ($this->input->post('login_user_header')) {
+            $this->load->model('auth_model');
+            $this->auth_model->login();
+        }
+        else {
+            $this->data['message'] = 'Authorization failed';
         }
 
         // CAPTCHA Example
@@ -107,23 +113,21 @@ class MY_Controller extends CI_Controller {
         // Get any status message that may have been set.
         $this->data['message'] = (! isset($this->data['message'])) ? $this->session->flashdata('message') : $this->data['message'];
 
-        $this->load->view('demo/login_view', $this->data);
+        $this->load->view('auth/register', $this->data);
     }
 
     /**
-     * logout
      * This example logs the user out of all sessions on all computers they may be logged into.
      * In this demo, this page is accessed via a link on the demo header once a user is logged in.
      */
-    public function logout()
-    {
+    public function logout() {
         // By setting the logout functions argument as 'TRUE', all browser sessions are logged out.
         $this->ez_auth->logout(TRUE);
 
         // Set a message to the CI flashdata so that it is available after the page redirect.
         $this->session->set_flashdata('message', $this->ez_auth->get_messages());
 
-        redirect('');
+        redirect();
     }
 
     ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###

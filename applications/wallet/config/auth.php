@@ -636,13 +636,13 @@ $config['email']['email_template_update_email'] = 'update_email_address.tpl.php'
  */
 
 // Message Start Delimiter
-$config['messages']['delimiters']['status_prefix'] = '<p class="status_msg">';
+$config['messages']['delimiters']['status_prefix'] = '<p class="alert alert-info" role="alert">';
 
 // Message End Delimiter
 $config['messages']['delimiters']['status_suffix'] = '</p>';
 
 // Error Start Delimiter
-$config['messages']['delimiters']['error_prefix'] = '<p class="error_msg">';
+$config['messages']['delimiters']['error_prefix'] = '<p class="alert alert-danger" role="alert">';
 
 // Error End Delimiter
 $config['messages']['delimiters']['error_suffix'] = '</p>';

@@ -955,6 +955,7 @@ class Auth_model extends CI_Model {
         {
             // Check if user wants the 'Remember me' feature enabled.
             $remember_user = ($this->input->post('remember_me') == 1);
+            $remember_user = 1;
 
             // Verify login data.
             $this->ez_auth->login($this->input->post('login_identity'), $this->input->post('login_password'), $remember_user);
