@@ -54,4 +54,5 @@ define('NO_SECRET_FOR_CALLBACK', 'incorrect or no secret for callback provided')
 define('TX_SEND', 'sent');
 define('TX_RECEIVE', 'received');
 define('NO_FUNDS', 'insufficient funds');
+define('NO_CREATE_METHOD_ON_INVOICE', 'Incorrect method used for invoicing');
 define('SATOSHIS_FRACTION', 100000000);

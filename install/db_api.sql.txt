@@ -183,3 +183,4 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `guid`, `password`, `email`, `name`, `callbackurl`, `secret`, `lastactivity`, `created`) VALUES
 (1, '0bb611895b9541310c3c4fb82d72bfb7', '98b5ee88205e3d64433166490c5b5e84', 'skyzer@gmail.com', 'Artur', 'http://www.example.com/processOrder.php', 'HMJzDEqsGF9W', NULL, '2014-06-23 01:07:46');
+p

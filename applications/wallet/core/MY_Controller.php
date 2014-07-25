@@ -152,13 +152,37 @@ class MY_Controller extends CI_Controller {
         redirect('auth');
     }
 
+    ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###
+    // Forgotten Password
+    ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###
+
+    /**
+     * Send user an email to verify their identity. Via a unique link in this email, the user is redirected to the site so they can then reset their password.
+     * In this demo, this page is accessed via a link on the login page.
+     *
+     * Note: This is step 1 of an example of allowing users to reset a forgotten password manually.
+     * See the auto_reset_forgotten_password() function below for an example of directly emailing the user a new randomised password.
+     */
+    public function forgotten_password() {
+        // If the 'Forgotten Password' form has been submitted, then email the user a link to reset their password.
+        if ($this->input->post('send_forgotten_password'))
+        {
+            $this->load->model('auth_model');
+            $this->auth_model->forgotten_password();
+        }
+
+        // Get any status message that may have been set.
+        $this->data['message'] = (! isset($this->data['message'])) ? $this->session->flashdata('message') : $this->data['message'];
+
+        $this->load->view('auth/register', $this->data);
+    }
+
     /**
      * Resend user an activation token via email.
      * If a user has not received/lost their account activation email, they can request a new activation email to be sent to them.
      * In this demo, this page is accessed via a link on the login page.
      */
-    public function resend_activation_token()
-    {
+    public function resend_activation_token() {
         // If the 'Resend Activation Token' form has been submitted, resend the user an account activation email.
         if ($this->input->post('send_activation_token'))
         {
@@ -169,6 +193,6 @@ class MY_Controller extends CI_Controller {
         // Get any status message that may have been set.
         $this->data['message'] = (! isset($this->data['message'])) ? $this->session->flashdata('message') : $this->data['message'];
 
-        $this->load->view('demo/public_examples/resend_activation_token_view', $this->data);
+        $this->load->view('auth/register', $this->data);
     }
 }

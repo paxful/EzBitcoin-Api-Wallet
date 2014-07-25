@@ -1210,6 +1210,182 @@ class Auth_model extends CI_Model {
         return TRUE;
     }
 
+    ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###
+    // Reseting Passwords
+    ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###
+
+    /**
+     * Sends a 'Forgotten Password' email to a users email address.
+     * The email will contain a link that redirects the user to the site, a token within the link is verified, and the user can then manually reset their password.
+     */
+    function forgotten_password() {
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('forgot_password_identity', 'Identity (Email / Login)', 'required');
+
+        // Run the validation.
+        if ($this->form_validation->run()) {
+            // The 'forgotten_password()' function will verify the users identity exists and automatically send a 'Forgotten Password' email.
+            $response = $this->ez_auth->forgotten_password($this->input->post('forgot_password_identity'));
+
+            // Save any public status or error messages (Whilst suppressing any admin messages) to CI's flash session data.
+            $this->session->set_flashdata('message', $this->ez_auth->get_messages());
+
+            // Redirect user.
+            redirect();
+        }
+        else {
+            // Set validation errors.
+            $this->data['message'] = validation_errors('<p class="error_msg">', '</p>');
+
+            return FALSE;
+        }
+    }
+
+    /**
+     * Inserts a forgotten password token.
+     *
+     * @return bool
+     * @author Rob Hussey
+     */
+    public function forgotten_password_token($identity) {
+        if (empty($identity)) {
+            return FALSE;
+        }
+
+        // Generate forgotten password token.
+        $hash_token = $this->generate_hash_token($this->generate_token());
+
+        // Set forgotten password token expiry time if defined by config file.
+        if ($this->auth->auth_security['expire_forgotten_password'] > 0) {
+            $expire_time = (60 * $this->auth->auth_security['expire_forgotten_password']); // 60 Secs * expire minutes.
+            $this->db->set($this->auth->tbl_col_user_account['forgot_password_expire'],
+                $this->database_date_time($expire_time));
+        }
+
+        $this->db->set($this->auth->tbl_col_user_account['forgot_password_token'], $hash_token)
+            ->where($this->auth->primary_identity_col, $identity)
+            ->update($this->auth->tbl_user_account);
+
+        return $this->db->affected_rows() == 1;
+    }
+
+    /**
+     * Changes a forgotten password to either a new submitted password, or it generates a new one.
+     *
+     * @return string
+     * @author Rob Hussey
+     */
+    public function change_forgotten_password($user_id, $token, $new_password = FALSE, $database_salt = FALSE) {
+        // Confirm token is 40 characters long (length of sha1)
+        if (!is_numeric($user_id) || strlen($token) !== 40) {
+            return FALSE;
+        }
+
+        // If forgotten password token matches and has not expired (expiry set via config)
+        if ($this->validate_forgotten_password_token($user_id, $token))
+        {
+            // Delete any user 'Remember me' sessions
+            $this->delete_database_login_session($user_id);
+
+            // Create new password if not set
+            if (!$new_password)
+            {
+                $new_password = $this->generate_token();
+            }
+
+            $hashed_new_password = $this->generate_hash_token($new_password, $database_salt, TRUE);
+
+            $sql_update = array(
+                $this->auth->tbl_col_user_account['password'] => $hashed_new_password,
+                $this->auth->tbl_col_user_account['forgot_password_token'] => '',
+                $this->auth->tbl_col_user_account['forgot_password_expire'] => 0
+            );
+
+            $sql_where = array(
+                $this->auth->tbl_col_user_account['id'] => $user_id,
+                $this->auth->tbl_col_user_account['forgot_password_token'] => $token
+            );
+
+            $this->db->update($this->auth->tbl_user_account, $sql_update, $sql_where);
+
+            if ($this->db->affected_rows() == 1)
+            {
+                return $new_password;
+            }
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * Validates that a submitted Forgotten Password Token matches the database record and has not expired.
+     *
+     * @return bool
+     * @author by Rob Hussey
+     */
+    public function validate_forgotten_password_token($user_id, $token) {
+        // Confirm token is 40 characters long (length of sha1).
+        if (!is_numeric($user_id) || strlen($token) !== 40) {
+            return FALSE;
+        }
+
+        $sql_where = array(
+            $this->auth->tbl_col_user_account['id'] => $user_id,
+            $this->auth->tbl_col_user_account['forgot_password_token'] => $token
+        );
+
+        // Check Forgotten Password Token hasn't expired, defined via config file.
+        if ($this->auth->auth_security['expire_forgotten_password'] > 0) {
+            $sql_where[$this->auth->tbl_col_user_account['forgot_password_expire'].' > '] = $this->database_date_time();
+        }
+
+        $this->db->where($sql_where);
+
+        return $this->db->count_all_results($this->auth->tbl_user_account) > 0;
+    }
+
+    /**
+     * This example lets the user manually reset their password rather than automatically sending them a new random password via email.
+     * The function validates the user via a token within the url of the current site page, then validates their current and newly submitted passwords are valid.
+     */
+    function manual_reset_forgotten_password($user_id, $token) {
+        $this->load->library('form_validation');
+
+        // Set validation rules
+        // The custom rule 'validate_password' can be found in '../libaries/MY_Form_validation.php'.
+        $validation_rules = array(
+            array('field' => 'new_password', 'label' => 'New Password', 'rules' => 'required|validate_password|matches[confirm_new_password]'),
+            array('field' => 'confirm_new_password', 'label' => 'Confirm Password', 'rules' => 'required')
+        );
+
+        $this->form_validation->set_rules($validation_rules);
+
+        // Run the validation.
+        if ($this->form_validation->run())
+        {
+            // Get password data from input.
+            $new_password = $this->input->post('new_password');
+
+            // The 'forgotten_password_complete()' function is used to either manually set a new password, or to auto generate a new password.
+            // For this example, we want to manually set a new password, so ensure the 3rd argument includes the $new_password var, or else a  new password.
+            // The function will then validate the token exists and set the new password.
+            $this->flexi_auth->forgotten_password_complete($user_id, $token, $new_password);
+
+            // Save any public status or error messages (Whilst suppressing any admin messages) to CI's flash session data.
+            $this->session->set_flashdata('message', $this->flexi_auth->get_messages());
+
+            redirect('auth');
+        }
+        else
+        {
+            // Set validation errors.
+            $this->data['message'] = validation_errors('<p class="error_msg">', '</p>');
+
+            return FALSE;
+        }
+    }
+
     /**
      * Generates the html for Google reCAPTCHA.
      * Note: If the reCAPTCHA is located on an SSL secured page (https), set $ssl = TRUE.
@@ -1372,8 +1548,7 @@ class Auth_model extends CI_Model {
      * Create a new user account.
      * Then if defined via the '$instant_activate' var, automatically log the user into their account.
      */
-    function register_account()
-    {
+    function register_account() {
         $this->load->library('form_validation');
 
         // Set validation rules.
@@ -1586,8 +1761,7 @@ class Auth_model extends CI_Model {
         $this->form_validation->set_rules('activation_token_identity', 'Identity (Email / Login)', 'required');
 
         // Run the validation.
-        if ($this->form_validation->run())
-        {
+        if ($this->form_validation->run()) {
             // Verify identity and resend activation token.
             $response = $this->ez_auth->resend_activation_token($this->input->post('activation_token_identity'));
 
@@ -1595,10 +1769,9 @@ class Auth_model extends CI_Model {
             $this->session->set_flashdata('message', $this->ez_auth->get_messages());
 
             // Redirect user.
-            ($response) ? redirect('auth') : redirect('auth/resend_activation_token');
+            redirect();
         }
-        else
-        {
+        else {
             // Set validation errors.
             $this->data['message'] = validation_errors('<p class="error_msg">', '</p>');
 
@@ -1607,8 +1780,7 @@ class Auth_model extends CI_Model {
     }
 
     public function deactivate_user($user_id) {
-        if (empty($user_id))
-        {
+        if (empty($user_id)) {
             return FALSE;
         }
 

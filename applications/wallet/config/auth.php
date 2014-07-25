@@ -515,7 +515,7 @@ $config['security']['expire_forgotten_password'] = 15;
  * Note: If a user exceeds 3 times the limit set, the resulting time ban is doubled to further slow down attempts.
  * Example: 0 = unlimited attempts, 3 = 3 attempts.
  */
-$config['security']['login_attempt_limit'] = 3;
+$config['security']['login_attempt_limit'] = 10;
 
 /**
  * If a user has exceeded the failed login attempt limit, set the length of time they must wait before they can attempt to login again.
@@ -551,8 +551,8 @@ $config['security']['login_attempt_time_ban'] = 10;
  * Set your unique reCAPTCHA api keys.
  * !IMPORTANT: Obtain YOUR OWN reCAPTCHA keys from http://www.google.com/recaptcha.
  */
-$config['security']['recaptcha_public_key']	= 'ENTER_RECAPTCHA_PUBLIC_KEY_HERE';
-$config['security']['recaptcha_private_key'] = 'ENTER_RECAPTCHA_PRIVATE_KEY_HERE';
+$config['security']['recaptcha_public_key']	= '6Lf7PvYSAAAAACZ6CA7QA5yIQ_l893z1dgCir1yn';
+$config['security']['recaptcha_private_key'] = '6Lf7PvYSAAAAAPMoMwqbvme3M9nyG5XuaeVtNSMx';
 
 /**
  * Set the theme of the reCAPTCHA. For custom theming, see https://developers.google.com/recaptcha/docs/customization

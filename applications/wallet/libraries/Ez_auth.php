@@ -213,6 +213,57 @@ class Ez_auth {
         }
     }
 
+    /**
+     * forgotten_password
+     * Sends the user an email containing a link the user must click to verify they have requested to change their forgotten password.
+     *
+     * @return bool
+     * @author Rob Hussey
+     */
+    public function forgotten_password($identifier) {
+        // Get users primary identity.
+        if (!$identity = $this->CI->auth_model->get_primary_identity($identifier))
+        {
+            $this->CI->auth_model->set_error_message('email_forgot_password_unsuccessful', 'config');
+            return FALSE;
+        }
+
+        if ($this->CI->auth_model->forgotten_password_token($identity))
+        {
+            // Get user information.
+            $sql_select = array(
+                $this->CI->auth->tbl_col_user_account['id'],
+                $this->CI->auth->tbl_col_user_account['email'],
+                $this->CI->auth->tbl_col_user_account['forgot_password_token']
+            );
+            $sql_where[$this->CI->auth->primary_identity_col] = $identity;
+
+            $user = $this->CI->auth_model->get_users($sql_select, $sql_where)->row();
+            $user_id = $user->{$this->CI->auth->database_config['user_acc']['columns']['id']};
+            $forgotten_password_token = $user->{$this->CI->auth->database_config['user_acc']['columns']['forgot_password_token']};
+
+            // Set email data.
+            $email_to = $user->{$this->CI->auth->database_config['user_acc']['columns']['email']};
+            $email_title = ' - Forgotten Password Verification';
+
+            $user_data = array(
+                'user_id' => $user_id,
+                'identity' => $identity,
+                'forgotten_password_token' => $forgotten_password_token
+            );
+            $template = $this->CI->auth->email_settings['email_template_directory'].$this->CI->auth->email_settings['email_template_forgot_password'];
+
+            if ($this->CI->auth_model->send_email($email_to, $email_title, $user_data, $template))
+            {
+                $this->CI->auth_model->set_status_message('email_forgot_password_successful', 'config');
+                return TRUE;
+            }
+        }
+
+        $this->CI->auth_model->set_error_message('email_forgot_password_unsuccessful', 'config');
+        return FALSE;
+    }
+
     ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###
     // EMAIL FUNCTIONS
     ###++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++###
@@ -288,13 +339,11 @@ class Ez_auth {
      * @return bool
      * @author Rob Hussey
      */
-    public function resend_activation_token($identity)
-    {
+    public function resend_activation_token($identity) {
         // Get primary identity.
         $identity = $this->CI->auth_model->get_primary_identity($identity);
 
-        if (empty($identity))
-        {
+        if (empty($identity)) {
             $this->CI->auth_model->set_error_message('activation_email_unsuccessful', 'config');
             return FALSE;
         }
@@ -313,8 +362,7 @@ class Ez_auth {
         $active_status = $user->{$this->CI->auth->database_config['user_acc']['columns']['active']};
 
         // If account is already activated.
-        if ($active_status == 1)
-        {
+        if ($active_status == 1) {
             $this->CI->auth_model->set_status_message('account_already_activated', 'config');
             return TRUE;
         }
@@ -344,8 +392,7 @@ class Ez_auth {
             );
             $template = $this->CI->auth->email_settings['email_template_directory'].$this->CI->auth->email_settings['email_template_activate'];
 
-            if ($this->CI->auth_model->send_email($email_to, $email_title, $user_data, $template))
-            {
+            if ($this->CI->auth_model->send_email($email_to, $email_title, $user_data, $template)) {
                 $this->CI->auth_model->set_status_message('activation_email_successful', 'config');
                 return TRUE;
             }

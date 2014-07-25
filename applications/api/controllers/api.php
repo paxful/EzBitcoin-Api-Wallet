@@ -222,7 +222,7 @@ class Api extends CI_Controller {
 
         $this->load->model('User_model', '', TRUE);
         try {
-            $new_wallet_address = $this->jsonrpcclient->getnewaddress();
+            $new_wallet_address = $this->jsonrpcclient->getnewaddress($this->user->id); // bitcoind account is the id of the API user in db
 
             $label = $this->input->get('label');
             if (!$label) {
@@ -260,7 +260,6 @@ class Api extends CI_Controller {
 
         $to_address =  $this->input->get('to');
         $amount =   $this->input->get('amount');
-        $fee =      $this->input->get('fee');
         $note =     $this->input->get('note');
         $cryptotype = $this->input->get('cryptotype');
 
@@ -297,11 +296,11 @@ class Api extends CI_Controller {
 //        $this->Address_model->update_address_balance($to_address, ); // TODO shit how do we know from which address was spent... ?
         $this->Balance_model->update_user_balance($new_balance, $this->user->id);
 
-        $bitcoin_amount = (float) ($amount / SATOSHIS_FRACTION);
+        $bitcoin_amount = bcdiv($amount, SATOSHIS_FRACTION); // division
 		try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
             if ($tx_id) {
-                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $bitcoin_amount, $this->crypto_type, $to_address, '', $note, $this->log_id);
+                $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $amount, $this->crypto_type, $to_address, '', $note, $this->log_id);
                 // TODO if its some inner address, should we update that address and users balance too?
             } // TODO in else should throw exception when tx_id is not returned ?
 
@@ -333,7 +332,7 @@ class Api extends CI_Controller {
 
         /* the url structure is different, so different segments of URI */
         $method =       $this->uri->segment(1);
-        $ipaddress =    $this->input->ip_address();;
+        $ipaddress =    $this->input->ip_address();
         $full_query_str = $this->uri->uri_string().'?'.$this->input->server('QUERY_STRING');
 
         if ($this->input->get('cryptotype')) {
@@ -418,20 +417,92 @@ class Api extends CI_Controller {
         }
 
         $this->load->model('Transaction_model', '', TRUE);
-        $this->load->model('Balance_model', '', TRUE);
-        $address_model = $this->Address_model->get_address($to_address);
-        $transaction_model = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
 
-        $satoshi_amount = $btc_amount * SATOSHIS_FRACTION;
+        $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
+        $satoshi_amount     = $btc_amount * SATOSHIS_FRACTION;
+
+        /******************* START processing the invoicing callback **************/
+        $invoice_address_model = $this->Address_model->get_invoice_address($to_address);
+        if ($invoice_address_model) {
+            if (!$transaction_model) { // first callback, because no transaction initially found in db
+                $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
+                    $tx_id, 0, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
+                    $to_address, $address_from, $confirmations, $block_hash, $block_index,
+                    $block_time, $time, $time_received, $category, $account_name, $satoshi_amount, $this->log_id
+                );
+
+                $total_received = $invoice_address_model->amount + $satoshi_amount;
+                $this->Address_model->update_invoice_address($invoice_address_model->address, $total_received, 1); // update amount and mark as received
+
+                $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
+
+                // check if needs to be forwarded
+                if ($invoice_address_model->forward = 1) {
+
+                    $bitcoin_amount = bcdiv($satoshi_amount, SATOSHIS_FRACTION); // division
+                    try{
+                        $forward_tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount);
+                        if ($forward_tx_id) {
+                            $this->Transaction_model->insert_new_transaction($forward_tx_id, 0, TX_SEND, $satoshi_amount, $this->crypto_type, $to_address, '', 'invoice forwarding', $this->log_id);
+                        } // TODO in else should throw exception when tx_id is not returned ?
+                    } catch (Exception $e) {
+                        $response = json_encode(array( 'error' => $e->getMessage()));
+                        $this->output
+                            ->set_content_type('application/json')
+                            ->set_output($response);
+                        $this->update_log_response_msg($this->log_id, $response);
+                        return;
+                    }
+                }
+
+                $full_callback_url = $invoice_address_model->callback_url."?value=".$satoshi_amount."&input_address=".$invoice_address_model->address."&confirmations=".$confirmations."&transaction_hash=".$forward_tx_id."&input_transaction_hash=".$tx_id."&destination_address=".$invoice_address_model->destination_address;
+                $app_response = file_get_contents($full_callback_url);
+
+                $callback_status = null;
+                if($app_response == "*ok*") {
+                    $callback_status = 1;
+                }
+
+                //if we get back an *ok* from the script then update the transactions status
+                $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
+
+                $response = null;
+                if (RETURN_OUTPUTTYPE == "json") {
+                    $response = json_encode(array(
+                        'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+                    $this->output
+                        ->set_content_type('application/json')
+                        ->set_output($response);
+                } else {
+                    $response = $app_response;
+                    echo $response;
+                }
+                $this->update_log_response_msg($this->log_id, $response);
+
+
+
+            } else {
+                /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
+            }
+            return;
+        }
+        /******************* END processing the invoicing callback **************/
+
+        $address_model = $this->Address_model->get_address($to_address);
+
         $new_address_balance = $address_model->balance + $satoshi_amount;
 
         $this->db->trans_start();
 
+        $this->load->model('Balance_model', '', TRUE);
+
         /* It is incoming transaction, because it is sent to some of the inner adresses */
         if ($address_model) {
+            $this->user = $this->User_model->get_user_by_id($address_model->user_id);
             if (!$transaction_model) { // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
-                    $tx_id, $this->user->id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
+                    $tx_id, $address_model->user_id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
@@ -446,7 +517,7 @@ class Api extends CI_Controller {
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
             }
             $this->db->trans_complete();
-
+        // TODO wtf is the address not found and then just updates the tx?
         /* It is outgoing transaction and the change is sent back to some of the change address */
         } else {
             $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations); // assuming the transaction was found in db
@@ -457,7 +528,7 @@ class Api extends CI_Controller {
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
         // TODO something: Trying to get property of non-object
-        $user_model = $this->User_model->get_user_by_id($address_model->user_id);
+        $user_model = $this->user;
         $full_callback_url = $user_model->callbackurl."?secret=".$user_model->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
         $app_response = file_get_contents($full_callback_url);
 
@@ -478,6 +549,65 @@ class Api extends CI_Controller {
                 ->set_output($response);
         } else {
             $response = $app_response;
+            echo $response;
+        }
+        $this->update_log_response_msg($this->log_id, $response);
+    }
+
+    public function receive() {
+
+        /* the url structure is different, so different segments of URI */
+        $method =           $this->uri->segment(1);
+        $ipaddress =        $this->input->ip_address();
+        $full_query_str =   $this->uri->uri_string().'?'.$this->input->server('QUERY_STRING');
+
+        if ($this->input->get('cryptotype')) {
+            $this->crypto_type = $this->input->get('cryptotype');
+        }
+
+        $agent      = $this->agent->agent_string();
+        $referrer   = $this->agent->referrer();
+
+        $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, ''); // log it
+
+
+        $method = $this->input->get('method');
+        if ($method != 'create') {
+            $response = json_encode(array('error' => NO_CREATE_METHOD_ON_INVOICE));
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+            $this->update_log_response_msg($this->log_id, $response);
+            return;
+        }
+
+        $receiving_address  = $this->input->get('address');
+        $receiving_address  = isset($receiving_address) == true ? $receiving_address : '';
+        $callback_url       = urlencode($this->input->get('callback'));
+        $label              = $this->input->get('label');
+        $forward            = $this->input->get('forward');
+
+        if (empty($receiving_address)) {
+            $forward = 0;
+        }
+
+        $input_address = $this->jsonrpcclient->getnewaddress('invoice'); // the argument is the account name in bitcoind, could possibly use domain from the callback url
+
+        $this->Address_model->save_invoice_address($input_address, $receiving_address, $label, $callback_url, $forward, $this->log_id); // save newly created address in invoice_adddresses table
+
+        $response = array(
+            'fee_percent' => 0,
+            'destination' => $receiving_address,
+            'input_address' => $input_address,
+            'callback_url' => $callback_url
+        );
+
+        if (RETURN_OUTPUTTYPE == "json") {
+            $response = json_encode($response);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output($response);
+        } else {
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);

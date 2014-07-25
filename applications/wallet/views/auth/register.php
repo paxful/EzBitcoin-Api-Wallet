@@ -66,23 +66,25 @@
             <?php echo form_close();?>
         </div>
         <div class="col-sm-6">
-            <div class="col-sm-6">
-                <?php echo form_open('welcome/forgotten_password', array('role' => 'form')); ?>
-                    <div class="form-group">
-                        <label for="forgotten-password-email" class="control-label">Email address</label>
-                            <input type="text" id="forgotten-password-email" name="forgotten-password-email" value="<?php echo set_value('forgotten-password-email');?>" class="form-control" placeholder="Enter email"/>
-                    </div>
-                <input type="submit" name="forgotten_password" id="forgotten_password" value="Reset Forgotten Password" class="col-lg-12 btn btn-default" />
-                <?php echo form_close();?>
-            </div>
-            <div class="col-sm-6">
-                <?php echo form_open('welcome/resend_activation', array('role' => 'form')); ?>
-                    <div class="form-group">
-                        <label for="account-activation-email" class="control-label">Email address</label>
-                        <input type="text" id="account-activation-email" name="account-activation-email" value="<?php echo set_value('account-activation-email');?>" class="form-control" placeholder="Enter email"/>
-                    </div>
-                    <input type="submit" name="resend_activation" id="resend_activation" value="Resend Account Activation Token" class="col-lg-12 btn btn-default" />
-                <?php echo form_close();?>
+            <div class="row">
+                <div class="col-sm-6">
+                    <?php echo form_open('welcome/forgotten_password', array('role' => 'form')); ?>
+                        <div class="form-group">
+                            <label for="forgotten-password-email" class="control-label">Email address</label>
+                                <input type="text" id="forgotten-password-email" name="forgotten-password-email" value="<?php echo set_value('forgotten-password-email');?>" class="form-control" placeholder="Enter email"/>
+                        </div>
+                    <input type="submit" name="forgotten_password" id="forgotten_password" value="Reset Forgotten Password" class="col-lg-12 btn btn-default" />
+                    <?php echo form_close();?>
+                </div>
+                <div class="col-sm-6">
+                    <?php echo form_open('welcome/resend_activation', array('role' => 'form')); ?>
+                        <div class="form-group">
+                            <label for="account-activation-email" class="control-label">Email address</label>
+                            <input type="text" id="account-activation-email" name="account-activation-email" value="<?php echo set_value('account-activation-email');?>" class="form-control" placeholder="Enter email"/>
+                        </div>
+                        <input type="submit" name="send_activation_token" id="send_activation_token" value="Resend Account Activation Token" class="col-lg-12 btn btn-default" />
+                    <?php echo form_close();?>
+                </div>
             </div>
         </div>
     </div>

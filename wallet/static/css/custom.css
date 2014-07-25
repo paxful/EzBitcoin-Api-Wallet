@@ -16,6 +16,9 @@ body {
 .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
     background-color: #F7931A;
 }
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
+    background-color: #F7931A;
+}
 .btn-primary {
     background-color: #F7931A;
     border-color: #DE8417;
@@ -42,4 +45,27 @@ body {
         white-space: normal;
         width: 198px;
     }
+}
+
+.panel-default>.panel-heading {
+    color: #fff;
+    background-color: #FF9900;
+}
+.currency-selector-container { margin-top: 20px; }
+.transactions-table tbody { border: 1px solid #ddd; }
+.transactions-table thead > tr { background-color: #FF9900; }
+.transactions-table thead > tr > th {
+    border: none;
+    color: #fff;
+}
+.transactions-table thead > tr > th:first-child {
+    border-top-left-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.transactions-table thead > tr > th:last-child {
+    border-top-right-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
 }

@@ -30,8 +30,33 @@ class Address_model extends CI_Model {
         $this->db->update('addresses', array('total_received' => $total_received), array('address' => $address));
     }
 
+    public function update_invoice_address($address, $total_received, $received = 1) {
+        $this->db->update('invoice_addresses', array(
+            'address' => $address,
+            'amount' => $total_received,
+            'received' => $received
+        ), array('address' => $address));
+    }
+
     public function update_address_balance($address, $new_balance, $previous_balance) {
         $this->db->update('addresses', array('balance' => $new_balance, 'previous_balance' => $previous_balance), array('address' => $address));
+    }
+
+    public function save_invoice_address($address, $receiving_address, $label = '', $callback_url, $forward = 1, $log_id, $crypto_type = 'BTC') {
+        $this->db->insert('invoice_addresses', array(
+            'address' => $address,
+            'destination_address' => $receiving_address,
+            'label' => $label,
+            'callback_url' => $callback_url,
+            'forward' => $forward,
+            'log_id' => $log_id,
+            'crypto_type' => $crypto_type
+        ));
+    }
+
+    public function get_invoice_address($address) {
+        $query = $this->db->get_where('invoice_addresses', array('address' => $address), 1);
+        return $query->row();
     }
 
 }
