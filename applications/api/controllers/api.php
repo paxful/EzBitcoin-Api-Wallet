@@ -107,11 +107,7 @@ class Api extends CI_Controller {
 
         $tx_id = $this->input->get('txid');
         if(!$tx_id){
-            $response = json_encode(array( 'error' => NO_TX_ID));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response(NO_TX_ID);
             return;
         }
 
@@ -150,10 +146,8 @@ class Api extends CI_Controller {
             $this->update_log_response_msg($this->log_id, $response);
 
         } catch (Exception $e) {
-            $response = json_encode(array( 'error' => $e->getMessage()));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
+            $this->log_exception_response($e->getMessage());
+            return;
         }
         $this->update_log_response_msg($this->log_id, $response);
     }
@@ -175,19 +169,13 @@ class Api extends CI_Controller {
         try{
             $address_valid = $this->jsonrpcclient->validateaddress($address) ;
         } catch(Exception $e) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(array( 'error' => $e->getMessage())));
-            $this->update_log_response_msg($this->log_id, $e->getMessage());
+            $this->log_exception_response($e->getMessage());
             return;
         }
 
         $is_valid = $address_valid["isvalid"];
         if (!$is_valid) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(array( 'error' => INVALID_ADDRESS)));
-            $this->update_log_response_msg($this->log_id, INVALID_ADDRESS);
+            $this->log_exception_response(INVALID_ADDRESS);
             return;
         }
 
@@ -231,10 +219,7 @@ class Api extends CI_Controller {
 
             $this->Address_model->insert_new_address($this->user->id, $new_wallet_address, $label, $this->crypto_type);
         } catch (Exception $e) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(array( 'error' => $e->getMessage())));
-            $this->update_log_response_msg($this->log_id, $e->getMessage());
+            $this->log_exception_response($e->getMessage());
             return;
         }
 
@@ -268,11 +253,7 @@ class Api extends CI_Controller {
         }
 
         if (empty($to_address) or empty($amount)) {
-            $response = json_encode(array('error' => ADDRESS_AMOUNT_NOT_SPECIFIED));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response(ADDRESS_AMOUNT_NOT_SPECIFIED);
             return;
         }
 
@@ -280,11 +261,7 @@ class Api extends CI_Controller {
 
         $user_balance = $this->User_model->get_user_balance($this->user->id);
         if ($user_balance->balance < $amount) {
-            $response = json_encode(array('error' => NO_FUNDS));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response(NO_FUNDS);
             return;
         }
 
@@ -305,11 +282,7 @@ class Api extends CI_Controller {
             } // TODO in else should throw exception when tx_id is not returned ?
 
         } catch (Exception $e) {
-            $response = json_encode(array( 'error' => $e->getMessage()));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response($e->getMessage());
             return;
         }
         $this->db->trans_complete();
@@ -331,7 +304,7 @@ class Api extends CI_Controller {
     public function callback() {
 
         /* the url structure is different, so different segments of URI */
-        $method =       $this->uri->segment(1);
+        $method =       $this->uri->segment(2);
         $ipaddress =    $this->input->ip_address();
         $full_query_str = $this->uri->uri_string().'?'.$this->input->server('QUERY_STRING');
 
@@ -345,11 +318,7 @@ class Api extends CI_Controller {
 
         $secret = $this->input->get('secret');
         if ($secret != 'testingbtc12') {
-            $response = json_encode(array( 'error' => NO_SECRET_FOR_CALLBACK));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response(NO_SECRET_FOR_CALLBACK);
             return;
         }
         /*--------------------------------------------*/
@@ -364,11 +333,7 @@ class Api extends CI_Controller {
 
         $tx_id = $this->input->get('txid'); // check if not null
         if (!$tx_id) {
-            $response = json_encode(array( 'error' => NO_TX_ID_PROVIDED));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response(NO_TX_ID_PROVIDED);
             return;
         }
 
@@ -376,11 +341,7 @@ class Api extends CI_Controller {
             $tx_info = $this->jsonrpcclient->gettransaction($tx_id);
 
         } catch (Exception $e) {
-            $response = json_encode(array( 'error' => $e->getMessage()));
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output($response);
-            $this->update_log_response_msg($this->log_id, $response);
+            $this->log_exception_response($e->getMessage());
             return;
         }
 
@@ -419,7 +380,7 @@ class Api extends CI_Controller {
         $this->load->model('Transaction_model', '', TRUE);
 
         $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
-        $satoshi_amount     = $btc_amount * SATOSHIS_FRACTION;
+        $satoshi_amount     = bcmul($btc_amount, SATOSHIS_FRACTION);
 
         /******************* START processing the invoicing callback **************/
         $invoice_address_model = $this->Address_model->get_invoice_address($to_address);
@@ -446,11 +407,7 @@ class Api extends CI_Controller {
                             $this->Transaction_model->insert_new_transaction($forward_tx_id, 0, TX_SEND, $satoshi_amount, $this->crypto_type, $to_address, '', 'invoice forwarding', $this->log_id);
                         } // TODO in else should throw exception when tx_id is not returned ?
                     } catch (Exception $e) {
-                        $response = json_encode(array( 'error' => $e->getMessage()));
-                        $this->output
-                            ->set_content_type('application/json')
-                            ->set_output($response);
-                        $this->update_log_response_msg($this->log_id, $response);
+                        $this->log_exception_response($e->getMessage());
                         return;
                     }
                 }
@@ -488,10 +445,10 @@ class Api extends CI_Controller {
             return;
         }
         /******************* END processing the invoicing callback **************/
+        // at this point its not the invoicing address, lookup address in address table
 
         $address_model = $this->Address_model->get_address($to_address);
 
-        $new_address_balance = $address_model->balance + $satoshi_amount;
 
         $this->db->trans_start();
 
@@ -501,6 +458,9 @@ class Api extends CI_Controller {
         if ($address_model) {
             $this->user = $this->User_model->get_user_by_id($address_model->user_id);
             if (!$transaction_model) { // first callback, because no transaction initially found in db
+
+                $new_address_balance = $address_model->balance + $satoshi_amount;
+
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
                     $tx_id, $address_model->user_id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
@@ -520,6 +480,7 @@ class Api extends CI_Controller {
         // TODO wtf is the address not found and then just updates the tx?
         /* It is outgoing transaction and the change is sent back to some of the change address */
         } else {
+            // TODO either its change address or somebody sent to some address that is not registered in db!
             $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations); // assuming the transaction was found in db
             $this->db->trans_complete();
             return;
@@ -554,10 +515,13 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    /* https://www.domain.com/api/receive?method=create&address=xxx&callback=https://callbackurl.com&label=xxx&forward=1
+    // if forward = 0, then dont forward to address. label needed just in this case, when forward 0 and it has a role of note
+    */
     public function receive() {
 
         /* the url structure is different, so different segments of URI */
-        $method =           $this->uri->segment(1);
+        $method =           $this->uri->segment(2); // receive
         $ipaddress =        $this->input->ip_address();
         $full_query_str =   $this->uri->uri_string().'?'.$this->input->server('QUERY_STRING');
 
@@ -583,7 +547,7 @@ class Api extends CI_Controller {
 
         $receiving_address  = $this->input->get('address');
         $receiving_address  = isset($receiving_address) == true ? $receiving_address : '';
-        $callback_url       = urlencode($this->input->get('callback'));
+        $callback_url       = $this->input->get('callback');
         $label              = $this->input->get('label');
         $forward            = $this->input->get('forward');
 
@@ -597,9 +561,10 @@ class Api extends CI_Controller {
 
         $response = array(
             'fee_percent' => 0,
+            'forward' => $forward,
             'destination' => $receiving_address,
             'input_address' => $input_address,
-            'callback_url' => $callback_url
+            'callback_url' => $callback_url,
         );
 
         if (RETURN_OUTPUTTYPE == "json") {
@@ -689,5 +654,14 @@ class Api extends CI_Controller {
 
     private function update_log_response_msg($log_id, $response) {
         $this->Log_model->update_log_response($log_id, $response);
+    }
+
+    private function log_exception_response($message)
+    {
+        $response = json_encode(array('error' => $message));
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output($response);
+        $this->update_log_response_msg($this->log_id, $response);
     }
 }
