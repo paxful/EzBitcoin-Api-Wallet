@@ -15,17 +15,7 @@ CREATE TABLE IF NOT EXISTS `addresses` (
   `server` varchar(24) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `address` (`address`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `addresses`
---
-
-INSERT INTO `addresses` (`id`, `address`, `label`, `user_id`, `balance`, `crypto_type`, `created`, `total_received`, `previous_balance`, `server`) VALUES
-(1, 'mgFyk3EPXyhuNPe2yyRywDZ9RRQQbk7AzF', '0', 1, 0, 'BTC', '2014-06-21 23:11:20', NULL, NULL, NULL),
-(2, 'mzWhM6a6xsGqjuAzqSp1F1fm7FRCjtfSES', '', 1, 0, 'BTC', '2014-06-21 23:12:12', NULL, NULL, NULL),
-(3, 'miYp3bffNwfqGEuW2s24jL5ogX2PRSMqNH', 'hui', 1, 0, 'BTC', '2014-06-21 23:12:32', NULL, NULL, NULL),
-(4, 'mvwmQD5nze8L2ujwQ4DbmfJUzvLoyGPZCM', '', 1, 0, 'BTC', '2014-06-23 01:35:26', 0, NULL, NULL);
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -43,14 +33,32 @@ CREATE TABLE IF NOT EXISTS `balances` (
   KEY `user_id` (`user_id`),
   KEY `user_id_2` (`user_id`),
   KEY `user_id_3` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `balances`
+-- Table structure for table `invoice_addresses`
 --
 
-INSERT INTO `balances` (`id`, `user_id`, `crypto_type`, `balance`, `total_received`) VALUES
-(1, 1, 'BTC', 97598592, 0);
+CREATE TABLE IF NOT EXISTS `invoice_addresses` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `address` varchar(48) DEFAULT NULL,
+  `destination_address` varchar(48) NOT NULL DEFAULT '' COMMENT 'address where to forward coins',
+  `label` text,
+  `amount` bigint(50) NOT NULL DEFAULT '0',
+  `transaction_hash` varchar(100) DEFAULT NULL,
+  `input_transaction_hash` varchar(100) DEFAULT NULL,
+  `crypto_type` varchar(8) DEFAULT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `callback_url` text,
+  `received` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `forward` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `log_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `address` (`address`),
+  KEY `log_id` (`log_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -70,37 +78,8 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `server` varchar(255) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=160 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
---
--- Dumping data for table `logs`
---
-
-INSERT INTO `logs` (`id`, `method`, `guid`, `ipaddress`, `querystring`, `agent`, `referrer`, `response`, `server`, `date_created`) VALUES
-(138, 'empty', 'callback', '::1', 'api/callback?secret=testingbtc12&txid=dsajkdas', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"error":"Request error: -5 - Invalid or non-wallet transaction id"}', NULL, '2014-06-23 02:54:15'),
-(139, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=dsajkdas', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"error":"Request error: -5 - Invalid or non-wallet transaction id"}', NULL, '2014-06-23 02:56:49'),
-(140, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=e35090178d750afe8bae8e9024a03196b7a01c703ebb1634586122d3dd1ad5d9', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', 'no method, no password', NULL, '2014-06-23 03:19:30'),
-(141, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=e35090178d750afe8bae8e9024a03196b7a01c703ebb1634586122d3dd1ad5d9', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"confirmations":0,"address":"mvwmQD5nze8L2ujwQ4DbmfJUzvLoyGPZCM","amount":0.02054321,"txid":"e35090178d750afe8bae8e9024a03196b7a01c703ebb1634586122d3dd1ad5d9","callback_url":"?secret=&transaction_hash=e35090178d750afe8bae8e9024a03196b7a01c703ebb163458612', NULL, '2014-06-23 03:22:53'),
-(142, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:31:50'),
-(143, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db?debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:34:38'),
-(144, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db?debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:35:30'),
-(145, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db?debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:38:47'),
-(146, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db?debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:39:06'),
-(147, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db&debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:41:05'),
-(148, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db&debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '', NULL, '2014-06-23 03:42:24'),
-(149, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db&debug=1', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"confirmations":1,"address":"mvwmQD5nze8L2ujwQ4DbmfJUzvLoyGPZCM","amount":0.09054321,"txid":"8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db","callback_url":"?secret=&transaction_hash=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5', NULL, '2014-06-23 03:43:00'),
-(150, 'api', '', '::1', 'api/callback?secret=testingbtc12&txid=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db&debug=1&cryptotype=BTC', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"confirmations":2,"address":"mvwmQD5nze8L2ujwQ4DbmfJUzvLoyGPZCM","amount":0.09054321,"txid":"8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db","callback_url":"?secret=&transaction_hash=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5', NULL, '2014-06-23 03:45:30'),
-(151, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-25 20:09:31'),
-(152, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-25 20:11:43'),
-(153, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-25 20:11:47'),
-(154, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-25 20:13:15'),
-(155, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-25 20:13:23'),
-(156, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-25 20:15:46'),
-(157, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-26 18:50:09'),
-(158, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-27 19:23:05'),
-(159, 'balance', '0bb611895b9541310c3c4fb82d72bfb7', '::1', 'api/0bb611895b9541310c3c4fb82d72bfb7/balance?debug=1&password=98b5ee88205e3d64433166490c5b5e84', 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36', '', '{"balance":"97598592","crypto_type":"BTC"}', NULL, '2014-06-27 21:34:17');
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `transactions`
@@ -142,23 +121,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `server` varchar(24) DEFAULT NULL,
   `log_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
-
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `tx_id`, `user_id`, `address_to`, `address_from`, `account_to`, `account_from`, `crypto_amount`, `crypto_type`, `confirmations`, `created`, `date_updated`, `response_callback`, `callback_status`, `callback_url`, `block_hash`, `block_index`, `block_time`, `tx_time`, `tx_timereceived`, `tx_category`, `address_account`, `balance`, `previous_balance`, `crypto_bitcoindbalance`, `credit`, `debit`, `messagetext`, `label`, `label2`, `label3`, `transaction_type`, `server`, `log_id`) VALUES
-(1, '9d64a2be837b60de3a08215c42450eb094fb138b02cb95cc6ae217be8a366afa', 1, 'mvAYLnD81tNe3h3iP8MLQdBLsRchHAkTMT', '', 'mvAYLnD81tNe3h3iP8MLQdBLsRchHAkTMT', '', NULL, 'BTC', NULL, '2014-06-21 00:18:16', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'test', NULL, NULL, NULL, 'sent', NULL, 49),
-(2, 'ad3202fe4da8497ecfdb4661f6cb272033213c8975453f23c4034b0b719b945c', 1, 'mvAYLnD81tNe3h3iP8MLQdBLsRchHAkTMT', '', 'mvAYLnD81tNe3h3iP8MLQdBLsRchHAkTMT', '', 0.30000000, 'BTC', NULL, '2014-06-21 00:18:29', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'test', NULL, NULL, NULL, 'sent', NULL, 50),
-(3, 'cc939e1e2c551632e8c445de391b75746f06a5841ce60c445d56d0ced5feb508', 1, 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 0.01350704, 'BTC', NULL, '2014-06-22 02:14:13', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dsafa', NULL, NULL, NULL, 'sent', NULL, 97),
-(4, '93aa72156ef744948d6bbc20ab24ef7a6e599995a650f585dd291c3be915770a', 1, 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 0.01350704, 'BTC', NULL, '2014-06-22 02:21:25', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dsafa', NULL, NULL, NULL, 'sent', NULL, 98),
-(5, '73034b0e6855c615eebd752cd9b7828cc5a4508ffc2eee45694206a84a0720b7', 1, 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 0.01350704, 'BTC', NULL, '2014-06-22 02:21:45', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dsafa', NULL, NULL, NULL, 'sent', NULL, 99),
-(6, 'e3ec606faebd7e8c409d888c19d952915d514876da2c9364a29195749427c7f5', 1, 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 0.01350704, 'BTC', NULL, '2014-06-22 02:47:15', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dsafa', NULL, NULL, NULL, 'sent', NULL, 100),
-(7, '9b803f7b7de72e2317f456a272aca17fa0837bab601a36a5a0284a2539229598', 1, 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 'mxfrSdzZ9fa3PC4FBYavoPFgdPfRrkmYzD', '', 0.01050704, 'BTC', NULL, '2014-06-22 02:47:26', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dsafa', NULL, NULL, NULL, 'sent', NULL, 101),
-(8, '8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db', NULL, 'mvwmQD5nze8L2ujwQ4DbmfJUzvLoyGPZCM', '', NULL, NULL, 0.09054321, 'BTC', 2, '2014-06-23 03:43:00', NULL, '0', NULL, '?secret=&transaction_hash=8fef82983c24bc846f1d958909e8f5d4cd1206526dc3172c2f0d5d37ca7c29db&input_address=mvwmQD5nze8L2ujwQ4DbmfJUzvLoyGPZCM&value=9054321&confirms=2', '00000000c6ef7f2dda66cae5546c3929bf40a80780651510fedf78f326cc1adc', 2, 2, 1403494096, 1403494096, 'receive', '', 999999.99999999, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'received', NULL, 149);
-
--- --------------------------------------------------------
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
 -- Table structure for table `users`
@@ -183,4 +146,13 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `guid`, `password`, `email`, `name`, `callbackurl`, `secret`, `lastactivity`, `created`) VALUES
 (1, '0bb611895b9541310c3c4fb82d72bfb7', '98b5ee88205e3d64433166490c5b5e84', 'skyzer@gmail.com', 'Artur', 'http://www.example.com/processOrder.php', 'HMJzDEqsGF9W', NULL, '2014-06-23 01:07:46');
-p
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `invoice_addresses`
+--
+ALTER TABLE `invoice_addresses`
+  ADD CONSTRAINT `invoice_addresses_ibfk_1` FOREIGN KEY (`log_id`) REFERENCES `logs` (`id`);
