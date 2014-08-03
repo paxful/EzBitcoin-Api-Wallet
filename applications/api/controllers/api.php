@@ -578,6 +578,18 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    public function test() {
+        $query = $this->db->query('SELECT name, created FROM users');
+
+        foreach ($query->result() as $row)
+        {
+            echo $row->name.'<br />';
+            echo $row->created.'<br />';
+        }
+
+        echo 'Total Results: ' . $query->num_rows();
+    }
+
     private function is_authenticated() {
         $guid =         $this->uri->segment(2);
         $method =       $this->uri->segment(3, "empty");
@@ -637,6 +649,11 @@ class Api extends CI_Controller {
      */
     private function validate_user($guid, $log_id) {
         $user = $this->User_model->get_user($guid);
+
+        if ($this->input->get('debug') or $this->jsonrpc_debug == true) {
+            echo "GUID: ".$guid."\n";
+            echo "User: ".print_r($user);
+        }
 
         if (!$user) {
             echo json_encode(array( 'error' => NO_USER));
