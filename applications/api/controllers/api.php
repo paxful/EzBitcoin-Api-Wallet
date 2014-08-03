@@ -587,7 +587,15 @@ class Api extends CI_Controller {
             echo $row->created.'<br />';
         }
 
-        echo 'Total Results: ' . $query->num_rows();
+        echo 'Total Results: ' . $query->num_rows() . '<br />';
+        $guid = $this->input->get('guid');
+        echo 'Guid in query string: ' . $guid;
+        $user = $this->User_model->get_user($guid);
+        if ($user) {
+            echo "User found: " . $user->name;
+        } else {
+            echo "No user.";
+        }
     }
 
     private function is_authenticated() {
