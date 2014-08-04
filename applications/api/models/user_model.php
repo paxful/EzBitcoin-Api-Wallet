@@ -10,7 +10,7 @@ class User_model extends CI_Model {
     {
         $this->db->select('*');
         $this->db->from('users');
-        $this->db->join('balances', 'users.id = balances.user_id');
+        $this->db->join('balances', 'users.id = balances.user_id', 'left'); // in Postgres it's strict
         $this->db->where(array('guid' => $guid));
         $query = $this->db->get();
         return $query->row();

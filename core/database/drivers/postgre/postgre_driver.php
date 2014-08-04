@@ -328,7 +328,8 @@ class CI_DB_postgre_driver extends CI_DB {
 	function insert_id()
 	{
 		$v = $this->_version();
-		$v = $v['server'];
+//		$v = $v['server']; it doesnt return version, just SQL, because of 9.* version, not version 8
+        $v = '9.3';
 
 		$table	= func_num_args() > 0 ? func_get_arg(0) : NULL;
 		$column	= func_num_args() > 1 ? func_get_arg(1) : NULL;

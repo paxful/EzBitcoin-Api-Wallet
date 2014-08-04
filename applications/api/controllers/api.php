@@ -10,6 +10,8 @@ class Api extends CI_Controller {
 
     public function __construct()
     {
+        //$this->output->enable_profiler(TRUE); // for local testing
+
         parent::__construct();
         $jsonrpc_conn_string = $this->config->item('jsonrpc_connectionstring');
         $this->jsonrpc_debug = $this->config->item('bitcoind_is_debug_mode');
@@ -19,6 +21,7 @@ class Api extends CI_Controller {
         $this->load->model('Log_model', '', TRUE); // load up log model to log all requests
         $this->load->model('User_model', '', TRUE); // load up user model
         $this->load->model('Address_model', '', TRUE);
+
 
         if ($this->input->get('debug') or $this->jsonrpc_debug == true) {
             echo "URI segment: ".$this->uri->uri_string()."\n";
@@ -42,7 +45,7 @@ class Api extends CI_Controller {
         if ($user_info) {
             $response = json_encode(array('balance' => $user_info->balance, 'crypto_type' => $this->crypto_type));
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type($this->input->get('debug') == 1 ? 'text/html' : 'application/json') // TODO think of better way
                 ->set_output($response);
         } else {
             $response = json_encode(array('error' => 'balance not found for crypto type '.$this->crypto_type));
@@ -579,23 +582,8 @@ class Api extends CI_Controller {
     }
 
     public function test() {
-        $query = $this->db->query('SELECT name, created FROM users');
 
-        foreach ($query->result() as $row)
-        {
-            echo $row->name.'<br />';
-            echo $row->created.'<br />';
-        }
-
-        echo 'Total Results: ' . $query->num_rows() . '<br />';
-        $guid = $this->input->get('guid');
-        echo 'Guid in query string: ' . $guid;
-        $user = $this->User_model->get_user($guid);
-        if ($user) {
-            echo "User found: " . $user->name;
-        } else {
-            echo "No user.";
-        }
+        // do something
     }
 
     private function is_authenticated() {
