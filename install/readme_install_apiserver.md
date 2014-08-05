@@ -91,8 +91,9 @@ https://www.digitalocean.com/community/articles/how-to-set-up-ssl-certificates-w
 
 * Add http authentication to phpmyadmin
 * Make site https only
-
-
+* In config/config.php choose testnet or not, also enable or disable email logging
+* In config/email.php set mail server parameters if u enabled email logging
+* In config/constants.php set DEBUG_API to true if you want to see whole debug and profiler
 
 
 

@@ -10,6 +10,7 @@ class Address_model extends CI_Model {
         $this->db->insert('addresses', array(
                 'address' => $new_wallet_addres,
                 'user_id' => $user_id,
+                'balance' => 0,
                 'label' => $label,
                 'crypto_type' => $crypto_type)
         );

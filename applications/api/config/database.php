@@ -49,10 +49,11 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
+$db['default']['username'] = 'postgres';
 $db['default']['password'] = 'muhahaha';
-$db['default']['database'] = 'bitcoinwallet';
-$db['default']['dbdriver'] = 'mysqli';
+$db['default']['database'] = 'bitcoinapi';
+$db['default']['dbdriver'] = 'postgre';
+$db['default']['port']     = 5432;
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;

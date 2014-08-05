@@ -17,7 +17,7 @@
 
 <div class="row">
     <div class="small-12 columns">
-        <h2>EzBit Api</h2>
+        <h2>EzBit Api!</h2>
         <h4>Bitcoin RESTful API JSONRPC Wrapper - PHP</h4><br>
 
         <div>Made to be the simplest, fastest way to get your own bitcoin wallet server up and running. Optimized for simplicity and speed towards a MVP. We include a sample wallet web app as a sample application.</div>

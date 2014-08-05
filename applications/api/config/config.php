@@ -2,10 +2,13 @@
 
 
 /* Bitcoind params */
-$config['jsonrpc_connectionstring'] = 'http://testingbtcU:testingbtc12@37.58.86.163:18332';
+$config['jsonrpc_connectionstring'] = 'username:pass@yourbitcoindboxip:port';
 $config['bitcoind_is_debug_mode'] = false;
 $config['api_is_debug_mode'] = false;
+$config['is_testnet'] = true;
 
+$config['enable_email_logging'] = true;
+$config['admin_email'] = 'admin@easybitz.com';
 
 /*
 |--------------------------------------------------------------------------
@@ -187,7 +190,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,7 +201,7 @@ $config['log_threshold'] = 0;
 | application/logs/ folder. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = 'applications/logs/';
 
 /*
 |--------------------------------------------------------------------------

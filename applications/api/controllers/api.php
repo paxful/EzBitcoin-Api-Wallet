@@ -10,9 +10,11 @@ class Api extends CI_Controller {
 
     public function __construct()
     {
-        //$this->output->enable_profiler(TRUE); // for local testing
-
         parent::__construct();
+        if (DEBUG_API) {
+            $this->output->enable_profiler(TRUE); // for local testing
+        }
+
         $jsonrpc_conn_string = $this->config->item('jsonrpc_connectionstring');
         $this->jsonrpc_debug = $this->config->item('bitcoind_is_debug_mode');
         $this->load->library('jsonrpcclient', array('url' => $jsonrpc_conn_string, 'debug' => $this->jsonrpc_debug));
@@ -56,6 +58,9 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    /**
+     * Untested
+     */
     public function address_balance() {
         if (!$this->is_authenticated()) {
             return;
@@ -144,9 +149,8 @@ class Api extends CI_Controller {
             if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
                 echo nl2br($new) . "\n";
             }
-            $response = "valid";
+            $response = "valid|txid:".$tx_id;
             echo $response;
-            $this->update_log_response_msg($this->log_id, $response);
 
         } catch (Exception $e) {
             $this->log_exception_response($e->getMessage());
@@ -163,7 +167,7 @@ class Api extends CI_Controller {
         $address = $this->input->get('address');
         if(!$address){
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output(json_encode(array( 'error' => NO_ADDRESS)));
             $this->update_log_response_msg($this->log_id, NO_ADDRESS);
             return;
@@ -196,7 +200,7 @@ class Api extends CI_Controller {
         if(RETURN_OUTPUTTYPE == "json") {
             $response = json_encode(array( 'isvalid' => $is_valid, 'address' => $address, 'ismine' => $is_mine ));
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
         } else {
             $response = "$is_valid|$address|$is_mine";
@@ -231,7 +235,7 @@ class Api extends CI_Controller {
         if(RETURN_OUTPUTTYPE=="json") {
             $response = json_encode(array( 'address' => $new_wallet_address, 'label' => $label));
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
         } else {
             $response = $new_wallet_address;
@@ -276,13 +280,14 @@ class Api extends CI_Controller {
 //        $this->Address_model->update_address_balance($to_address, ); // TODO shit how do we know from which address was spent... ?
         $this->Balance_model->update_user_balance($new_balance, $this->user->id);
 
-        $bitcoin_amount = bcdiv($amount, SATOSHIS_FRACTION); // division
+        $bitcoin_amount = (float)bcdiv($amount, SATOSHIS_FRACTION, 8); // division, return type is string
 		try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
             if ($tx_id) {
+                // if it fails here on inserting new transaction, then this transaction will be rolled back - user balance not updated, but jsonrpcclient will send out.
+                // think of a clever way on which step it failed and accordingly let know if balance was updated or not
                 $this->Transaction_model->insert_new_transaction($tx_id, $this->user->id, TX_SEND, $amount, $this->crypto_type, $to_address, '', $note, $this->log_id);
-                // TODO if its some inner address, should we update that address and users balance too?
-            } // TODO in else should throw exception when tx_id is not returned ?
+            }
 
         } catch (Exception $e) {
             $this->log_exception_response($e->getMessage());
@@ -291,11 +296,11 @@ class Api extends CI_Controller {
         $this->db->trans_complete();
 
         $response = null;
-        $message = 'Sent ' . $bitcoin_amount . ' ' . $cryptotype. ' to ' . $to_address;
+        $message = 'Sent ' . $bitcoin_amount . ' ' . $this->crypto_type. ' to ' . $to_address;
 		if (RETURN_OUTPUTTYPE=="json") {
             $response = json_encode(array( 'message' => $message, 'tx_hash' => $tx_id));
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
         } else {
             $response = $message.'|'.$tx_id;
@@ -431,7 +436,7 @@ class Api extends CI_Controller {
                     $response = json_encode(array(
                         'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
                     $this->output
-                        ->set_content_type('application/json')
+                        ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                         ->set_output($response);
                 } else {
                     $response = $app_response;
@@ -509,7 +514,7 @@ class Api extends CI_Controller {
             $response = json_encode(array(
                 'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
         } else {
             $response = $app_response;
@@ -542,7 +547,7 @@ class Api extends CI_Controller {
         if ($method != 'create') {
             $response = json_encode(array('error' => NO_CREATE_METHOD_ON_INVOICE));
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
             $this->update_log_response_msg($this->log_id, $response);
             return;
@@ -556,6 +561,14 @@ class Api extends CI_Controller {
 
         if (empty($receiving_address)) {
             $forward = 0;
+        }
+
+        $isTestnet = $this->config->item('is_testnet');
+        $this->load->library('bitcoinaddressvalidator');
+        $isValidAddress = $this->bitcoinaddressvalidator->isValid($receiving_address, $isTestnet ? BitcoinAddressValidator::TESTNET : null);
+        if (!$isValidAddress) {
+            $this->log_exception_response(INVALID_ADDRESS);
+            return;
         }
 
         $input_address = $this->jsonrpcclient->getnewaddress('invoice'); // the argument is the account name in bitcoind, could possibly use domain from the callback url
@@ -573,7 +586,7 @@ class Api extends CI_Controller {
         if (RETURN_OUTPUTTYPE == "json") {
             $response = json_encode($response);
             $this->output
-                ->set_content_type('application/json')
+                ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
         } else {
             echo $response;
@@ -581,9 +594,19 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
-    public function test() {
+    public function test()
+    {
+        log_message('error', 'Test writing to log file');
+    }
 
-        // do something
+    public function sendEmail($subjct, $message) {
+        $this->load->library('email'); // set mail server parameters in config/email.php
+        $admin_email = $this->config->item('admin_email'); // due to shitty codeigniter, this is in config.php
+        $this->email->from('easybitz+api@easybitz.com');
+        $this->email->to($admin_email);
+        $this->email->subject($subjct);
+        $this->email->message($message);
+        $this->email->send();
     }
 
     private function is_authenticated() {
@@ -648,7 +671,6 @@ class Api extends CI_Controller {
 
         if ($this->input->get('debug') or $this->jsonrpc_debug == true) {
             echo "GUID: ".$guid."\n";
-            echo "User: ".print_r($user);
         }
 
         if (!$user) {
@@ -671,10 +693,14 @@ class Api extends CI_Controller {
 
     private function log_exception_response($message)
     {
+        log_message('error', $message);
         $response = json_encode(array('error' => $message));
         $this->output
-            ->set_content_type('application/json')
+            ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
             ->set_output($response);
         $this->update_log_response_msg($this->log_id, $response);
+        if ($this->config->item('enable_email_logging')) {
+            $this->sendEmail("API ERROR", $message);
+        }
     }
 }
