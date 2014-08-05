@@ -35,6 +35,9 @@ class Api extends CI_Controller {
 		$this->load->view('start');
 	}
 
+    /**
+     * example.com/api/<guid>/balance?password=xxx&debug=1
+     */
     public function balance() {
         if (!$this->is_authenticated()) {
             return;
@@ -107,6 +110,9 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    /**
+     * example.com/api/<guid>/validate_transaction?txid=xxx&&password=zzz&debug=1
+     */
     public function validate_transaction() {
 
         if (!$this->is_authenticated()) {
@@ -159,6 +165,9 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    /**
+     * example.com/api/<guid>/validate_address?address=xxx&password=zzz&debug=1
+     */
     public function validate_address() {
 
         if (!$this->is_authenticated()) {
@@ -209,6 +218,9 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    /**
+     * example.com/api/<guid>/new_address?label=xxx&password=zzz&debug=1
+     */
     public function new_address() {
 
         if (!$this->is_authenticated()) {
@@ -244,6 +256,9 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+    /**
+     * example.com/api/<guid>/payment?to=xxx&amount=satoshis&note=yyy&password=zzz&debug=1
+     */
     public function payment() {
 
         if (!$this->is_authenticated()) {
@@ -261,6 +276,14 @@ class Api extends CI_Controller {
 
         if (empty($to_address) or empty($amount)) {
             $this->log_exception_response(ADDRESS_AMOUNT_NOT_SPECIFIED);
+            return;
+        }
+
+        $isTestnet = $this->config->item('is_testnet');
+        $this->load->library('bitcoinaddressvalidator');
+        $isValidAddress = $this->bitcoinaddressvalidator->isValid($to_address, $isTestnet ? BitcoinAddressValidator::TESTNET : null);
+        if (!$isValidAddress) {
+            $this->log_exception_response(INVALID_ADDRESS);
             return;
         }
 
@@ -523,7 +546,7 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
-    /* https://www.domain.com/api/receive?method=create&address=xxx&callback=https://callbackurl.com&label=xxx&forward=1
+    /* example.com/api/receive?method=create&address=xxx&callback=https://callbackurl.com&label=xxx&forward=1
     // if forward = 0, then dont forward to address. label needed just in this case, when forward 0 and it has a role of note
     */
     public function receive() {
@@ -563,12 +586,14 @@ class Api extends CI_Controller {
             $forward = 0;
         }
 
-        $isTestnet = $this->config->item('is_testnet');
-        $this->load->library('bitcoinaddressvalidator');
-        $isValidAddress = $this->bitcoinaddressvalidator->isValid($receiving_address, $isTestnet ? BitcoinAddressValidator::TESTNET : null);
-        if (!$isValidAddress) {
-            $this->log_exception_response(INVALID_ADDRESS);
-            return;
+        if (!empty($receiving_address)) {
+            $isTestnet = $this->config->item('is_testnet');
+            $this->load->library('bitcoinaddressvalidator');
+            $isValidAddress = $this->bitcoinaddressvalidator->isValid($receiving_address, $isTestnet ? BitcoinAddressValidator::TESTNET : null);
+            if (!$isValidAddress) {
+                $this->log_exception_response(INVALID_ADDRESS);
+                return;
+            }
         }
 
         $input_address = $this->jsonrpcclient->getnewaddress('invoice'); // the argument is the account name in bitcoind, could possibly use domain from the callback url
@@ -693,6 +718,7 @@ class Api extends CI_Controller {
 
     private function log_exception_response($message)
     {
+        $message = 'log id: '.$this->log_id.'|'.$message;
         log_message('error', $message);
         $response = json_encode(array('error' => $message));
         $this->output
