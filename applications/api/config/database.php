@@ -50,7 +50,7 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'postgres';
-$db['default']['password'] = 'muhahaha';
+$db['default']['password'] = 'pass';
 $db['default']['database'] = 'bitcoinapi';
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['port']     = 5432;

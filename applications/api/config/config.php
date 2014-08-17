@@ -2,10 +2,12 @@
 
 
 /* Bitcoind params */
-$config['jsonrpc_connectionstring'] = 'username:pass@yourbitcoindboxip:port';
+$config['jsonrpc_connectionstring'] = 'http://your:bitcoind@192.168.1.1:18332'; // reich staging server
 $config['bitcoind_is_debug_mode'] = false;
 $config['api_is_debug_mode'] = false;
 $config['is_testnet'] = true;
+$config['callback_secret'] = 'testbtc123';
+$config['private_invoicing'] = true; // if receive method in API should be private, accessible only with a password. Password is same as for callback
 
 $config['enable_email_logging'] = true;
 $config['admin_email'] = 'admin@easybitz.com';
@@ -24,7 +26,7 @@ $config['admin_email'] = 'admin@easybitz.com';
 | path to your installation.
 |
 */
-$config['base_url']	= '';
+$config['base_url']	= 'http://127.0.0.1:8282/bitcoin-wallet-api/';
 
 /*
 |--------------------------------------------------------------------------
@@ -190,7 +192,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 3;
 
 /*
 |--------------------------------------------------------------------------

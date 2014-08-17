@@ -40,7 +40,7 @@ class Transaction_model extends CI_Model {
             'confirmations' => $confirmations,
             'block_hash' => $block_hash,
             'block_index' => $block_index,
-            'block_time' => $block_index,
+            'block_time' => $block_time,
             'tx_time' => $time,
             'tx_timereceived' => $time_received,
             'tx_category' => $category,
@@ -51,8 +51,15 @@ class Transaction_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    public function update_tx_confirmations($id, $confirmations) {
-        $this->db->update('transactions', array('confirmations' => $confirmations), array('id' => $id));
+    public function update_tx_confirmations($id, $confirmations, $block_hash, $block_index, $block_time) {
+        $this->db->update('transactions',
+            array(
+                'confirmations' => $confirmations,
+                'block_hash' => $block_hash,
+                'block_index' => $block_index,
+                'block_time' => $block_time,
+            ),
+            array('id' => $id));
     }
 
     public function update_tx_on_app_callback($id, $response_callback, $full_callback_url, $callback_status) {

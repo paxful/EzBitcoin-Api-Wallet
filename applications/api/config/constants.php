@@ -40,7 +40,7 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 /* bitcoind constants */
 define("RETURN_OUTPUTTYPE", "json");
 
-define("DEBUG_API", TRUE);
+define("DEBUG_API", false);
 
 define('NO_USER', 'no user/guid found');
 define('WRONG_PASSWD', 'wrong password');

@@ -21,7 +21,7 @@ class User_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('users');
         $this->db->join('balances', 'users.id = balances.user_id');
-        $this->db->where(array('crypto_type' => $crypto_type));
+        $this->db->where(array('users.id' => $user_id, 'crypto_type' => $crypto_type));
         $query = $this->db->get();
         return $query->row();
     }

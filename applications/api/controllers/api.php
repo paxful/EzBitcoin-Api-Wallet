@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+//require_once APPPATH.'libraries/REST_Controller.php';
+//class Api extends REST_Controller {
+
 class Api extends CI_Controller {
 
     private $log_id;
@@ -121,7 +124,7 @@ class Api extends CI_Controller {
 
         $tx_id = $this->input->get('txid');
         if(!$tx_id){
-            $this->log_exception_response(NO_TX_ID);
+            $this->log_exception_response("#validate_transaction, no tx id: ".NO_TX_ID);
             return;
         }
 
@@ -159,7 +162,7 @@ class Api extends CI_Controller {
             echo $response;
 
         } catch (Exception $e) {
-            $this->log_exception_response($e->getMessage());
+            $this->log_exception_response("#validate_transaction, get transaction exception: ".$e->getMessage());
             return;
         }
         $this->update_log_response_msg($this->log_id, $response);
@@ -185,13 +188,13 @@ class Api extends CI_Controller {
         try{
             $address_valid = $this->jsonrpcclient->validateaddress($address) ;
         } catch(Exception $e) {
-            $this->log_exception_response($e->getMessage());
+            $this->log_exception_response("#validate_address, validate address exception: ".$e->getMessage());
             return;
         }
 
         $is_valid = $address_valid["isvalid"];
         if (!$is_valid) {
-            $this->log_exception_response(INVALID_ADDRESS);
+            $this->log_exception_response("#validate_address, invalid address: ".INVALID_ADDRESS);
             return;
         }
 
@@ -238,7 +241,7 @@ class Api extends CI_Controller {
 
             $this->Address_model->insert_new_address($this->user->id, $new_wallet_address, $label, $this->crypto_type);
         } catch (Exception $e) {
-            $this->log_exception_response($e->getMessage());
+            $this->log_exception_response("#new_address, get new address exception: ".$e->getMessage());
             return;
         }
 
@@ -275,7 +278,7 @@ class Api extends CI_Controller {
         }
 
         if (empty($to_address) or empty($amount)) {
-            $this->log_exception_response(ADDRESS_AMOUNT_NOT_SPECIFIED);
+            $this->log_exception_response("#payment, empty address or amount: ".ADDRESS_AMOUNT_NOT_SPECIFIED);
             return;
         }
 
@@ -283,7 +286,7 @@ class Api extends CI_Controller {
         $this->load->library('bitcoinaddressvalidator');
         $isValidAddress = $this->bitcoinaddressvalidator->isValid($to_address, $isTestnet ? BitcoinAddressValidator::TESTNET : null);
         if (!$isValidAddress) {
-            $this->log_exception_response(INVALID_ADDRESS);
+            $this->log_exception_response("#payment, non valid address: ".INVALID_ADDRESS);
             return;
         }
 
@@ -291,14 +294,14 @@ class Api extends CI_Controller {
 
         $user_balance = $this->User_model->get_user_balance($this->user->id);
         if ($user_balance->balance < $amount) {
-            $this->log_exception_response(NO_FUNDS);
+            $this->log_exception_response("#payment, insufficient funds: ".NO_FUNDS);
             return;
         }
 
         $this->load->model('Transaction_model', '', TRUE);
         $this->load->model('Balance_model', '', TRUE);
 
-        $new_balance = $user_balance->balance - $amount;
+        $new_balance = bcsub($user_balance->balance, $amount);
 
 //        $this->Address_model->update_address_balance($to_address, ); // TODO shit how do we know from which address was spent... ?
         $this->Balance_model->update_user_balance($new_balance, $this->user->id);
@@ -313,7 +316,7 @@ class Api extends CI_Controller {
             }
 
         } catch (Exception $e) {
-            $this->log_exception_response($e->getMessage());
+            $this->log_exception_response("#payment, send to address exception: ".$e->getMessage());
             return;
         }
         $this->db->trans_complete();
@@ -334,6 +337,7 @@ class Api extends CI_Controller {
 
     public function callback() {
 
+        log_message('info', '====== CALLBACK STARTED ======');
         /* the url structure is different, so different segments of URI */
         $method =       $this->uri->segment(2);
         $ipaddress =    $this->input->ip_address();
@@ -348,8 +352,10 @@ class Api extends CI_Controller {
         $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, ''); // log it
 
         $secret = $this->input->get('secret');
-        if ($secret != 'testingbtc12') {
-            $this->log_exception_response(NO_SECRET_FOR_CALLBACK);
+        $server_callback_secret = $this->config->item('callback_secret');
+
+        if ($secret != $server_callback_secret) {
+            $this->log_exception_response("#callback, secret mismatch: ".NO_SECRET_FOR_CALLBACK);
             return;
         }
         /*--------------------------------------------*/
@@ -364,7 +370,7 @@ class Api extends CI_Controller {
 
         $tx_id = $this->input->get('txid'); // check if not null
         if (!$tx_id) {
-            $this->log_exception_response(NO_TX_ID_PROVIDED);
+            $this->log_exception_response("#callback, no tx id: ".NO_TX_ID_PROVIDED);
             return;
         }
 
@@ -372,7 +378,7 @@ class Api extends CI_Controller {
             $tx_info = $this->jsonrpcclient->gettransaction($tx_id);
 
         } catch (Exception $e) {
-            $this->log_exception_response($e->getMessage());
+            $this->log_exception_response("#callback, get transaction exception: ".$e->getMessage());
             return;
         }
 
@@ -386,16 +392,16 @@ class Api extends CI_Controller {
         $time = 				$tx_info["time"] ;
         $time_received = 		$tx_info["timereceived"];
         $category = 			$tx_info["details"][0]["category"];
-        $block_hash = 		    $tx_info["blockhash"];
-        $block_index = 		    $tx_info["blockindex"];
-        $block_time = 		    $tx_info["blocktime"];
+        $block_hash = 		    isset($tx_info["blockhash"]) ? $tx_info["blockhash"] : null;
+        $block_index = 		    isset($tx_info["blockindex"]) ? $tx_info["blockindex"] : null;
+        $block_time = 		    isset($tx_info["blocktime"]) ? $tx_info["blocktime"] : null;
 
         $new = "Transaction hash: ".$tx_id
             ."\n amount: ".$tx_info['details'][0]["amount"]
             ."\n confirmations: ".$tx_info["confirmations"]
-            ."\n blockhash: ".$tx_info["blockhash"]
-            ."\n blockindex: ".$tx_info["blockindex"]
-            ."\n blocktime: ".$tx_info["blocktime"]
+            ."\n blockhash: ".$block_hash
+            ."\n blockindex: ".$block_index
+            ."\n blocktime: ".$block_time
             ."\n txid: ".$tx_info["txid"]
             ."\n time: ".$tx_info["time"]
             ."\n timereceived: ".$tx_info["timereceived"]
@@ -408,6 +414,8 @@ class Api extends CI_Controller {
             echo nl2br($new)."\n";
         }
 
+        log_message('info', 'Address '.$to_address.' received transaction id '.$tx_id);
+
         $this->load->model('Transaction_model', '', TRUE);
 
         $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
@@ -416,36 +424,47 @@ class Api extends CI_Controller {
         /******************* START processing the invoicing callback **************/
         $invoice_address_model = $this->Address_model->get_invoice_address($to_address);
         if ($invoice_address_model) {
+
+            log_message('info', 'Processing invoicing address '.$to_address.', destination address: '.$invoice_address_model->destination_address.
+                ', label: '.$invoice_address_model->label.', amount satoshi: '.$invoice_address_model->amount.', callback url: '.$invoice_address_model->callback_url.
+                ', forward: '.$invoice_address_model->forward);
+
             if (!$transaction_model) { // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
-                    $tx_id, 0, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
+                    $tx_id, 0, TX_RECEIVE, $satoshi_amount, $this->crypto_type,
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $satoshi_amount, $this->log_id
                 );
-
-                $total_received = $invoice_address_model->amount + $satoshi_amount;
+                log_message('info', 'Inserted new invoicing transaction');
+                $total_received = bcadd($invoice_address_model->amount, $satoshi_amount);
                 $this->Address_model->update_invoice_address($invoice_address_model->address, $total_received, 1); // update amount and mark as received
 
                 $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
 
+                $forward_tx_id = 0; // needed for callback. stays 0 when forwarding is not chosen
                 // check if needs to be forwarded
-                if ($invoice_address_model->forward = 1) {
+                if ($invoice_address_model->forward == 1) {
 
-                    $bitcoin_amount = bcdiv($satoshi_amount, SATOSHIS_FRACTION); // division
+                    $bitcoin_amount = bcdiv($satoshi_amount, SATOSHIS_FRACTION, 8); // division
+                    log_message('info', 'Starting to forward '.$satoshi_amount.' satoshis which is '.$bitcoin_amount.' bitcoins');
                     try{
-                        $forward_tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount);
+                        $forward_tx_id = $this->jsonrpcclient->sendtoaddress( $invoice_address_model->destination_address , (float)$bitcoin_amount);
                         if ($forward_tx_id) {
                             $this->Transaction_model->insert_new_transaction($forward_tx_id, 0, TX_SEND, $satoshi_amount, $this->crypto_type, $to_address, '', 'invoice forwarding', $this->log_id);
+                            log_message('info', 'Forwarded '.$bitcoin_amount.' bitcoins to '.$to_address);
                         } // TODO in else should throw exception when tx_id is not returned ?
                     } catch (Exception $e) {
-                        $this->log_exception_response($e->getMessage());
+                        $this->log_exception_response("#callback, send to address exception: ".$e->getMessage());
                         return;
                     }
+                } else {
+                    log_message('info', 'No forwarding');
                 }
 
                 $full_callback_url = $invoice_address_model->callback_url."?value=".$satoshi_amount."&input_address=".$invoice_address_model->address."&confirmations=".$confirmations."&transaction_hash=".$forward_tx_id."&input_transaction_hash=".$tx_id."&destination_address=".$invoice_address_model->destination_address;
+                log_message('info', 'Sending callback to: '.$full_callback_url);
                 $app_response = file_get_contents($full_callback_url);
-
+                log_message('info', 'Received response from server: '.$app_response);
                 $callback_status = null;
                 if($app_response == "*ok*") {
                     $callback_status = 1;
@@ -453,7 +472,7 @@ class Api extends CI_Controller {
 
                 //if we get back an *ok* from the script then update the transactions status
                 $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
-
+                log_message('info', 'Updated transaction id '.$transaction_model->id.' with response: '.$app_response.', callback status: '.$callback_status);
                 $response = null;
                 if (RETURN_OUTPUTTYPE == "json") {
                     $response = json_encode(array(
@@ -466,20 +485,20 @@ class Api extends CI_Controller {
                     echo $response;
                 }
                 $this->update_log_response_msg($this->log_id, $response);
-
-
-
+                return;
             } else {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
+                log_message('info', 'Updating confirmation, new confirmation number: '.$confirmations.', for transaction id: '.$transaction_model->id);
+                $this->update_log_response_msg($this->log_id, "updated confirmations to ".$confirmations);
+                return; // step out from callback
             }
-            return;
         }
         /******************* END processing the invoicing callback **************/
         // at this point its not the invoicing address, lookup address in address table
 
+        log_message('info', 'Getting user\'s address');
         $address_model = $this->Address_model->get_address($to_address);
-
 
         $this->db->trans_start();
 
@@ -487,43 +506,48 @@ class Api extends CI_Controller {
 
         /* It is incoming transaction, because it is sent to some of the inner adresses */
         if ($address_model) {
-            $this->user = $this->User_model->get_user_by_id($address_model->user_id);
+            $this->user = $this->User_model->get_user_balance($address_model->user_id);
             if (!$transaction_model) { // first callback, because no transaction initially found in db
 
-                $new_address_balance = $address_model->balance + $satoshi_amount;
+                log_message('info', 'Received address '.$address_model->address.' label: '.$address_model->label.
+                    ', user guid: '.$this->user->guid.', email: '.$this->user->email);
+
+                $new_address_balance = bcadd($address_model->balance, $satoshi_amount);
 
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
-                    $tx_id, $address_model->user_id, TX_RECEIVE, $satoshi_amount, $this->crypto_type, // TODO default to BTC crypto_type
+                    $tx_id, $address_model->user_id, TX_RECEIVE, $satoshi_amount, $this->crypto_type,
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
 
-                $address_total_received = $address_model->total_received + $satoshi_amount; // TODO set final balance to address, but how?
+                log_message('info', 'Inserted new transaction to db - tx id: '.$tx_id.', user id: '.$address_model->user_id.', satoshi amount: '.
+                    $satoshi_amount.', address new balance: '.$new_address_balance);
+
+                $address_total_received = bcadd($address_model->total_received, $satoshi_amount); // TODO set final balance to address, but how?
                 $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
+                log_message('info', 'Updated address with new total received: '.$address_total_received.', previous balance: '.$address_model->total_received.', added amount: '.$satoshi_amount);
                 $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
-                $new_user_balance = $this->user->balance + $satoshi_amount;
+                $new_user_balance = bcadd($this->user->balance, $satoshi_amount);
                 $this->Balance_model->update_user_balance($new_user_balance, $this->user->id);
+                log_message('info', 'Updated user balance: '.$new_user_balance.', previous balance: '.$this->user->balance.', added amount: '.$satoshi_amount);
             } else {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations);
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
             }
-            $this->db->trans_complete();
-        // TODO wtf is the address not found and then just updates the tx?
-        /* It is outgoing transaction and the change is sent back to some of the change address */
         } else {
-            // TODO either its change address or somebody sent to some address that is not registered in db!
-            $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations); // assuming the transaction was found in db
+            // either its change address or somebody sent to some address that is not registered in db!
+            // say some shit that address is unknown, and maybe mail too!
+            $this->sendEmail('RECEIVED '.$btc_amount.' BITCOINS TO UNKNOWN ADDRESS', 'Address that received it: '.$to_address);
             $this->db->trans_complete();
             return;
         }
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        // TODO something: Trying to get property of non-object
-        $user_model = $this->user;
-        $full_callback_url = $user_model->callbackurl."?secret=".$user_model->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
+        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
+        log_message('info', 'Sending callback to: '.$full_callback_url);
         $app_response = file_get_contents($full_callback_url);
-
+        log_message('info', 'Received response from server: '.$app_response);
         $callback_status = null;
         if($app_response == "*ok*") {
             $callback_status = 1;
@@ -531,6 +555,8 @@ class Api extends CI_Controller {
 
         //if we get back an *ok* from the script then update the transactions status
         $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
+        $this->db->trans_complete();
+        log_message('info', 'Updated transaction id '.$transaction_model->id.' with response: '.$app_response.', callback status: '.$callback_status);
 
         $response = null;
         if (RETURN_OUTPUTTYPE == "json") {
@@ -551,6 +577,8 @@ class Api extends CI_Controller {
     */
     public function receive() {
 
+        log_message('info', '====== RECEIVE STARTED ======');
+
         /* the url structure is different, so different segments of URI */
         $method =           $this->uri->segment(2); // receive
         $ipaddress =        $this->input->ip_address();
@@ -564,7 +592,7 @@ class Api extends CI_Controller {
         $referrer   = $this->agent->referrer();
 
         $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, ''); // log it
-
+        log_message('info', '====== RECEIVE LOGGED A CALL ======');
 
         $method = $this->input->get('method');
         if ($method != 'create') {
@@ -575,6 +603,18 @@ class Api extends CI_Controller {
             $this->update_log_response_msg($this->log_id, $response);
             return;
         }
+
+        $isPrivate = $this->config->item('private_invoicing');
+        if ($isPrivate) {
+            $input_secret = $this->input->get('secret');
+            $server_secret = $this->config->item('callback_secret');
+            if ($input_secret != $server_secret) {
+                $this->log_exception_response("#receive, secret mismatch: ".NO_SECRET_FOR_CALLBACK);
+                return;
+            }
+        }
+
+        log_message('info', '====== RECEIVE METHOD AND PRIVATE INVOICING VALIDATION CHECKED ======');
 
         $receiving_address  = $this->input->get('address');
         $receiving_address  = isset($receiving_address) == true ? $receiving_address : '';
@@ -591,7 +631,7 @@ class Api extends CI_Controller {
             $this->load->library('bitcoinaddressvalidator');
             $isValidAddress = $this->bitcoinaddressvalidator->isValid($receiving_address, $isTestnet ? BitcoinAddressValidator::TESTNET : null);
             if (!$isValidAddress) {
-                $this->log_exception_response(INVALID_ADDRESS);
+                $this->log_exception_response("#receive, non valid address: ".INVALID_ADDRESS);
                 return;
             }
         }
@@ -599,6 +639,8 @@ class Api extends CI_Controller {
         $input_address = $this->jsonrpcclient->getnewaddress('invoice'); // the argument is the account name in bitcoind, could possibly use domain from the callback url
 
         $this->Address_model->save_invoice_address($input_address, $receiving_address, $label, $callback_url, $forward, $this->log_id); // save newly created address in invoice_adddresses table
+
+        log_message('info', '====== RECEIVE NEW ADDRESS GENERATED AND SAVED which is receiving address: '.$receiving_address.', input address'.$input_address.' ======');
 
         $response = array(
             'fee_percent' => 0,
@@ -613,10 +655,12 @@ class Api extends CI_Controller {
             $this->output
                 ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
+            log_message('info', '====== RECEIVE RETURNED RESPONSE ======');
         } else {
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);
+        log_message('info', '====== RECEIVE FINALLY UPDATED LOG WITH RESPONSE ======');
     }
 
     public function test()
@@ -725,7 +769,8 @@ class Api extends CI_Controller {
             ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
             ->set_output($response);
         $this->update_log_response_msg($this->log_id, $response);
-        if ($this->config->item('enable_email_logging')) {
+        if ($this->config->item('enable_email_logging'))
+        {
             $this->sendEmail("API ERROR", $message);
         }
     }
