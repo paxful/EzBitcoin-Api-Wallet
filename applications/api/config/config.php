@@ -2,12 +2,13 @@
 
 
 /* Bitcoind params */
-$config['jsonrpc_connectionstring'] = 'http://your:bitcoind@192.168.1.1:18332'; // reich staging server
+$config['jsonrpc_connectionstring'] = 'http://user:pass@ip:port'; // reich staging server
 $config['bitcoind_is_debug_mode'] = false;
 $config['api_is_debug_mode'] = false;
 $config['is_testnet'] = true;
-$config['callback_secret'] = 'testbtc123';
+$config['callback_secret'] = 'xxxxx';
 $config['private_invoicing'] = true; // if receive method in API should be private, accessible only with a password. Password is same as for callback
+$config['app_secret'] = 'xxxxx'; // easybitz  secret that has to match on callback
 
 $config['enable_email_logging'] = true;
 $config['admin_email'] = 'admin@easybitz.com';

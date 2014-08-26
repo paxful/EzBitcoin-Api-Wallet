@@ -1,8 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-//require_once APPPATH.'libraries/REST_Controller.php';
-//class Api extends REST_Controller {
-
 class Api extends CI_Controller {
 
     private $log_id;
@@ -426,8 +423,8 @@ class Api extends CI_Controller {
         if ($invoice_address_model) {
 
             log_message('info', 'Processing invoicing address '.$to_address.', destination address: '.$invoice_address_model->destination_address.
-                ', label: '.$invoice_address_model->label.', amount satoshi: '.$invoice_address_model->amount.', callback url: '.$invoice_address_model->callback_url.
-                ', forward: '.$invoice_address_model->forward);
+                ', label: '.$invoice_address_model->label.', amount satoshi: '.$invoice_address_model->received_amount.
+                ', callback url: '.$invoice_address_model->callback_url.', forward: '.$invoice_address_model->forward);
 
             if (!$transaction_model) { // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
@@ -436,7 +433,7 @@ class Api extends CI_Controller {
                     $block_time, $time, $time_received, $category, $account_name, $satoshi_amount, $this->log_id
                 );
                 log_message('info', 'Inserted new invoicing transaction');
-                $total_received = bcadd($invoice_address_model->amount, $satoshi_amount);
+                $total_received = bcadd($invoice_address_model->received_amount, $satoshi_amount);
                 $this->Address_model->update_invoice_address($invoice_address_model->address, $total_received, 1); // update amount and mark as received
 
                 $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
@@ -461,9 +458,12 @@ class Api extends CI_Controller {
                     log_message('info', 'No forwarding');
                 }
 
-                $full_callback_url = $invoice_address_model->callback_url."?value=".$satoshi_amount."&input_address=".$invoice_address_model->address."&confirmations=".$confirmations."&transaction_hash=".$forward_tx_id."&input_transaction_hash=".$tx_id."&destination_address=".$invoice_address_model->destination_address;
+                $full_callback_url = $invoice_address_model->callback_url."?value=".$satoshi_amount."&input_address=".$invoice_address_model->address.
+                    "&confirms=".$confirmations."&transaction_hash=".$forward_tx_id."&input_transaction_hash=".$tx_id.
+                    "&destination_address=".$invoice_address_model->destination_address;
+                $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret');
                 log_message('info', 'Sending callback to: '.$full_callback_url);
-                $app_response = file_get_contents($full_callback_url);
+                $app_response = file_get_contents($full_callback_url_with_secret);
                 log_message('info', 'Received response from server: '.$app_response);
                 $callback_status = null;
                 if($app_response == "*ok*") {
@@ -528,7 +528,8 @@ class Api extends CI_Controller {
                 log_message('info', 'Updated address with new total received: '.$address_total_received.', previous balance: '.$address_model->total_received.', added amount: '.$satoshi_amount);
                 $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
                 $new_user_balance = bcadd($this->user->balance, $satoshi_amount);
-                $this->Balance_model->update_user_balance($new_user_balance, $this->user->id);
+                $total_received = bcadd($this->user->total_received, $satoshi_amount);
+                $this->Balance_model->update_user_balance($new_user_balance, $this->user->id, $total_received);
                 log_message('info', 'Updated user balance: '.$new_user_balance.', previous balance: '.$this->user->balance.', added amount: '.$satoshi_amount);
             } else {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
@@ -621,6 +622,14 @@ class Api extends CI_Controller {
         $callback_url       = $this->input->get('callback');
         $label              = $this->input->get('label');
         $forward            = $this->input->get('forward');
+        $invoice_amount     = $this->input->get('amount'); // BTC
+        if (!empty($invoice_amount))
+        {
+            $invoice_amount = bcmul($invoice_amount, SATOSHIS_FRACTION);
+        } else
+        {
+            $invoice_amount = 0;
+        }
 
         if (empty($receiving_address)) {
             $forward = 0;
@@ -638,7 +647,7 @@ class Api extends CI_Controller {
 
         $input_address = $this->jsonrpcclient->getnewaddress('invoice'); // the argument is the account name in bitcoind, could possibly use domain from the callback url
 
-        $this->Address_model->save_invoice_address($input_address, $receiving_address, $label, $callback_url, $forward, $this->log_id); // save newly created address in invoice_adddresses table
+        $this->Address_model->save_invoice_address($input_address, $receiving_address, $invoice_amount, $label, $callback_url, $forward, $this->log_id); // save newly created address in invoice_adddresses table
 
         log_message('info', '====== RECEIVE NEW ADDRESS GENERATED AND SAVED which is receiving address: '.$receiving_address.', input address'.$input_address.' ======');
 
