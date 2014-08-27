@@ -418,6 +418,8 @@ class Api extends CI_Controller {
         $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
         $satoshi_amount     = bcmul($btc_amount, SATOSHIS_FRACTION);
 
+        $this->db->trans_start();
+
         /******************* START processing the invoicing callback **************/
         $invoice_address_model = $this->Address_model->get_invoice_address($to_address);
         if ($invoice_address_model) {
@@ -452,6 +454,7 @@ class Api extends CI_Controller {
                         } // TODO in else should throw exception when tx_id is not returned ?
                     } catch (Exception $e) {
                         $this->log_exception_response("#callback, send to address exception: ".$e->getMessage());
+                        $this->db->trans_complete();
                         return;
                     }
                 } else {
@@ -485,12 +488,15 @@ class Api extends CI_Controller {
                     echo $response;
                 }
                 $this->update_log_response_msg($this->log_id, $response);
+                $this->db->trans_complete();
                 return;
             } else {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
+                file_get_contents($invoice_address_model->callback_url.'?input_transaction_hash='.$tx_id.'&secret='.$this->config->item('app_secret')."&confirms=".$confirmations);
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
                 log_message('info', 'Updating confirmation, new confirmation number: '.$confirmations.', for transaction id: '.$transaction_model->id);
                 $this->update_log_response_msg($this->log_id, "updated confirmations to ".$confirmations);
+                $this->db->trans_complete();
                 return; // step out from callback
             }
         }
@@ -499,8 +505,6 @@ class Api extends CI_Controller {
 
         log_message('info', 'Getting user\'s address');
         $address_model = $this->Address_model->get_address($to_address);
-
-        $this->db->trans_start();
 
         $this->load->model('Balance_model', '', TRUE);
 
@@ -556,7 +560,6 @@ class Api extends CI_Controller {
 
         //if we get back an *ok* from the script then update the transactions status
         $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
-        $this->db->trans_complete();
         log_message('info', 'Updated transaction id '.$transaction_model->id.' with response: '.$app_response.', callback status: '.$callback_status);
 
         $response = null;
@@ -571,6 +574,7 @@ class Api extends CI_Controller {
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);
+        $this->db->trans_complete();
     }
 
     /* example.com/api/receive?method=create&address=xxx&callback=https://callbackurl.com&label=xxx&forward=1
