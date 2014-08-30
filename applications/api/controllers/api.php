@@ -418,6 +418,8 @@ class Api extends CI_Controller {
         $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
         $satoshi_amount     = bcmul($btc_amount, SATOSHIS_FRACTION);
 
+        $hostname = gethostname();
+
         $this->db->trans_start();
 
         /******************* START processing the invoicing callback **************/
@@ -463,7 +465,7 @@ class Api extends CI_Controller {
 
                 $full_callback_url = $invoice_address_model->callback_url."?value=".$satoshi_amount."&input_address=".$invoice_address_model->address.
                     "&confirms=".$confirmations."&transaction_hash=".$forward_tx_id."&input_transaction_hash=".$tx_id.
-                    "&destination_address=".$invoice_address_model->destination_address;
+                    "&destination_address=".$invoice_address_model->destination_address."&host=".$hostname;
                 $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret');
                 log_message('info', 'Sending callback to: '.$full_callback_url);
                 $app_response = file_get_contents($full_callback_url_with_secret);
@@ -492,7 +494,7 @@ class Api extends CI_Controller {
                 return;
             } else {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                file_get_contents($invoice_address_model->callback_url.'?input_transaction_hash='.$tx_id.'&secret='.$this->config->item('app_secret')."&confirms=".$confirmations);
+                file_get_contents($invoice_address_model->callback_url.'?input_transaction_hash='.$tx_id.'&secret='.$this->config->item('app_secret')."&confirms=".$confirmations."&host=".$hostname);
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
                 log_message('info', 'Updating confirmation, new confirmation number: '.$confirmations.', for transaction id: '.$transaction_model->id);
                 $this->update_log_response_msg($this->log_id, "updated confirmations to ".$confirmations);
@@ -549,7 +551,8 @@ class Api extends CI_Controller {
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->secret."&transaction_hash=".$tx_id."&input_address=".$to_address."&value=".$satoshi_amount."&confirms=".$confirmations;
+        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->secret."&transaction_hash=".$tx_id."&input_address=".
+            $to_address."&value=".$satoshi_amount."&confirms=".$confirmations."&host=".$hostname;
         log_message('info', 'Sending callback to: '.$full_callback_url);
         $app_response = file_get_contents($full_callback_url);
         log_message('info', 'Received response from server: '.$app_response);
