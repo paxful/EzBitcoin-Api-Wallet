@@ -415,10 +415,11 @@ class Api extends CI_Controller {
 
         $this->load->model('Transaction_model', '', TRUE);
 
-        $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id); // whether new transaction or notify was fired on 1st confirmation
+        // whether new transaction or notify was fired on 1st confirmation
+        $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id);
         $satoshi_amount     = bcmul($btc_amount, SATOSHIS_FRACTION);
 
-        $hostname = gethostname();
+        $HOST_NAME = gethostname();
 
         $this->db->trans_start();
 
@@ -430,85 +431,97 @@ class Api extends CI_Controller {
                 ', label: '.$invoice_address_model->label.', amount satoshi: '.$invoice_address_model->received_amount.
                 ', callback url: '.$invoice_address_model->callback_url.', forward: '.$invoice_address_model->forward);
 
-            if (!$transaction_model) { // first callback, because no transaction initially found in db
+            $forward_tx_id = 0; // needed for callback. stays 0 when forwarding is not chosen
+
+            if (!$transaction_model)
+            {   // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
-                    $tx_id, 0, TX_RECEIVE, $satoshi_amount, $this->crypto_type,
+                    $tx_id, 0, TX_RECEIVE_INVOICING, $satoshi_amount, $this->crypto_type,
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $satoshi_amount, $this->log_id
                 );
                 log_message('info', 'Inserted new invoicing transaction');
+
                 $total_received = bcadd($invoice_address_model->received_amount, $satoshi_amount);
                 $this->Address_model->update_invoice_address($invoice_address_model->address, $total_received, 1); // update amount and mark as received
 
                 $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
 
-                $forward_tx_id = 0; // needed for callback. stays 0 when forwarding is not chosen
                 // check if needs to be forwarded
-                if ($invoice_address_model->forward == 1) {
-
+                if ($invoice_address_model->forward == 1)
+                {
                     $bitcoin_amount = bcdiv($satoshi_amount, SATOSHIS_FRACTION, 8); // division
                     log_message('info', 'Starting to forward '.$satoshi_amount.' satoshis which is '.$bitcoin_amount.' bitcoins');
-                    try{
+                    try
+                    {
                         $forward_tx_id = $this->jsonrpcclient->sendtoaddress( $invoice_address_model->destination_address , (float)$bitcoin_amount);
-                        if ($forward_tx_id) {
+                        if ($forward_tx_id)
+                        {
                             $this->Transaction_model->insert_new_transaction($forward_tx_id, 0, TX_SEND, $satoshi_amount, $this->crypto_type, $to_address, '', 'invoice forwarding', $this->log_id);
                             log_message('info', 'Forwarded '.$bitcoin_amount.' bitcoins to '.$to_address);
-                        } // TODO in else should throw exception when tx_id is not returned ?
+                        } // TODO fucked when sendtoaddress throws exception, should send to server still the response.
                     } catch (Exception $e) {
                         $this->log_exception_response("#callback, send to address exception: ".$e->getMessage());
                         $this->db->trans_complete();
                         return;
                     }
-                } else {
+                }
+                else
+                {
                     log_message('info', 'No forwarding');
                 }
-
-                $full_callback_url = $invoice_address_model->callback_url."?value=".$satoshi_amount."&input_address=".$invoice_address_model->address.
-                    "&confirms=".$confirmations."&transaction_hash=".$forward_tx_id."&input_transaction_hash=".$tx_id.
-                    "&destination_address=".$invoice_address_model->destination_address."&host=".$hostname;
-                $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret');
-                log_message('info', 'Sending callback to: '.$full_callback_url);
-                $app_response = file_get_contents($full_callback_url_with_secret);
-                log_message('info', 'Received response from server: '.$app_response);
-                $callback_status = null;
-                if($app_response == "*ok*") {
-                    $callback_status = 1;
-                }
-
-                //if we get back an *ok* from the script then update the transactions status
-                $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
-                log_message('info', 'Updated transaction id '.$transaction_model->id.' with response: '.$app_response.', callback status: '.$callback_status);
-                $response = null;
-                if (RETURN_OUTPUTTYPE == "json") {
-                    $response = json_encode(array(
-                        'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
-                    $this->output
-                        ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
-                        ->set_output($response);
-                } else {
-                    $response = $app_response;
-                    echo $response;
-                }
-                $this->update_log_response_msg($this->log_id, $response);
-                $this->db->trans_complete();
-                return;
-            } else {
-                /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                file_get_contents($invoice_address_model->callback_url.'?input_transaction_hash='.$tx_id.'&secret='.$this->config->item('app_secret')."&confirms=".$confirmations."&host=".$hostname);
-                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
-                log_message('info', 'Updating confirmation, new confirmation number: '.$confirmations.', for transaction id: '.$transaction_model->id);
-                $this->update_log_response_msg($this->log_id, "updated confirmations to ".$confirmations);
-                $this->db->trans_complete();
-                return; // step out from callback
             }
+            else
+            {
+                /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
+                log_message('info', 'Updating confirmation, new confirmation number: '.$confirmations.', for transaction id: '.$transaction_model->id);
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
+            }
+
+            $full_callback_url = "$invoice_address_model->callback_url?value=$satoshi_amount&input_address=$invoice_address_model->address
+                &confirms=$confirmations&transaction_hash=$forward_tx_id&input_transaction_hash=$tx_id
+                destination_address=$invoice_address_model->destination_address.&host=$HOST_NAME&type=".TX_INVOICE;
+            $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret'); // don't include secret in log
+            log_message('info', 'Sending callback to: '.$full_callback_url);
+            $app_response = file_get_contents($full_callback_url_with_secret); // TODO wrap in exception - means the host did not respond
+            log_message('info', 'Received response from server: '.$app_response);
+            $callback_status = null;
+            if($app_response == "*ok*") {
+                $callback_status = 1;
+            }
+
+            //if we get back an *ok* from the script then update the transactions status
+            $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
+
+            log_message('info', 'Updated transaction id '.$transaction_model->id.' with response: '.$app_response.', callback status: '.$callback_status);
+
+            $response = null;
+            if (RETURN_OUTPUTTYPE == "json")
+            {
+                $response = json_encode(array(
+                    'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+                $this->output
+                    ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
+                    ->set_output($response);
+            }
+            else
+            {
+                $response = $app_response;
+                echo $response;
+            }
+
+            // do the response to server from either 0 confirmation or 1 confirmation
+            $this->update_log_response_msg($this->log_id, $response);
+            $this->db->trans_complete();
+            return; // step out from callback
         }
         /******************* END processing the invoicing callback **************/
+
         // at this point its not the invoicing address, lookup address in address table
 
         log_message('info', 'Getting user\'s address');
         $address_model = $this->Address_model->get_address($to_address);
 
-        $this->load->model('Balance_model', '', TRUE);
 
         /* It is incoming transaction, because it is sent to some of the inner adresses */
         if ($address_model) {
@@ -520,24 +533,32 @@ class Api extends CI_Controller {
 
                 $new_address_balance = bcadd($address_model->balance, $satoshi_amount);
 
+                // insert new transaction
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
                     $tx_id, $address_model->user_id, TX_RECEIVE, $satoshi_amount, $this->crypto_type,
                     $to_address, $address_from, $confirmations, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
-
                 log_message('info', 'Inserted new transaction to db - tx id: '.$tx_id.', user id: '.$address_model->user_id.', satoshi amount: '.
                     $satoshi_amount.', address new balance: '.$new_address_balance);
 
+                // update address total received
                 $address_total_received = bcadd($address_model->total_received, $satoshi_amount); // TODO set final balance to address, but how?
-                $this->Address_model->update_total_received_crypto($address_model->address, $address_total_received);
+                $this->Address_model->update_total_received_crypto($address_model, $address_total_received);
                 log_message('info', 'Updated address with new total received: '.$address_total_received.', previous balance: '.$address_model->total_received.', added amount: '.$satoshi_amount);
-                $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
-                $new_user_balance = bcadd($this->user->balance, $satoshi_amount);
-                $total_received = bcadd($this->user->total_received, $satoshi_amount);
+
+                // update API user balance
+                $new_user_balance   = bcadd($this->user->balance, $satoshi_amount);
+                $total_received     = bcadd($this->user->total_received, $satoshi_amount);
+                $this->load->model('Balance_model', '', TRUE); // load balance model to update user's balance
                 $this->Balance_model->update_user_balance($new_user_balance, $this->user->id, $total_received);
                 log_message('info', 'Updated user balance: '.$new_user_balance.', previous balance: '.$this->user->balance.', added amount: '.$satoshi_amount);
-            } else {
+
+                // get the newly inserted model for updating the info with response from external server
+                $transaction_model = $this->Transaction_model->get_transaction_by_id($transaction_model_id);
+            }
+            else
+            {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
             }
@@ -551,11 +572,15 @@ class Api extends CI_Controller {
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = $this->user->callbackurl."?secret=".$this->user->secret."&transaction_hash=".$tx_id."&input_address=".
-            $to_address."&value=".$satoshi_amount."&confirms=".$confirmations."&host=".$hostname;
+        $full_callback_url = "$this->user->callbackurl?transaction_hash=$tx_id&input_address=
+            $to_address&value=$satoshi_amount&confirms=$confirmations&host=$HOST_NAME&type=".TX_API_USER;
+
         log_message('info', 'Sending callback to: '.$full_callback_url);
-        $app_response = file_get_contents($full_callback_url);
+
+        $full_callback_url_with_secret = $full_callback_url."&secret=".$this->user->secret; // don't include secret in a log
+        $app_response = file_get_contents($full_callback_url_with_secret); // TODO wrap in exception - means the host did not respond
         log_message('info', 'Received response from server: '.$app_response);
+
         $callback_status = null;
         if($app_response == "*ok*") {
             $callback_status = 1;
@@ -563,6 +588,7 @@ class Api extends CI_Controller {
 
         //if we get back an *ok* from the script then update the transactions status
         $this->Transaction_model->update_tx_on_app_callback($transaction_model->id, $app_response, $full_callback_url, $callback_status);
+
         log_message('info', 'Updated transaction id '.$transaction_model->id.' with response: '.$app_response.', callback status: '.$callback_status);
 
         $response = null;
