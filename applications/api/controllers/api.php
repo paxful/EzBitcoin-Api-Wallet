@@ -562,7 +562,8 @@ class Api extends CI_Controller {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
             }
-        } else {
+        } else
+        {
             // either its change address or somebody sent to some address that is not registered in db!
             // say some shit that address is unknown, and maybe mail too!
             $this->sendEmail('RECEIVED '.$btc_amount.' BITCOINS TO UNKNOWN ADDRESS', 'Address that received it: '.$to_address);
