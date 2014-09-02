@@ -478,9 +478,9 @@ class Api extends CI_Controller {
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
             }
 
-            $full_callback_url = "$invoice_address_model->callback_url?value=$satoshi_amount&input_address=$invoice_address_model->address
-                &confirms=$confirmations&transaction_hash=$forward_tx_id&input_transaction_hash=$tx_id
-                &destination_address=$invoice_address_model->destination_address.&host=$HOST_NAME&type=".TX_INVOICE;
+            $full_callback_url = $invoice_address_model->callback_url.'?value='.$satoshi_amount.'&input_address='.$invoice_address_model->address
+                .'&confirms='.$confirmations.'&transaction_hash='.$forward_tx_id.'&input_transaction_hash='.$tx_id
+                .'&destination_address='.$invoice_address_model->destination_address.'&host='.$HOST_NAME.'&type='.TX_INVOICE;
             $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret'); // don't include secret in log
             log_message('info', 'Sending callback to: '.$full_callback_url);
             $app_response = file_get_contents($full_callback_url_with_secret); // TODO wrap in exception - means the host did not respond
@@ -572,8 +572,8 @@ class Api extends CI_Controller {
 
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
-        $full_callback_url = "$this->user->callbackurl?transaction_hash=$tx_id&input_address=
-            $to_address&value=$satoshi_amount&confirms=$confirmations&host=$HOST_NAME&type=".TX_API_USER;
+        $full_callback_url = $this->user->callbackurl.'?transaction_hash='.$tx_id.'&input_address='.$to_address.'&value='.$satoshi_amount.'
+            &confirms='.$confirmations.'&host='.$HOST_NAME.'&type='.TX_API_USER;
 
         log_message('info', 'Sending callback to: '.$full_callback_url);
 
