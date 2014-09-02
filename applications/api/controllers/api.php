@@ -480,7 +480,7 @@ class Api extends CI_Controller {
 
             $full_callback_url = "$invoice_address_model->callback_url?value=$satoshi_amount&input_address=$invoice_address_model->address
                 &confirms=$confirmations&transaction_hash=$forward_tx_id&input_transaction_hash=$tx_id
-                destination_address=$invoice_address_model->destination_address.&host=$HOST_NAME&type=".TX_INVOICE;
+                &destination_address=$invoice_address_model->destination_address.&host=$HOST_NAME&type=".TX_INVOICE;
             $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret'); // don't include secret in log
             log_message('info', 'Sending callback to: '.$full_callback_url);
             $app_response = file_get_contents($full_callback_url_with_secret); // TODO wrap in exception - means the host did not respond
