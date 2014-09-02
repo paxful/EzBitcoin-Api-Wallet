@@ -382,7 +382,7 @@ class Api extends CI_Controller {
         // TODO make it into separate class cause same thing is #validate_transaction() function
         echo "<pre>".print_r($tx_info)."</pre><br />";
         $btc_amount =           $tx_info["amount"] ;
-        $confirmations = 	    $tx_info["confirmations"] ;
+        $confirms = 	    $tx_info["confirmations"] ;
         $account_name = 		$tx_info["details"][0]["account"] ;
         $to_address =           $tx_info["details"][0]["address"]; // address where transaction was sent to. from address may be multiple inputs which means many addresses
         $address_from = 		"" ; //always blank as there is no way to know where bitcoin comes from UNLESS we do get rawtransaction
@@ -411,13 +411,14 @@ class Api extends CI_Controller {
             echo nl2br($new)."\n";
         }
 
-        log_message('info', 'Address '.$to_address.' received transaction id '.$tx_id);
 
         $this->load->model('Transaction_model', '', TRUE);
 
         // whether new transaction or notify was fired on 1st confirmation
         $transaction_model  = $this->Transaction_model->get_transaction_by_tx_id($tx_id);
         $satoshi_amount     = bcmul($btc_amount, SATOSHIS_FRACTION);
+
+        log_message('info', "Address $to_address, amount (BTC): $btc_amount, amount (satoshi): $satoshi_amount, confirms: $confirms received transaction id $tx_id");
 
         $HOST_NAME = gethostname();
 
@@ -437,7 +438,7 @@ class Api extends CI_Controller {
             {   // first callback, because no transaction initially found in db
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
                     $tx_id, 0, TX_RECEIVE_INVOICING, $satoshi_amount, $this->crypto_type,
-                    $to_address, $address_from, $confirmations, $block_hash, $block_index,
+                    $to_address, $address_from, $confirms, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $satoshi_amount, $this->log_id
                 );
                 log_message('info', 'Inserted new invoicing transaction');
@@ -474,12 +475,12 @@ class Api extends CI_Controller {
             else
             {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                log_message('info', 'Updating confirmation, new confirmation number: '.$confirmations.', for transaction id: '.$transaction_model->id);
-                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
+                log_message('info', 'Updating confirmation, new confirmation number: '.$confirms.', for transaction id: '.$transaction_model->id);
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirms, $block_hash, $block_index, $block_index);
             }
 
             $full_callback_url = $invoice_address_model->callback_url.'?value='.$satoshi_amount.'&input_address='.$invoice_address_model->address
-                .'&confirms='.$confirmations.'&transaction_hash='.$forward_tx_id.'&input_transaction_hash='.$tx_id
+                .'&confirms='.$confirms.'&transaction_hash='.$forward_tx_id.'&input_transaction_hash='.$tx_id
                 .'&destination_address='.$invoice_address_model->destination_address.'&host='.$HOST_NAME.'&type='.TX_INVOICE;
             $full_callback_url_with_secret = $full_callback_url.'&secret='.$this->config->item('app_secret'); // don't include secret in log
             log_message('info', 'Sending callback to: '.$full_callback_url);
@@ -499,7 +500,7 @@ class Api extends CI_Controller {
             if (RETURN_OUTPUTTYPE == "json")
             {
                 $response = json_encode(array(
-                    'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+                    'confirmations' => $confirms, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
                 $this->output
                     ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                     ->set_output($response);
@@ -536,7 +537,7 @@ class Api extends CI_Controller {
                 // insert new transaction
                 $transaction_model_id = $this->Transaction_model->insert_new_transaction_from_callback(
                     $tx_id, $address_model->user_id, TX_RECEIVE, $satoshi_amount, $this->crypto_type,
-                    $to_address, $address_from, $confirmations, $block_hash, $block_index,
+                    $to_address, $address_from, $confirms, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
                 log_message('info', 'Inserted new transaction to db - tx id: '.$tx_id.', user id: '.$address_model->user_id.', satoshi amount: '.
@@ -560,7 +561,7 @@ class Api extends CI_Controller {
             else
             {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirmations, $block_hash, $block_index, $block_index);
+                $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirms, $block_hash, $block_index, $block_index);
             }
         } else
         {
@@ -574,7 +575,7 @@ class Api extends CI_Controller {
         // now it is time to fire to the API user callback URL which is his app that is using this server's API
         // mind the secret here, that app has to verify that it is coming from the API server not somebody else
         $full_callback_url = $this->user->callbackurl.'?input_transaction_hash='.$tx_id.'&input_address='.$to_address.'&value='.$satoshi_amount.'
-            &confirms='.$confirmations.'&host='.$HOST_NAME.'&type='.TX_API_USER;
+            &confirms='.$confirms.'&host='.$HOST_NAME.'&type='.TX_API_USER;
 
         log_message('info', 'Sending callback to: '.$full_callback_url);
 
@@ -595,7 +596,7 @@ class Api extends CI_Controller {
         $response = null;
         if (RETURN_OUTPUTTYPE == "json") {
             $response = json_encode(array(
-                'confirmations' => $confirmations, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
+                'confirmations' => $confirms, 'address' => $to_address, 'amount' => $btc_amount, 'txid' => $tx_id, 'callback_url' => $full_callback_url, 'response' => $app_response ));
             $this->output
                 ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
