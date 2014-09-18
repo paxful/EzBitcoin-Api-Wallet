@@ -9,7 +9,7 @@
  * http://php.net/manual/en/timezones.php
  *
  */
-ini_set('date.timezone', 'America/New_York');
+ini_set('date.timezone', 'UTC');
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

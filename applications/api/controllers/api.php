@@ -290,6 +290,9 @@ class Api extends CI_Controller {
         $this->db->trans_start();
 
         $user_balance = $this->User_model->get_user_balance($this->user->id);
+
+        log_message('info', 'User balance: '.$user_balance->balance.", received amount: ".$amount);
+
         if ($user_balance->balance < $amount) {
             $this->log_exception_response("#payment, insufficient funds: ".NO_FUNDS);
             return;
@@ -304,7 +307,10 @@ class Api extends CI_Controller {
         $this->Balance_model->update_user_balance($new_balance, $this->user->id);
 
         $bitcoin_amount = (float)bcdiv($amount, SATOSHIS_FRACTION, 8); // division, return type is string
-		try{
+
+        log_message('info', "About to send out $bitcoin_amount bitcoins");
+
+        try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
             if ($tx_id) {
                 // if it fails here on inserting new transaction, then this transaction will be rolled back - user balance not updated, but jsonrpcclient will send out.
