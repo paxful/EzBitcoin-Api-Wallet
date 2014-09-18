@@ -1,4 +1,14 @@
 <?php
+/*
+ *---------------------------------------------------------------
+ * TIMEZONE SETTINGS
+ *---------------------------------------------------------------
+ *
+ * You can change the system default time-zone by modifying the line below.
+ * The default is 'America/New_York' but you may choose any timezone listed at:
+ * http://php.net/manual/en/timezones.php
+ *
+ */
 ini_set('date.timezone', 'America/New_York');
 /*
  *---------------------------------------------------------------
