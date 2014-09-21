@@ -446,7 +446,7 @@ class Api extends CI_Controller {
 		    return;
 	    } else
 	    {
-	        $this->cache->save($transactionCacheName, array('txid' => $tx_id, 'timestamp' => $bitcoind_timestamp, 'confirms' => $confirms));
+	        $this->cache->save($transactionCacheName, "txtransaction", 60);
 	        log_message('info', "Transaction $tx_id with timestamp $bitcoind_timestamp does not exist in cache. Creating a new one.");
 	    }
 	    // END of checking if its repetitive bitcoind shooting
