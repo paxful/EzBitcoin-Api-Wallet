@@ -437,17 +437,13 @@ class Api extends CI_Controller {
         log_message('info', "Processed $btc_amount bitcoins, tx id: $tx_id with timestamp $bitcoind_timestamp");
 	    // START sometimes bitcoind shoots to callback the same tx_id on 0 or 1st confirm twice!!! its even with same nanotime!
 	    // so we need to ignore if its repetitive one.
-	    $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
-	    $transactionCacheName   = $tx_id.$bitcoind_timestamp.$confirms;
-	    $cachedTransaction      = $this->cache->get($transactionCacheName);
-	    if ($cachedTransaction)
+	    if ($this->checkDuplicateBitcoinD($tx_id, $bitcoind_timestamp, $confirms))
 	    {
 	        log_message('info', "Repetitive bitcoind shooting for tx id: $tx_id, timestamp: $bitcoind_timestamp and confirms: $confirms");
 		    return;
 	    } else
 	    {
-	        $this->cache->save($transactionCacheName, "txtransaction", 60);
-	        log_message('info', "Transaction $tx_id with timestamp $bitcoind_timestamp does not exist in cache. Creating a new one.");
+	        log_message('info', "Transaction $tx_id with timestamp $bitcoind_timestamp is not repetitive. Continuing initiating.");
 	    }
 	    // END of checking if its repetitive bitcoind shooting
 
@@ -894,5 +890,24 @@ class Api extends CI_Controller {
 	private function satoshiToBtc($satoshis)
 	{
 		return (float)bcdiv($satoshis, SATOSHIS_FRACTION, 8);
+	}
+
+	/**
+	 * @param $txId
+	 * @param $timestamp
+	 * @param $confirms
+	 *
+	 * @return bool true if transaction is repetitive
+	 */
+	private function checkDuplicateBitcoinD($txId, $timestamp, $confirms)
+	{
+		static $output = NULL;
+		if( $output['txid'] == $txId and $output['timestamp'] == $timestamp and $output['confirms'] == $confirms ) {
+			return true;
+		}
+		$output['txid'] = $txId;
+		$output['timestamp'] = $timestamp;
+		$output['confirms'] = $confirms;
+		return false;
 	}
 }
