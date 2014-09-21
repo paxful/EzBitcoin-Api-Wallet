@@ -7,6 +7,7 @@ class Api extends CI_Controller {
     private $method;
     private $crypto_type = 'BTC';
     private $jsonrpc_debug;
+	private static $callback_transaction; // used to ignore bitcoind repetitive shooting to callback url
 
     public function __construct()
     {
@@ -29,6 +30,7 @@ class Api extends CI_Controller {
             echo "URI segment: ".$this->uri->uri_string()."\n";
             echo "Controller: ".$this->uri->segment(1).", GUID: ".$this->uri->segment(2).", method: ".$this->uri->segment(3)."\n";
         }
+		self::$callback_transaction = array('txid' => '', 'timestamp' => '', 'confirms' => '');
     }
 
 	public function index()
@@ -434,7 +436,15 @@ class Api extends CI_Controller {
             echo nl2br($new)."\n";
         }
 
-	    log_message('info', "Sent on $bitcoind_timestamp");
+	    // somestimes bitcoind shoots to callback the same tx_id on 0 or 1st confirm twice!!! its even with same nanotime!
+	    // so we need to ignore if its repetitive one.
+	    if (
+		    self::$callback_transaction['txid'] == $tx_id and
+		    self::$callback_transaction['timestamp'] == $bitcoind_timestamp and
+		    self::$callback_transaction['confirms'] == $confirms
+	    ) {
+		    return;
+	    }
 
 	    /******************* START of checking if its outgoing transaction *******************/
 	    if ($btc_amount < 0):
