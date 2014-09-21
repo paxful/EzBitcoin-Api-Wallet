@@ -8,7 +8,7 @@ class Api extends CI_Controller {
     private $crypto_type = 'BTC';
     private $jsonrpc_debug;
 
-	private static $output = array();
+	public static $output = array();
 
     public function __construct()
     {
