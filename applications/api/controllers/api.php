@@ -8,6 +8,8 @@ class Api extends CI_Controller {
     private $crypto_type = 'BTC';
     private $jsonrpc_debug;
 
+	private static $output = array();
+
     public function __construct()
     {
         parent::__construct();
@@ -901,13 +903,12 @@ class Api extends CI_Controller {
 	 */
 	private function checkDuplicateBitcoinD($txId, $timestamp, $confirms)
 	{
-		static $output = NULL;
-		if( $output['txid'] == $txId and (abs($output['timestamp']-$timestamp) < 5) and $output['confirms'] == $confirms ) {
+		if( self::$output['txid'] == $txId and (abs(self::$output['timestamp']-$timestamp) < 5) and self::$output['confirms'] == $confirms ) {
 			return true;
 		}
-		$output['txid'] = $txId;
-		$output['timestamp'] = $timestamp;
-		$output['confirms'] = $confirms;
+		self::$output['txid'] = $txId;
+		self::$output['timestamp'] = $timestamp;
+		self::$output['confirms'] = $confirms;
 		return false;
 	}
 }
