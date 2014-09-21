@@ -532,7 +532,7 @@ class Api extends CI_Controller {
             else
             {
                 /* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-                log_message('info', 'Updating confirmation, new confirmation number: '.$confirms.', for transaction id: '.$transaction_model->id);
+                log_message('info', 'Updating confirmations to '.$confirms.' for transaction id: '.$transaction_model->id);
                 $this->Transaction_model->update_tx_confirmations($transaction_model->id, $confirms, $block_hash, $block_index, $block_index);
             }
 
@@ -578,7 +578,6 @@ class Api extends CI_Controller {
         log_message('info', 'Getting user\'s address');
         $address_model = $this->Address_model->get_address($to_address);
 
-
         /* It is incoming transaction, because it is sent to some of the inner adresses */
         if ($address_model) {
             $this->user = $this->User_model->get_user_balance($address_model->user_id);
@@ -595,7 +594,7 @@ class Api extends CI_Controller {
                     $to_address, $address_from, $confirms, $block_hash, $block_index,
                     $block_time, $time, $time_received, $category, $account_name, $new_address_balance, $this->log_id
                 );
-                log_message('info', 'Inserted new transaction to db - tx id: '.$tx_id.', user id: '.$address_model->user_id.', satoshi amount: '.
+                log_message('info', 'Inserted new transaction to db. Tx id: '.$tx_id.', user id: '.$address_model->user_id.', satoshi amount: '.
                     $satoshi_amount.', address new balance: '.$new_address_balance);
 
                 // update address total received
