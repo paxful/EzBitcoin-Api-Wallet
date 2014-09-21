@@ -31,7 +31,8 @@ class Api extends CI_Controller {
         }
     }
 
-	public function index() {
+	public function index()
+	{
 		$this->load->view('start');
 	}
 
@@ -46,6 +47,7 @@ class Api extends CI_Controller {
         $user_info = $this->User_model->get_user_balance($this->user->id, $this->crypto_type);
         $response = null;
 
+	    log_message('info', 'Queried balance for '.$user_info->email.': '.self::satoshiToBtc($user_info->balance).' bitcoins');
 
         if ($user_info) {
             $response = json_encode(array('balance' => $user_info->balance, 'crypto_type' => $this->crypto_type));
@@ -227,7 +229,7 @@ class Api extends CI_Controller {
             return;
         }
 
-        $this->load->model('User_model', '', TRUE);
+	    $this->load->model('User_model', '', TRUE);
         try {
             $new_wallet_address = $this->jsonrpcclient->getnewaddress($this->user->id); // bitcoind account is the id of the API user in db
 
@@ -241,6 +243,8 @@ class Api extends CI_Controller {
             $this->log_exception_response("#new_address, get new address exception: ".$e->getMessage());
             return;
         }
+
+	    log_message('info', "Created new address $new_wallet_address for user id: ".$this->user->email);
 
         //return error will be wallet address if it works
         $response = null;
@@ -270,9 +274,12 @@ class Api extends CI_Controller {
         $note =     $this->input->get('note');
         $cryptotype = $this->input->get('cryptotype');
 
+
         if (!$note) {
             $note = '';
         }
+
+	    log_message('info', "=== Starting payment to $to_address, note: $note, amount: ".self::satoshiToBtc($amount).' ===');
 
         if (empty($to_address) or empty($amount)) {
             $this->log_exception_response("#payment, empty address or amount: ".ADDRESS_AMOUNT_NOT_SPECIFIED);
@@ -291,7 +298,7 @@ class Api extends CI_Controller {
 
         $user_balance = $this->User_model->get_user_balance($this->user->id);
 
-        log_message('info', 'User balance: '.$user_balance->balance.", received amount: ".$amount);
+        log_message('info', 'User initial balance: '.self::satoshiToBtc($user_balance->balance).' bitcoins');
 
         if ($user_balance->balance < $amount) {
             $this->log_exception_response("#payment, insufficient funds: ".NO_FUNDS);
@@ -303,12 +310,12 @@ class Api extends CI_Controller {
 
         $new_balance = bcsub($user_balance->balance, $amount);
 
+	    log_message('info', 'User new balance: '.self::satoshiToBtc($new_balance).' bitcoins');
+
 //        $this->Address_model->update_address_balance($to_address, ); // TODO shit how do we know from which address was spent... ?
         $this->Balance_model->update_user_balance($new_balance, $this->user->id);
 
-        $bitcoin_amount = (float)bcdiv($amount, SATOSHIS_FRACTION, 8); // division, return type is string
-
-        log_message('info', "About to send out $bitcoin_amount bitcoins");
+        $bitcoin_amount = self::satoshiToBtc($amount); // return float
 
         try{
             $tx_id = $this->jsonrpcclient->sendtoaddress( $to_address , $bitcoin_amount, $note);
@@ -324,6 +331,8 @@ class Api extends CI_Controller {
         }
         $this->db->trans_complete();
 
+	    log_message('info', "=== Sending to  $to_address, amount: ".self::satoshiToBtc($amount).' completed ===');
+
         $response = null;
         $message = 'Sent ' . $bitcoin_amount . ' ' . $this->crypto_type. ' to ' . $to_address;
 		if (RETURN_OUTPUTTYPE=="json") {
@@ -338,6 +347,12 @@ class Api extends CI_Controller {
         $this->update_log_response_msg($this->log_id, $response);
     }
 
+	/**
+	 * Callback is initiated when:
+	 * Receiving transaction gets into mempool
+	 * Sending out transaction - has negative amount
+	 * Transaction gets 1st confirmation
+	 */
     public function callback() {
 
         log_message('info', '====== CALLBACK STARTED ======');
@@ -388,7 +403,7 @@ class Api extends CI_Controller {
         // TODO make it into separate class cause same thing is #validate_transaction() function
         echo "<pre>".print_r($tx_info)."</pre><br />";
         $btc_amount =           $tx_info["amount"] ;
-        $confirms = 	    $tx_info["confirmations"] ;
+        $confirms = 	        $tx_info["confirmations"] ;
         $account_name = 		$tx_info["details"][0]["account"] ;
         $to_address =           $tx_info["details"][0]["address"]; // address where transaction was sent to. from address may be multiple inputs which means many addresses
         $address_from = 		"" ; //always blank as there is no way to know where bitcoin comes from UNLESS we do get rawtransaction
@@ -416,6 +431,42 @@ class Api extends CI_Controller {
         if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
             echo nl2br($new)."\n";
         }
+
+	    /******************* START of checking if its outgoing transaction *******************/
+	    if ($btc_amount < 0):
+	        log_message('info', "Sent out $btc_amount bitcoins to $to_address, tx_id $tx_id and log_id: ".$this->log_id);
+
+		    $data = array(
+			    'tx_id' => $tx_id,
+				'crypto_amount' => bcmul($btc_amount, SATOSHIS_FRACTION),
+				'crypto_type' => $this->crypto_type,
+				'address_to' => $to_address,
+			    'confirmations' => $confirms,
+				'log_id' => $this->log_id
+		    );
+
+		    $this->load->model('Payout_history_model', '', TRUE);
+		    $this->Payout_history_model->insert_new_transaction($data);
+		    $response = null;
+		    if (RETURN_OUTPUTTYPE == "json")
+		    {
+			    $response = json_encode(array(
+				    'sent_out_amount' => $btc_amount, 'address' => $to_address, 'txid' => $tx_id, 'log_id' => $this->log_id));
+			    $this->output
+				    ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
+				    ->set_output($response);
+		    }
+		    else
+		    {
+			    $response = "sent_out_amount:$btc_amount|address:$to_address|txid:$tx_id|log_id:".$this->log_id;
+			    echo $response;
+		    }
+
+		    // do the response to server from either 0 confirmation or 1 confirmation
+		    $this->update_log_response_msg($this->log_id, $response);
+		    return; // step out from callback
+	    endif;
+	    /******************* END of checking if its outgoing transaction *******************/
 
 
         $this->load->model('Transaction_model', '', TRUE);
@@ -821,4 +872,9 @@ class Api extends CI_Controller {
             $this->sendEmail("API ERROR", $message);
         }
     }
+
+	private function satoshiToBtc($satoshis)
+	{
+		return (float)bcdiv($satoshis, SATOSHIS_FRACTION, 8);
+	}
 }
