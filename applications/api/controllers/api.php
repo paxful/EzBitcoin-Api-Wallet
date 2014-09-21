@@ -392,6 +392,8 @@ class Api extends CI_Controller {
             return;
         }
 
+	    $bitcoind_timestamp = $this->input->get('time');
+
         try {
             $tx_info = $this->jsonrpcclient->gettransaction($tx_id);
 
@@ -431,6 +433,8 @@ class Api extends CI_Controller {
         if(($this->input->get('debug') or $this->jsonrpc_debug == true)) {
             echo nl2br($new)."\n";
         }
+
+	    log_message('info', "Sent on $bitcoind_timestamp");
 
 	    /******************* START of checking if its outgoing transaction *******************/
 	    if ($btc_amount < 0):
