@@ -443,6 +443,7 @@ class Api extends CI_Controller {
 		    self::$callback_transaction['timestamp'] == $bitcoind_timestamp and
 		    self::$callback_transaction['confirms'] == $confirms
 	    ) {
+	        log_message('info', "Repetitive bitcoind shooting for tx id: $tx_id, timestamp: $bitcoind_timestamp and confirms: $confirms");
 		    return;
 	    }
 
