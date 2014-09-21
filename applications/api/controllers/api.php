@@ -7,7 +7,6 @@ class Api extends CI_Controller {
     private $method;
     private $crypto_type = 'BTC';
     private $jsonrpc_debug;
-	private static $callback_transaction; // used to ignore bitcoind repetitive shooting to callback url
 
     public function __construct()
     {
@@ -30,7 +29,6 @@ class Api extends CI_Controller {
             echo "URI segment: ".$this->uri->uri_string()."\n";
             echo "Controller: ".$this->uri->segment(1).", GUID: ".$this->uri->segment(2).", method: ".$this->uri->segment(3)."\n";
         }
-		self::$callback_transaction = array('txid' => '', 'timestamp' => '', 'confirms' => '');
     }
 
 	public function index()
@@ -357,7 +355,7 @@ class Api extends CI_Controller {
 	 */
     public function callback() {
 
-        log_message('info', '====== CALLBACK STARTED ======');
+        log_message('info', '=== CALLBACK STARTED ===');
         /* the url structure is different, so different segments of URI */
         $method =       $this->uri->segment(2);
         $ipaddress =    $this->input->ip_address();
@@ -436,16 +434,20 @@ class Api extends CI_Controller {
             echo nl2br($new)."\n";
         }
 
-	    // somestimes bitcoind shoots to callback the same tx_id on 0 or 1st confirm twice!!! its even with same nanotime!
+	    // START sometimes bitcoind shoots to callback the same tx_id on 0 or 1st confirm twice!!! its even with same nanotime!
 	    // so we need to ignore if its repetitive one.
-	    if (
-		    self::$callback_transaction['txid'] == $tx_id and
-		    self::$callback_transaction['timestamp'] == $bitcoind_timestamp and
-		    self::$callback_transaction['confirms'] == $confirms
-	    ) {
+	    $this->load->driver('cache');
+	    $transactionCacheName = $tx_id.$bitcoind_timestamp.$confirms;
+	    $cachedTransaction = $this->cache->get($transactionCacheName);
+	    if ($cachedTransaction)
+	    {
 	        log_message('info', "Repetitive bitcoind shooting for tx id: $tx_id, timestamp: $bitcoind_timestamp and confirms: $confirms");
 		    return;
+	    } else
+	    {
+	        $this->cache->save($transactionCacheName, array('txid' => $tx_id, 'timestamp' => $bitcoind_timestamp, 'confirms' => $confirms));
 	    }
+	    // END of checking if its repetitive bitcoind shooting
 
 	    /******************* START of checking if its outgoing transaction *******************/
 	    if ($btc_amount < 0):
@@ -681,7 +683,7 @@ class Api extends CI_Controller {
     */
     public function receive() {
 
-        log_message('info', '====== RECEIVE STARTED ======');
+        log_message('info', '=== RECEIVE STARTED ===');
 
         /* the url structure is different, so different segments of URI */
         $method =           $this->uri->segment(2); // receive
@@ -696,7 +698,7 @@ class Api extends CI_Controller {
         $referrer   = $this->agent->referrer();
 
         $this->log_id = $this->log_call($method, '', $ipaddress, $full_query_str, $agent, $referrer, ''); // log it
-        log_message('info', '====== RECEIVE LOGGED A CALL ======');
+        log_message('info', '=== RECEIVE LOGGED A CALL ===');
 
         $method = $this->input->get('method');
         if ($method != 'create') {
@@ -718,7 +720,7 @@ class Api extends CI_Controller {
             }
         }
 
-        log_message('info', '====== RECEIVE METHOD AND PRIVATE INVOICING VALIDATION CHECKED ======');
+        log_message('info', '=== RECEIVE METHOD AND PRIVATE INVOICING VALIDATION CHECKED ===');
 
         $receiving_address  = $this->input->get('address');
         $receiving_address  = isset($receiving_address) == true ? $receiving_address : '';
@@ -752,7 +754,7 @@ class Api extends CI_Controller {
 
         $this->Address_model->save_invoice_address($input_address, $receiving_address, $invoice_amount, $label, $callback_url, $forward, $this->log_id); // save newly created address in invoice_adddresses table
 
-        log_message('info', '====== RECEIVE NEW ADDRESS GENERATED AND SAVED which is receiving address: '.$receiving_address.', input address'.$input_address.' ======');
+        log_message('info', '=== RECEIVE NEW ADDRESS GENERATED AND SAVED which is receiving address: '.$receiving_address.', input address'.$input_address.' ===');
 
         $response = array(
             'fee_percent' => 0,
@@ -767,12 +769,12 @@ class Api extends CI_Controller {
             $this->output
                 ->set_content_type(DEBUG_API == TRUE ? 'text/html' : 'application/json')
                 ->set_output($response);
-            log_message('info', '====== RECEIVE RETURNED RESPONSE ======');
+            log_message('info', '=== RECEIVE RETURNED RESPONSE ===');
         } else {
             echo $response;
         }
         $this->update_log_response_msg($this->log_id, $response);
-        log_message('info', '====== RECEIVE FINALLY UPDATED LOG WITH RESPONSE ======');
+        log_message('info', '=== RECEIVE FINALLY UPDATED LOG WITH RESPONSE ===');
     }
 
     public function test()
