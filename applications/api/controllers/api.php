@@ -434,12 +434,12 @@ class Api extends CI_Controller {
             echo nl2br($new)."\n";
         }
 
-        log_message('info', "Received $btc_amount bitcoins, tx id: $tx_id with timestamp $bitcoind_timestamp");
+        log_message('info', "Processed $btc_amount bitcoins, tx id: $tx_id with timestamp $bitcoind_timestamp");
 	    // START sometimes bitcoind shoots to callback the same tx_id on 0 or 1st confirm twice!!! its even with same nanotime!
 	    // so we need to ignore if its repetitive one.
-	    $this->load->driver('cache');
-	    $transactionCacheName = $tx_id.$bitcoind_timestamp.$confirms;
-	    $cachedTransaction = $this->cache->get($transactionCacheName);
+	    $this->load->driver('cache', array('adapter' => 'apc', 'backup' => 'file'));
+	    $transactionCacheName   = $tx_id.$bitcoind_timestamp.$confirms;
+	    $cachedTransaction      = $this->cache->get($transactionCacheName);
 	    if ($cachedTransaction)
 	    {
 	        log_message('info', "Repetitive bitcoind shooting for tx id: $tx_id, timestamp: $bitcoind_timestamp and confirms: $confirms");
