@@ -787,6 +787,62 @@ class Api extends CI_Controller {
 		log_message( 'info', '=== RECEIVE FINALLY UPDATED LOG WITH RESPONSE ===' );
 	}
 
+	public function get_transaction_confirmations()
+	{
+		if ( ! $this->is_authenticated() ) {
+			return;
+		}
+
+		$tx_id = $this->input->get( 'txid' );
+		if ( ! $tx_id ) {
+			$this->log_exception_response( "#get_transaction, no tx id: " . NO_TX_ID );
+			return;
+		}
+
+		try {
+			$tx_info = $this->jsonrpcclient->gettransaction( $tx_id );
+
+			//bind values to variables
+			$transaction_id = $tx_info["txid"];
+
+			$new = "Transaction hash: " . $transaction_id[1]
+			       . "\n amount: " . $tx_info["amount"]
+			       . "\n confirmations: " . $tx_info["confirmations"]
+			       . "\n blockhash: " . $tx_info["blockhash"]
+			       . "\n blockindex: " . $tx_info["blockindex"]
+			       . "\n blocktime: " . $tx_info["blocktime"]
+			       . "\n txid: " . $tx_info["txid"]
+			       . "\n time: " . $tx_info["time"]
+			       . "\n timereceived: " . $tx_info["timereceived"]
+			       . "\n account: " . $tx_info["details"][0]["account"]
+			       . "\n address: " . $tx_info["details"][0]["address"]
+			       . "\n category: " . $tx_info["details"][0]["category"]
+			       . "\n amount: " . $tx_info["details"][0]["amount"]
+			       . "\n";
+			if ( ( $this->input->get( 'debug' ) or $this->jsonrpc_debug == true ) ) {
+				echo nl2br( $new ) . "\n";
+			}
+			$response = null;
+			if ( RETURN_OUTPUTTYPE == "json" )
+			{
+				$response = json_encode( array( 'confirmations' => $tx_info["confirmations"] ) );
+				$this->output
+					->set_content_type( DEBUG_API == true ? 'text/html' : 'application/json' )
+					->set_output( $response );
+			}
+			else
+			{
+				$response = $tx_info["confirmations"];
+				echo $response;
+			}
+
+		} catch ( Exception $e ) {
+			$this->log_exception_response( "#validate_transaction, get transaction exception: " . $e->getMessage() );
+			return;
+		}
+		$this->update_log_response_msg( $this->log_id, $response );
+	}
+
 	public function test() {
 		log_message( 'error', 'Test writing to log file' );
 	}
