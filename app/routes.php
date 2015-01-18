@@ -1,7 +1,5 @@
 <?php
 Route::get('/', function()  {
-	$addressUser = Address::getAddress( 'xxxx' );
-//	dd($addressUser);
 	return View::make('hello');
 });
 Route::get('api/{guid}/balance',                array('as' => 'balance',                'uses' => 'ApiController@balance'));
