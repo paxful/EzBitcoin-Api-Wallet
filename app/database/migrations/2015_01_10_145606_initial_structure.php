@@ -11,6 +11,12 @@ class InitialStructure extends Migration {
      */
     public function up()
     {
+	    Schema::create('crypto_types', function($table) {
+		    $table->bigIncrements('id');
+		    $table->string('crypto_type', 12);
+		    $table->timestamps();
+	    });
+
         Schema::create('users', function($table) {
             $table->increments('id');
 	        $table->string('guid')->unique();
@@ -105,12 +111,6 @@ class InitialStructure extends Migration {
 		    $table->boolean('received')->default(false);
 		    $table->boolean('forward')->default(false);
 		    $table->bigInteger('received_amount')->default(0);
-		    $table->timestamps();
-	    });
-
-	    Schema::create('crypto_types', function($table) {
-		    $table->bigIncrements('id');
-		    $table->string('crypto_type', 12);
 		    $table->timestamps();
 	    });
     }
