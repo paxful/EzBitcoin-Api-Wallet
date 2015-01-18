@@ -25,7 +25,7 @@ class InitialStructure extends Migration {
 	        $table->string('name');
 	        $table->string('secret');
 	        $table->text('callback_url');
-	        $table->text('users_callback_url');
+	        $table->text('blocknotify_callback_url');
 	        $table->text('rpc_connection');
 	        $table->timestamps();
         });
