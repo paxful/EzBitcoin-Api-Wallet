@@ -63,7 +63,7 @@ class InitialStructure extends Migration {
 		    $table->bigIncrements('id');
 		    $table->integer('user_id');
 		    $table->foreign('user_id')->references('id')->on('users');
-		    $table->integer('crypto_type_id');
+		    $table->integer('crypto_type_id')->default(1);
 		    $table->foreign('crypto_type_id')->references('id')->on('crypto_types');
 		    $table->bigInteger('crypto_amount')->default(0);
 		    $table->string('tx_id', 100)->nullable();
@@ -76,7 +76,7 @@ class InitialStructure extends Migration {
 		    $table->increments('id');
 		    $table->integer('user_id');
 		    $table->foreign('user_id')->references('id')->on('users');
-		    $table->integer('crypto_type_id');
+		    $table->integer('crypto_type_id')->default(1);
 		    $table->foreign('crypto_type_id')->references('id')->on('crypto_types');
 		    $table->bigInteger('balance')->default(0);
 		    $table->bigInteger('total_received')->default(0);
@@ -87,7 +87,7 @@ class InitialStructure extends Migration {
 		    $table->bigIncrements('id');
 		    $table->integer('user_id');
 		    $table->foreign('user_id')->references('id')->on('users');
-		    $table->integer('crypto_type_id');
+		    $table->integer('crypto_type_id')->default(1);
 		    $table->foreign('crypto_type_id')->references('id')->on('crypto_types');
 		    $table->string('address', 48)->nullable()->unique()->index();
 		    $table->text('label')->nullable();
@@ -101,7 +101,7 @@ class InitialStructure extends Migration {
 		    $table->bigIncrements('id');
 		    $table->integer('user_id');
 		    $table->foreign('user_id')->references('id')->on('users');
-		    $table->integer('crypto_type_id');
+		    $table->integer('crypto_type_id')->default(1);
 		    $table->foreign('crypto_type_id')->references('id')->on('crypto_types');
 		    $table->string('address', 48)->nullable()->unique()->index();
 		    $table->string('destination_address', 48)->nullable();
