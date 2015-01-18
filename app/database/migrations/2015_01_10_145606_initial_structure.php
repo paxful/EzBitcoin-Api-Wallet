@@ -45,15 +45,15 @@ class InitialStructure extends Migration {
 		    $table->boolean('callback_status')->default(false);
 		    $table->text('callback_url')->nullable();
 		    $table->text('block_hash')->nullable();
-		    $table->integer('block_index')->default(0);
-		    $table->integer('block_time')->default(0);
+		    $table->integer('block_index')->nullable();
+		    $table->integer('block_time')->nullable();
 		    $table->integer('tx_time')->default(0);
 		    $table->integer('tx_timereceived')->default(0);
 		    $table->string('tx_category', 24)->nullable();
 		    $table->string('address_account', 100)->nullable();
 		    $table->bigInteger('balance')->default(0);
 		    $table->bigInteger('previous_balance')->nullable();
-		    $table->bigInteger('bitcoind_balance')->nullable();
+		    $table->decimal('bitcoind_balance')->nullable();
 		    $table->text('note')->nullable();
 		    $table->string('transaction_type', 25);
 		    $table->timestamps();

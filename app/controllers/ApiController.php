@@ -507,7 +507,7 @@ class ApiController extends BaseController {
 			$queryString = http_build_query([
 				'value'                     => $satoshi_amount,
 				'input_address'             => $invoice_address_model->address,
-				'confirms'                  => $confirms,
+				'confirmations'             => $confirms,
 				'transaction_hash'          => $forward_tx_id,
 				'input_transaction_hash'    => $tx_id,
 				'destination_address'       => $invoice_address_model->destination_address,
