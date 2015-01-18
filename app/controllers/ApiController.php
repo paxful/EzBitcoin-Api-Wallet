@@ -824,7 +824,7 @@ class ApiController extends BaseController {
 		$this->user = User::find($user_id);
 
 		// no point to add secret
-		$full_callback_url = $this->user->users_callback_url . '?blockhash=' . Input::get('blockhash') . '&host=' . gethostname();
+		$full_callback_url = $this->user->blocknotify_callback_url . '?blockhash=' . Input::get('blockhash') . '&host=' . gethostname();
 
 		Log::info( 'Sending callback to: ' . $full_callback_url );
 
