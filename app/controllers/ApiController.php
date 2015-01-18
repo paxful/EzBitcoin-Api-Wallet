@@ -1,5 +1,6 @@
 <?php
 
+use Helpers\DataParserInterface;
 use Helpers\JsonRPCClientInterface;
 
 class ApiController extends BaseController {
@@ -7,10 +8,12 @@ class ApiController extends BaseController {
 	protected $crypto_type_id = 1;
 	protected $user;
 	protected $bitcoin_core;
+	protected $dataParser;
 
-	public function __construct(JsonRPCClientInterface $bitcoin_core_client)
+	public function __construct(JsonRPCClientInterface $bitcoin_core_client, DataParserInterface $dataParser)
 	{
 		$this->bitcoin_core = $bitcoin_core_client;
+		$this->dataParser   = $dataParser;
 	}
 
 	/**
@@ -318,7 +321,7 @@ class ApiController extends BaseController {
 	 */
 	public function callback()
 	{
-		Log:info( '=== CALLBACK STARTED ===' );
+		Log::info('=== CALLBACK STARTED ===' );
 
 		/* the url structure is different, so different segments of URI */
 		if ( Input::get( 'cryptotype' ) ) {
@@ -516,7 +519,7 @@ class ApiController extends BaseController {
 
 			Log::info( 'Sending callback to: ' . $full_callback_url );
 
-			$app_response = file_get_contents( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
+			$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
 			Log::info( 'Received response from server: ' . $app_response );
 
@@ -669,11 +672,11 @@ class ApiController extends BaseController {
 			'type'                   => TX_API_USER,
 		]);
 
-		$full_callback_url = $this->user->callbackurl . '?'. $queryString;
+		$full_callback_url = $this->user->callback_url . '?'. $queryString;
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $this->user->secret; // don't include secret in a log
 		Log::info( 'Sending callback to: ' . $full_callback_url );
 
-		$app_response = file_get_contents( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
+		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 		Log::info( 'Received response from server: ' . $app_response );
 
 		$callback_status = null;
@@ -700,7 +703,7 @@ class ApiController extends BaseController {
 		return Response::json($response);
 	}
 
-	/* example.com/api/receive?method=create&address=xxx&callback=https://callbackurl.com&label=xxx&forward=1&userid=1
+	/* example.com/api/receive?method=create&address=xxx&callback=https://callback_url.com&label=xxx&forward=1&userid=1
 	/ if forward = 0, then don't forward to address. label needed just in this case, when forward 0 and it has a role of note */
 	public function receive()
 	{
@@ -826,7 +829,7 @@ class ApiController extends BaseController {
 		Log::info( 'Sending callback to: ' . $full_callback_url );
 
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $this->user->secret; // don't include secret in a log
-		$app_response                  = file_get_contents( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
+		$app_response                  = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
 		Log::info( 'Received response from server: ' . $app_response );
 		Log::info( '=== BLOCK NOTIFY CALLBACK FINISHED for user: '.$this->user->email.' ===' );

@@ -8,7 +8,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
 		Artisan::call('migrate');
 		Artisan::call('db:seed');
 		Mail::pretend(true);
+		Route::enableFilters();
 		App::bind('Helpers\JsonRPCClientInterface', 'Helpers\DummyJsonRPCClient');
+		App::bind('Helpers\DataParserInterface',    'Helpers\DummyDataParser');
 	}
 
 	public function tearDown()

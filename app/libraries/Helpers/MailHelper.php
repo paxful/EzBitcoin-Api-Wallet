@@ -1,5 +1,7 @@
 <?php namespace Helpers;
 
+use Illuminate\Support\Facades\Mail;
+
 class MailHelper
 {
 	public static function sendEmailPlain($data)

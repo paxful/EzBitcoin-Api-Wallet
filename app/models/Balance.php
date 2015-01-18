@@ -16,6 +16,7 @@ class Balance extends Eloquent {
 			$user_balance->total_received = $total_received;
 		}
 		$user_balance->save();
+		return $user_balance;
 	}
 
 	public function user()

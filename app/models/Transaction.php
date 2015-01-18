@@ -9,7 +9,7 @@ class Transaction extends Eloquent {
 		'note', 'transaction_type'];
 
 	public static function getTransactionByTxId($txId) {
-		return self::where('tx_id', $txId);
+		return self::where('tx_id', $txId)->first();
 	}
 
 	public static function updateTxConfirmation($transactionModel, $confirms, $block_hash, $block_index, $block_index)
@@ -18,6 +18,7 @@ class Transaction extends Eloquent {
 		$transactionModel->block_hash = $block_hash;
 		$transactionModel->block_index = $block_index;
 		$transactionModel->save();
+		return $transactionModel;
 	}
 
 	public static function insertNewTransaction($data) {
@@ -29,6 +30,7 @@ class Transaction extends Eloquent {
 		$transaction_model->callback_url = $full_callback_url;
 		$transaction_model->callback_status = $callback_status;
 		$transaction_model->save();
+		return $transaction_model;
 	}
 
 	public function user()

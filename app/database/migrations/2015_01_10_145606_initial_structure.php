@@ -46,8 +46,8 @@ class InitialStructure extends Migration {
 		    $table->string('tx_category', 24)->nullable();
 		    $table->string('address_account', 100)->nullable();
 		    $table->bigInteger('balance')->default(0);
-		    $table->bigInteger('previous_balance')->default(0);
-		    $table->bigInteger('bitcoind_balance')->default(0);
+		    $table->bigInteger('previous_balance')->nullable();
+		    $table->bigInteger('bitcoind_balance')->nullable();
 		    $table->text('note')->nullable();
 		    $table->string('transaction_type', 25);
 		    $table->timestamps();

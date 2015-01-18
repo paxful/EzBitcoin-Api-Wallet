@@ -91,9 +91,52 @@ class AllTests extends TestCase {
 
 	}
 
-	public function testCallback()
+	public function testStaticAddressCallback()
 	{
-		$response = $this->call('GET', 'api/callback?cryptotype=1&secret=xx&txid=xx&userid=1&time=xxx');
+
+		Address::insertNewAddress([
+			'user_id'        => 1,
+			'address'        => 'mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr',
+			'label'          => 'xxx',
+			'crypto_type_id' => 1
+		]);
+
+		$queryString = http_build_query([
+			'cryptotype'    => 1,
+			'secret'        => 'testbtc123',
+			'txid'          => '151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160',
+			'userid'        => 1,
+			'time'          => 'xxx',
+		]);
+		$this->call('GET', 'api/callback?'.$queryString);
+
+	}
+
+	public function testInvoiceAddressCallback()
+	{
+		InvoiceAddress::saveInvoiceAddress([
+			'address'               => 'mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr',
+			'destination_address'   => null,
+			'invoice_amount'        => 0,
+			'label'                 => 'invoice',
+			'callback_url'          => 'http://dummy.url.com',
+			'forward'               => 0,
+			'crypto_type_id'        => 1,
+			'user_id'               => 1,
+		]);
+
+		$queryString = http_build_query([
+			'cryptotype'    => 1,
+			'secret'        => 'testbtc123',
+			'txid'          => '151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160',
+			'userid'        => 1,
+			'time'          => 'xxx',
+		]);
+
+		$response = $this->call('GET', 'api/callback?'.$queryString);
+		$jsonResult = json_decode($response->getContent());
+		$this->assertEquals('mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr', $jsonResult->address);
+		$this->assertEquals('*ok*', $jsonResult->response);
 
 	}
 
