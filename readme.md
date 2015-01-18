@@ -54,4 +54,3 @@ Please join us in making this solve even more problems for people
 * [Reddit thread](http://reddit.com)
 * Did you like the project? Donations are welcome 1NDQEjqmdiYG8VQ4u6Sd8oAyGrNtgAvUd8
 
-
