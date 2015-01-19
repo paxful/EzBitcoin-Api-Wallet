@@ -110,8 +110,8 @@ update composer
 	sudo composer self-update
 	sudo composer update
 
-	if you get an error about mcrypt then install it
-	--
+	#if you get an error about mcrypt then install it
+
 	apt-get install php5-mcrypt
 		#if it still isn't found by composer then you need to link to the right mcrypt.so file
 		sudo updatedb 
@@ -128,8 +128,7 @@ update composer
 		service php5-fpm restart
 
 if error is reported about the DEBUG file then create a .env.php file in the root
---
-sudo pico .env.php
+	sudo pico .env.php
 
 add the below settings
 --
@@ -150,21 +149,18 @@ add the below settings
 	);
 
 rerun composer update
---
-sudo composer update
+	sudo composer update
 
 in your application create a secure guid (username) password and secret
 --
 
 run create database
---
-sudo php artisan migrate
+	sudo php artisan migrate
 
 seed tables with right values
---
-sudo php artisan db:seed
+	sudo php artisan db:seed
 
-	if you mess up and need to redo the sequence for the tables, after a botched export import from the old api server then
+if you mess up and need to redo the sequence for the tables, after a botched export import from the old api server then
 	
 	su postgres
 	psql
@@ -184,14 +180,11 @@ sudo php artisan db:seed
 	#rpc_connection = http://nikola:DU54293EBJV6JB@127.0.0.1:8332
 
 configure nginx to add site
+	sudo touch /usr/local/nginx/sites-available/ezbitapi
+	sudo pico /usr/local/nginx/sites-available/ezbitapi
 
-sudo touch /usr/local/nginx/sites-available/ezbitapi
 
-sudo pico /usr/local/nginx/sites-available/ezbitapi
-
-	configure site
-	--
-	
+configure site
 	server {
 			listen   81;
 			root /home/user/ezbitapi/public;
@@ -224,11 +217,9 @@ sudo pico /usr/local/nginx/sites-available/ezbitapi
 
 make a new sym link for each site
 --
-sudo ln -s /usr/local/nginx/sites-available/ezbitapi /usr/local/nginx/sites-enabled/ezbitapi
-
-sudo service nginx restart 
-
-service php5-fpm restart
+	sudo ln -s /usr/local/nginx/sites-available/ezbitapi /usr/local/nginx/sites-enabled/ezbitapi
+	sudo service nginx restart 
+	service php5-fpm restart
 
 add firewall rule to add access to apiserver from ip /port if necessary
 --
@@ -240,9 +231,8 @@ add firewall rule to add access to apiserver from ip /port if necessary
 
 
 update bitcoin core to fire callback to the apisevrer via wallet notify
-
-	add line to bitcoin.conf
-	
+--
+add line to bitcoin.conf
 	walletnotify=/home/user/.bitcoin/walletnotify.sh %s
 	
     	rpcallowip=*.*.*.* is now phased out so use cidr instead
