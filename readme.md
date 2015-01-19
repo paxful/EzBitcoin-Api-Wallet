@@ -45,9 +45,8 @@ Our goal with this is to introduce bitcoin developement to a whole new class of 
 	
 update ubuntu 
 --
-sudo apt-get update
-
-sudo apt-get upgrade
+	sudo apt-get update
+	sudo apt-get upgrade
 
 install nginx 1.7
 --
@@ -96,25 +95,20 @@ create a postgres Database named ezbitapi and assign a new username and password
 		 #save file
 
 get git server files
---
-git clone https://github.com/easybitz/EzBitcoin-Api-Wallet
-
-mv EzBitcoin-Api-Wallet ezbitapi
+	git clone https://github.com/easybitz/EzBitcoin-Api-Wallet
+	mv EzBitcoin-Api-Wallet ezbitapi
 
 change ownership of all files to running as user and nginx user
---
-chown -R runningasuser:www-data ezbitapi
+	chown -R runningasuser:www-data ezbitapi
 
 give full permissions to storage folder for logs
---
-sudo chmod -R 777 app/storage
+	sudo chmod -R 777 app/storage
 
 
 update composer
 --
-sudo composer self-update
-
-sudo composer update
+	sudo composer self-update
+	sudo composer update
 
 	if you get an error about mcrypt then install it
 	--
