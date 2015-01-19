@@ -53,7 +53,8 @@ install nginx 1.7
 --
 https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
 
-install php 5.4 + php-fpm  
+install php 5.4 + php-fpm
+--
 
 install postgres 9.4 *be sure to set localization to English and UTF8.
 --
@@ -134,7 +135,7 @@ sudo composer update
 
 if error is reported about the DEBUG file then create a .env.php file in the root
 --
-pico .env.php
+sudo pico .env.php
 
 add the below settings
 --
@@ -170,7 +171,7 @@ seed tables with right values
 sudo php artisan db:seed
 
 	if you mess up and need to redo the sequence for the tables, after a botched export import from the old api server then
-	--
+	
 	su postgres
 	psql
 	\connect ezbitapi
@@ -189,7 +190,7 @@ sudo php artisan db:seed
 	#rpc_connection = http://nikola:DU54293EBJV6JB@127.0.0.1:8332
 
 configure nginx to add site
---
+
 sudo touch /usr/local/nginx/sites-available/ezbitapi
 
 sudo pico /usr/local/nginx/sites-available/ezbitapi
