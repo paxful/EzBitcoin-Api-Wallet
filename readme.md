@@ -246,9 +246,9 @@ add firewall rule to add access to apiserver from ip /port if necessary
 
 
 update bitcoin core to fire callback to the apisevrer via wallet notify
---
+
 	add line to bitcoin.conf
-	--
+	
 	walletnotify=/home/user/.bitcoin/walletnotify.sh %s
 	
     	rpcallowip=*.*.*.* is now phased out so use cidr instead
@@ -256,12 +256,12 @@ update bitcoin core to fire callback to the apisevrer via wallet notify
       	rpcallowip=192.168.0.0.1 #ip of app server that will call apiserver
 
 	restart bitcoin core
-	--
+	
 	bitcoin-cli stop
 	bitcoind
 	
 	create walletnotify.sh
-	--
+	
 	sudo pico walletnotify.sh
 	
     #!/bin/bash
