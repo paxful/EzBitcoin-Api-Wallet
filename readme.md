@@ -44,25 +44,33 @@ Our goal with this is to introduce bitcoin developement to a whole new class of 
 
 	
 update ubuntu 
------
+--
 sudo apt-get update
+
 sudo apt-get upgrade
 
-install nginx 1.7 - #https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
+install nginx 1.7
+--
+https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
 
 install php 5.4 + php-fpm  
 
-install postgres 9.4 *be sure to set localization to English and UTF8. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
+install postgres 9.4 *be sure to set localization to English and UTF8.
+--
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
 
 
-install composer - https://getcomposer.org/download/
+install composer
+--
+https://getcomposer.org/download/
 
-
+Shortcut
+--
 or you can save yourself immense time and use laravel forge for $ a month https://forge.laravel.com
 
 
 create a postgres Database named ezbitapi and assign a new username and password. use whatever gui you like pgadmin, navicat razorsql etc..
------
+--
 
 	#if you get a LC_CTYPE error when specify UTF8 then you installed postgres with the wrong locale
 	#utf8 is not necessary but you should always change the locale before installing
@@ -87,24 +95,28 @@ create a postgres Database named ezbitapi and assign a new username and password
 		 #save file
 
 get git server files
-----
+--
 git clone https://github.com/easybitz/EzBitcoin-Api-Wallet
 
 mv EzBitcoin-Api-Wallet ezbitapi
 
-#change ownership of all files to running as user and nginx user
+change ownership of all files to running as user and nginx user
+--
 chown -R runningasuser:www-data ezbitapi
 
-#give full permissions to storage folder for logs
+give full permissions to storage folder for logs
+--
 sudo chmod -R 777 app/storage
 
-#update composer
 
+update composer
+--
 sudo composer self-update
 
 sudo composer update
 
-	#if you get an error about mcrypt then install it
+	if you get an error about mcrypt then install it
+	--
 	apt-get install php5-mcrypt
 		#if it still isn't found by composer then you need to link to the right mcrypt.so file
 		sudo updatedb 
@@ -120,9 +132,12 @@ sudo composer update
 		sudo service nginx restart���
 		service php5-fpm restart
 
-#if error is reported about the DEBUG file then create a .env.php file in the root
+if error is reported about the DEBUG file then create a .env.php file in the root
+--
 pico .env.php
-#add the below settings
+
+add the below settings
+--
 	<?php
 	return array(
 	 'DEBUG' => true, //false for production
@@ -139,17 +154,23 @@ pico .env.php
 	 'DATABASE_PASS'     => 'passwordgoeshere',
 	);
 
-#rerun composer update
+rerun composer update
+--
 sudo composer update
 
-#in your application create a secure guid (username) password and secret
+in your application create a secure guid (username) password and secret
+--
 
-#run create database
+run create database
+--
 sudo php artisan migrate
-#seed tables with right values
+
+seed tables with right values
+--
 sudo php artisan db:seed
 
-	#if you mess up and need to redo the sequence for the tables, after a botched export import from the old api server then
+	if you mess up and need to redo the sequence for the tables, after a botched export import from the old api server then
+	--
 	su postgres
 	psql
 	\connect ezbitapi
@@ -167,10 +188,14 @@ sudo php artisan db:seed
 	#blocknotifyurl = "address to handle blocknotify "
 	#rpc_connection = http://nikola:DU54293EBJV6JB@127.0.0.1:8332
 
-#configure nginx to add site
+configure nginx to add site
+--
 sudo touch /usr/local/nginx/sites-available/ezbitapi
+
 sudo pico /usr/local/nginx/sites-available/ezbitapi
-	#configure site
+
+	configure site
+	--
 	
 	server {
 			listen   81;
@@ -202,12 +227,16 @@ sudo pico /usr/local/nginx/sites-available/ezbitapi
 	}
 
 
-# make a new sym link for each site
+make a new sym link for each site
+--
 sudo ln -s /usr/local/nginx/sites-available/ezbitapi /usr/local/nginx/sites-enabled/ezbitapi
+
 sudo service nginx restart 
+
 service php5-fpm restart
 
-#add firewall rule to add access to apiserver from ip /port if necessary
+add firewall rule to add access to apiserver from ip /port if necessary
+--
 	ufw status numbered #get status
 	ufw delete [number] #drop rules
 	ufw allow from 192.168.0.1 to any port 80 	#allow by ip and port
@@ -215,19 +244,25 @@ service php5-fpm restart
 	ufw reload 									#restart firewall to make new rules take affects
 
 
-# update bitcoin core to fire callback to the apisevrer via wallet notify
-	#add line to bitcoin.conf
+update bitcoin core to fire callback to the apisevrer via wallet notify
+--
+	add line to bitcoin.conf
+	--
 	walletnotify=/home/user/.bitcoin/walletnotify.sh %s
-    #rpcallowip=*.*.*.* is now phased out so use cidr instead
-      rpcallowip=0.0.0.0/0 #allow all ips NOT SECURE, use for testing only
-      rpcallowip=192.168.0.0.1 #ip of app server that will call apiserver
+	
+    	rpcallowip=*.*.*.* is now phased out so use cidr instead
+      	rpcallowip=0.0.0.0/0 #allow all ips NOT SECURE, use for testing only
+      	rpcallowip=192.168.0.0.1 #ip of app server that will call apiserver
 
-	#restart bitcoin core
+	restart bitcoin core
+	--
 	bitcoin-cli stop
 	bitcoind
 	
-	#create walletnotify.sh
+	create walletnotify.sh
+	--
 	sudo pico walletnotify.sh
+	
     #!/bin/bash
     F=/home/cryptoheat/walletnotify_btc_transaction_log
     D=`date +"%Y%m%d%H%M%S"`
