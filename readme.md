@@ -43,20 +43,26 @@ Our goal with this is to introduce bitcoin developement to a whole new class of 
 * <a href="install/readme_secure_bitcoind.md">How to Secure your BitcoinD server step by step tutorial</a>
 
 	
-#update ubuntu 
+update ubuntu 
+-----
 sudo apt-get update
 sudo apt-get upgrade
 
-#install nginx 1.7 - #https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
-#install php 5.4 + php-fpm  
-#install postgres 9.4 *be sure to set localization to English and UTF8. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
+install nginx 1.7 - #https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-on-ubuntu-12-04
 
-#install composer - https://getcomposer.org/download/
-#or you can save yourself immense time and use laravel forge for $ a month https://forge.laravel.com
+install php 5.4 + php-fpm  
+
+install postgres 9.4 *be sure to set localization to English and UTF8. https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-14-04
 
 
-#create a postgres Database named ezbitapi and assign a new username and password. 
-#use whatever gui you like pgadmin, navicat razorsql etc..
+install composer - https://getcomposer.org/download/
+
+
+or you can save yourself immense time and use laravel forge for $ a month https://forge.laravel.com
+
+
+create a postgres Database named ezbitapi and assign a new username and password. use whatever gui you like pgadmin, navicat razorsql etc..
+-----
 
 	#if you get a LC_CTYPE error when specify UTF8 then you installed postgres with the wrong locale
 	#utf8 is not necessary but you should always change the locale before installing
@@ -80,7 +86,8 @@ sudo apt-get upgrade
 		 LC_ALL=en_US.UTF-8
 		 #save file
 
-#get git server files
+get git server files
+----
 git clone https://github.com/easybitz/EzBitcoin-Api-Wallet
 
 mv EzBitcoin-Api-Wallet ezbitapi
