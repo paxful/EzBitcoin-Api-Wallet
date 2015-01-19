@@ -234,25 +234,22 @@ update bitcoin core to fire callback to the apisevrer via wallet notify
 --
 add line to bitcoin.conf
 	walletnotify=/home/user/.bitcoin/walletnotify.sh %s
-	
-    	rpcallowip=*.*.*.* is now phased out so use cidr instead
-      	rpcallowip=0.0.0.0/0 #allow all ips NOT SECURE, use for testing only
-      	rpcallowip=192.168.0.0.1 #ip of app server that will call apiserver
+	    	rpcallowip=*.*.*.* is now phased out so use cidr instead
+	      	rpcallowip=0.0.0.0/0 #allow all ips NOT SECURE, use for testing only
+	      	rpcallowip=192.168.0.0.1 #ip of app server that will call apiserver
 
-	restart bitcoin core
-	
+restart bitcoin core
 	bitcoin-cli stop
 	bitcoind
 	
-	create walletnotify.sh
-	
+create walletnotify.sh
 	sudo pico walletnotify.sh
 	
-    #!/bin/bash
-    F=/home/cryptoheat/walletnotify_btc_transaction_log
-    D=`date +"%Y%m%d%H%M%S"`
-    echo ${D} - ${1} >> ${F}
-    curl 'http://127.0.0.1/api/callback?secret=secretgoeshere&txid='${1}
+		#!/bin/bash
+		F=/home/cryptoheat/walletnotify_btc_transaction_log
+		D=`date +"%Y%m%d%H%M%S"`
+		echo ${D} - ${1} >> ${F}
+		curl 'http://127.0.0.1/api/callback?secret=secretgoeshere&txid='${1}
 	
 	  #http://127.0.0.1/api/callback is the url of your api server process route. all incoming btc sends will go to this address, be added to the api server log tables and then a callback will be fired to your web/app server process transaction url.
 
