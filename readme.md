@@ -1,9 +1,9 @@
 
-EzBit Api
+EzBit Api Server
 ====================================
 Bitcoin RESTful API JSONRPC Wrapper - PHP
 -----
-Made to be the simplest, fastest way to get your own bitcoin wallet server up and running. Optimized for simplicity and speed towards a MVP. We include a sample wallet web app as a sample application.
+Made to be the simplest, fastest way to get your own bitcoin wallet server up and running. Optimized for simplicity and speed towards a MVP. This more than a RPC wrapper it is a full database complete with logs and it does the most vital task of processing incoming transactions which befuddles many who first try and make a bitcoin service. We are using three of this API servers in our systems and it works beautifully and simply.
 
 
 Features
@@ -16,26 +16,24 @@ Features
 
 Security
 -----
-* Encrypted passwords
 * Optional 256 sha hashed api calls
-* Database ORM prepared statements and auto escaping via code igniter
-* Reject security scanner requests ex. acutex etc.. The first thing Russian and Chinese hackers do is scan with these to find vulnerabilities
+* Database ORM prepared statements and auto escaping via laravel eloquent model
 * Full logging of all Api requests and all transactions
+* TODO: race conditions prevention via php module ...
 
 
 Requirements
 -----
 * Hardware: linux server with at least 4 gigs of ram. 
-* Ubuntu 12.04 LTS preferred - (dedicated over virtual is preferred to avoid shared memory attacks)
+* Ubuntu 14 LTS preferred - (dedicated over virtual is preferred to avoid shared memory attacks)
 * Laravel PHP framework (comes included)
 * Composer 
 * Nginx 1.7 or later
 * Postgres 9.3
-* PHP 5.4 or later
-* Mcrypt module for PHP
+* PHP 5.4 or later + php-fpm +  Mcrypt module for PHP
 * bare minimum linux command line skills. step by step guide included :)
 
-*Update this server now uses Laravel, a much more robust framework than Codeigniter.
+* Update this server now uses Laravel, a much more robust framework than Codeigniter.
 
 Install Guide
 -----
@@ -205,8 +203,8 @@ service php5-fpm restart
 #add firewall rule to add access to apiserver from ip /port if necessary
 	ufw status numbered #get status
 	ufw delete [number] #drop rules
-	ufw allow from 192.168.0.1 to any port 22 	#allow by ip and port
-	ufw allow 8081 								#ufw allow from anywhere to port
+	ufw allow from 192.168.0.1 to any port 80 	#allow by ip and port
+	ufw allow 80 								#ufw allow from anywhere to port
 	ufw reload 									#restart firewall to make new rules take affects
 
 
