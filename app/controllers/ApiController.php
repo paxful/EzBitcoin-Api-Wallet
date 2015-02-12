@@ -169,7 +169,7 @@ class ApiController extends BaseController {
 
 			$label = Input::get( 'label' );
 			if ( ! $label ) {
-				$label = '';
+				$label = null;
 			}
 
 			Address::insertNewAddress([
