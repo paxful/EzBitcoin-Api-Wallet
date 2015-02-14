@@ -16,6 +16,10 @@ class ApiController extends BaseController {
 		$this->dataParser   = $dataParser;
 	}
 
+	public function getIndex() {
+		return View::make('hello');
+	}
+
 	/**
 	 * example.com/api/<guid>/balance?password=xxx&debug=1
 	 */

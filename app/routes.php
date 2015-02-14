@@ -2,6 +2,7 @@
 Route::get('/', function()  {
 	return View::make('hello');
 });
+Route::get('user', 'ApiController@getIndex');
 Route::get('api/{guid}/balance',                array('as' => 'balance',                'uses' => 'ApiController@balance'));
 Route::get('api/{guid}/address-balance',        array('as' => 'addressBalance',         'uses' => 'ApiController@addressBalance')); // not implemented
 Route::get('api/{guid}/validate-transaction',   array('as' => 'validateTransaction',    'uses' => 'ApiController@validateTransaction'));
