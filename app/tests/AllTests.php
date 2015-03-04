@@ -54,7 +54,7 @@ class AllTests extends TestCase {
 		$this->assertEquals(1, $addressModel->crypto_type_id);
 		$this->assertEquals(0, $addressModel->balance);
 		$this->assertEquals('xxx', $addressModel->label);
-		$this->assertEquals('151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160', $addressModel->address);
+		$this->assertEquals('mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr', $addressModel->address);
 	}
 
 	/**
