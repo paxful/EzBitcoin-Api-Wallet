@@ -606,7 +606,7 @@ class ApiController extends BaseController {
 				Log::info( 'Updated address ' . $address_model->address . ', added amount: ' . $satoshi_amount );
 
 				/* update API user balance */
-				$old_balance = $this->user->balance;
+				$old_balance = $this->user->balances()->first()->balance;
 				$new_balance = bcadd( $this->user->balance, $satoshi_amount );
 				$total_received   = bcadd( $this->user->total_received, $satoshi_amount );
 				$balance_model = Balance::getBalance($this->user->id, $this->crypto_type_id);
