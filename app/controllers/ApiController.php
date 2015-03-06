@@ -452,7 +452,7 @@ class ApiController extends BaseController {
 					'address_account'   => $account_name,
 					'balance'           => bcadd($initialUserBalance, $satoshi_amount), // new API user balance
 					'previous_balance'  => $initialUserBalance->balance, // API user balance before that transaction, because user balance has not been updated yet
-					'bitcoind_balance'  => $this->bitcoin_core->getbalance(), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
+					'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 				];
 				$transaction_model = Transaction::insertNewTransaction($invoice_tx_data);
 
@@ -592,7 +592,7 @@ class ApiController extends BaseController {
 					'address_account'   => $account_name,
 					'balance'           => $new_address_balance,
 					'previous_balance'  => $address_model->balance,
-					'bitcoind_balance'  => $this->bitcoin_core->getbalance(), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
+					'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 				];
 
 				// insert new transaction
@@ -652,7 +652,7 @@ class ApiController extends BaseController {
 				'note'              => TX_UNREGISTERED_ADDRESS,
 				'balance'           => bcadd($initialUserBalance, $satoshi_amount), // new API user balance
 				'previous_balance'  => $initialUserBalance->balance, // API user balance before that transaction, because user balance has not been updated yet
-				'bitcoind_balance'  => $this->bitcoin_core->getbalance(), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
+				'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 			];
 
 			// insert new transaction anyway
