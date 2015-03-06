@@ -807,6 +807,7 @@ class ApiController extends BaseController {
 	public function blocknotify()
 	{
 		Log::info( '=== BLOCK NOTIFY CALLBACK STARTED ===' );
+		Log::info('User id: '.Input::get('userid').', block hash: '.Input::get('blockhash'));
 
 		$ip_address = Request::ip();
 
@@ -837,7 +838,6 @@ class ApiController extends BaseController {
 		$app_response                  = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
 		Log::info( 'Received response from server: ' . $app_response );
-		Log::info( '=== BLOCK NOTIFY CALLBACK FINISHED for user: '.$this->user->email.' ===' );
 
 		return Response::json('ok :)');
 	}
