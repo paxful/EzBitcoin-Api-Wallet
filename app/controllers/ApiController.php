@@ -326,6 +326,7 @@ class ApiController extends BaseController {
 	public function callback()
 	{
 		Log::info('=== CALLBACK STARTED ===' );
+		Log::info('User id: '.Input::get('userid').', tx hash: '.Input::get('txid'));
 
 		/* the url structure is different, so different segments of URI */
 		if ( Input::get( 'cryptotype' ) ) {
