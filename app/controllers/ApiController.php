@@ -86,6 +86,7 @@ class ApiController extends BaseController {
 			//bind values to variables
 			$transaction_id = $tx_info["txid"];
 
+			if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
 			$new = "Transaction hash: " . $transaction_id[1]
 			       . "\n amount: " . $tx_info["amount"]
 			       . "\n confirmations: " . $tx_info["confirmations"]
@@ -100,7 +101,6 @@ class ApiController extends BaseController {
 			       . "\n category: " . $tx_info["details"][0]["category"]
 			       . "\n amount: " . $tx_info["details"][0]["amount"]
 			       . "\n";
-			if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
 				echo nl2br( $new ) . "\n";
 			}
 			return Response::json( ['is_valid' => true, 'tx_id' => $tx_id] );
@@ -211,6 +211,7 @@ class ApiController extends BaseController {
 			//bind values to variables
 			$transaction_id = $tx_info["txid"];
 
+			if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
 			$new = "Transaction hash: " . $transaction_id[1]
 			       . "\n amount: " . $tx_info["amount"]
 			       . "\n confirmations: " . $tx_info["confirmations"]
@@ -225,7 +226,6 @@ class ApiController extends BaseController {
 			       . "\n category: " . $tx_info["details"][0]["category"]
 			       . "\n amount: " . $tx_info["details"][0]["amount"]
 			       . "\n";
-			if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
 				echo nl2br( $new ) . "\n";
 			}
 
@@ -384,6 +384,7 @@ class ApiController extends BaseController {
 		$block_index   = isset( $tx_info['blockindex'] ) ? $tx_info['blockindex'] : null;
 		$block_time    = isset( $tx_info['blocktime'] ) ? $tx_info['blocktime'] : null;
 
+		if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
 		$new = "Transaction hash: " . $tx_id
 		       . "\n amount: " . $tx_info['details'][0]["amount"]
 		       . "\n confirmations: " . $tx_info["confirmations"]
@@ -397,7 +398,6 @@ class ApiController extends BaseController {
 		       . "\n address: " . $tx_info["details"][0]["address"]
 		       . "\n category: " . $tx_info["details"][0]["category"]
 		       . "\n amount: " . $tx_info["details"][0]["amount"];
-		if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
 			echo nl2br( $new ) . "\n";
 		}
 
