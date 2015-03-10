@@ -17,7 +17,7 @@ class AddNumTransactions extends Migration {
 			$table->integer('num_transactions')->default(0);
 		});
 
-		Schema::create('transactions', function($table) {
+		Schema::table('transactions', function($table) {
 			$table->bigInteger('user_balance')->default(0);
 		});
 	}
