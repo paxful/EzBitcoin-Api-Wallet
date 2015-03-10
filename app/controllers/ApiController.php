@@ -187,8 +187,6 @@ class ApiController extends BaseController {
 			return Response::json( ['error' => '#newAddress: get new address exception: ' . $e->getMessage()] );
 		}
 
-		Log::info( "Created new address $new_wallet_address for user: " . $this->user->email );
-
 		return Response::json( ['address' => $new_wallet_address, 'label' => $label] );
 	}
 
@@ -254,7 +252,7 @@ class ApiController extends BaseController {
 			$note = '';
 		}
 
-		Log::info( "=== Starting payment to $to_address, note: $note, amount: " . self::satoshiToBtc( $amount ) . ' ===' );
+		Log::info( "=== PAYMENT to $to_address, note: $note, amount: " . self::satoshiToBtc( $amount ) );
 
 		if ( empty( $to_address ) or empty( $amount ) ) {
 			Log::error( '#payment: ' . ADDRESS_AMOUNT_NOT_SPECIFIED );
@@ -267,22 +265,22 @@ class ApiController extends BaseController {
 			return Response::json( ['error' => '#payment: ' . INVALID_ADDRESS] );
 		}
 
-		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
+		DB::beginTransaction(); // begin DB transaction
 
-		Log::info( 'User initial balance: ' . self::satoshiToBtc( $user_balance->balance ) . ' bitcoins' );
+		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
 
 		if ( $user_balance->balance < $amount ) {
 			Log::error( '#payment: ' . NO_FUNDS );
 			return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
 		}
 
+		$amount = abs($amount); // make it sure its positive
+
 		$new_balance = bcsub( $user_balance->balance, $amount );
 
-		Log::info( 'User new balance: ' . self::satoshiToBtc( $new_balance ) . ' bitcoins' );
+		Log::info('User initial balance: ' . self::satoshiToBtc( $user_balance->balance ) . ' BTC, new balance: ' . self::satoshiToBtc( $new_balance ));
 
-		DB::beginTransaction(); // begin DB transaction
-
-		Balance::updateUserBalance($user_balance, $new_balance);
+		Balance::setNewUserBalance($user_balance, $new_balance);
 
 		$bitcoin_amount = self::satoshiToBtc( $amount ); // return float
 
@@ -311,8 +309,6 @@ class ApiController extends BaseController {
 		}
 		DB::commit();
 
-		Log::info( "=== Sending to  $to_address, amount: " . self::satoshiToBtc( $amount ) . ' completed ===' );
-
 		$message  = "Sent $bitcoin_amount, crypto type id: " . $this->crypto_type_id . " to $to_address";
 		return Response::json( ['message' => $message, 'tx_hash' => $tx_id] );
 	}
@@ -325,8 +321,7 @@ class ApiController extends BaseController {
 	 */
 	public function callback()
 	{
-		Log::info('=== CALLBACK STARTED ===' );
-		Log::info('User id: '.Input::get('userid').', tx hash: '.Input::get('txid'));
+		Log::info('=== CALLBACK. ' . 'User id: '.Input::get('userid').', tx hash: '.Input::get('txid'));
 
 		/* the url structure is different, so different segments of URI */
 		if ( Input::get( 'cryptotype' ) ) {
@@ -357,6 +352,7 @@ class ApiController extends BaseController {
 		$user_id = Input::get('userid');
 		if ( ! $user_id ) {
 			// TODO daaaaamn
+			// return here with error
 		}
 		$this->user = User::find($user_id);
 
@@ -401,7 +397,7 @@ class ApiController extends BaseController {
 			echo nl2br( $new ) . "\n";
 		}
 
-		Log::info( "Starting to process $btc_amount bitcoins, tx id: $tx_id with timestamp $bitcoind_timestamp" );
+		Log::info( "Address $to_address, amount (BTC): $btc_amount, confirms: $confirms received transaction id $tx_id" );
 
 		/******************* START of checking if its outgoing transaction *******************/
 		if ( $btc_amount < 0 )
@@ -415,7 +411,6 @@ class ApiController extends BaseController {
 		$transaction_model = Transaction::getTransactionByTxId( $tx_id );
 		$satoshi_amount    = bcmul( $btc_amount, SATOSHIS_FRACTION );
 
-		Log::info( "Address $to_address, amount (BTC): $btc_amount, amount (satoshi): $satoshi_amount, confirms: $confirms received transaction id $tx_id" );
 
 		$HOST_NAME = gethostname();
 
@@ -451,14 +446,17 @@ class ApiController extends BaseController {
 					'tx_timereceived'   => $time_received,
 					'tx_category'       => $category,
 					'address_account'   => $account_name,
-					'balance'           => bcadd($initialUserBalance, $satoshi_amount), // new API user balance
-					'previous_balance'  => $initialUserBalance->balance, // API user balance before that transaction, because user balance has not been updated yet
+					'user_balance'      => bcadd($initialUserBalance->balance, $satoshi_amount), // new API user balance
+					'balance'           => bcadd($invoice_address_model->balance, $satoshi_amount), // new address balance
+					'previous_balance'  => $invoice_address_model->balance, // address balance before that transaction
 					'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 				];
 				$transaction_model = Transaction::insertNewTransaction($invoice_tx_data);
 
 				$total_received = bcadd( $invoice_address_model->received_amount, $satoshi_amount );
 				InvoiceAddress::updateReceived($invoice_address_model, $total_received);// update amount and mark as received
+				/* update API user balance */
+				$user_balance_updated = Balance::updateUserBalance($this->user, $satoshi_amount);
 
 				// check if needs to be forwarded
 				if ( $invoice_address_model->forward == 1 )
@@ -474,12 +472,16 @@ class ApiController extends BaseController {
 							'crypto_type_id' => $this->crypto_type_id,
 							'address_to' => $to_address,
 							'note' => 'invoice forwarding',
+							'balance' => bcsub($transaction_model->balance, $satoshi_amount),
 						];
 						$forward_tx_id = $this->bitcoin_core->sendtoaddress( $invoice_address_model->destination_address, (float) $bitcoin_amount );
 						if ( $forward_tx_id )
 						{
 							$forward_data['tx_id'] = $forward_tx_id;
+							$forward_data['previous_balance']  = $transaction_model->balance;
+							$forward_data['bitcoind_balance']  = bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION);
 							Transaction::insertNewTransaction($forward_data);
+							Balance::updateUserBalance($this->user, $satoshi_amount);
 							Log::info( 'Forwarded ' . $bitcoin_amount . ' bitcoins to ' . $to_address );
 						} // TODO fucked when sendtoaddress throws exception, should send to server still the response.
 					}
@@ -505,7 +507,6 @@ class ApiController extends BaseController {
 			else
 			{
 				/* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-				Log::info( 'Updating confirmations to ' . $confirms . ' for transaction id: ' . $transaction_model->id . ' and transaction hash: ' . $tx_id);
 				Transaction::updateTxConfirmation( $transaction_model, $confirms, $block_hash, $block_index, $block_index );
 			}
 
@@ -522,11 +523,7 @@ class ApiController extends BaseController {
 			$full_callback_url              = $invoice_address_model->callback_url . '?' . $queryString;
 			$full_callback_url_with_secret  = $full_callback_url . '&secret=' . Config::get( 'bitcoin.app_secret' ); // don't include secret in log
 
-			Log::info( 'Sending callback to: ' . $full_callback_url );
-
 			$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
-
-			Log::info( 'Received response from server: ' . $app_response );
 
 			$callback_status = null;
 			if ( $app_response == '*ok*' ) {
@@ -535,8 +532,6 @@ class ApiController extends BaseController {
 
 			//if we get back an *ok* from the script then update the transactions status
 			Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status );
-
-			Log::info( 'Updated transaction id ' . $transaction_model->id . ' with response: ' . $app_response . ', callback status: ' . $callback_status );
 
 			DB::commit();
 
@@ -557,8 +552,6 @@ class ApiController extends BaseController {
 		/* at this point its not the invoicing address, lookup address in address table
 		/*************************************************************************************/
 
-		Log::info( 'Getting user address' );
-
 		$address_model = Address::getAddress( $to_address );
 
 		/************* It is incoming transaction, because it is sent to some of the inner addresses *************/
@@ -574,6 +567,8 @@ class ApiController extends BaseController {
 				                     ', user guid: ' . $this->user->guid . ', email: ' . $this->user->email );
 
 				$new_address_balance = bcadd( $address_model->balance, $satoshi_amount );
+
+				$initialUserBalance = Balance::getBalance($this->user->id, $this->crypto_type_id);
 
 				$data = [
 					'tx_id'             => $tx_id,
@@ -592,6 +587,7 @@ class ApiController extends BaseController {
 					'tx_category'       => $category,
 					'address_account'   => $account_name,
 					'balance'           => $new_address_balance,
+					'user_balance'      => bcadd($initialUserBalance->balance, $satoshi_amount),
 					'previous_balance'  => $address_model->balance,
 					'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 				];
@@ -599,22 +595,11 @@ class ApiController extends BaseController {
 				// insert new transaction
 				$transaction_model = Transaction::insertNewTransaction( $data );
 
-				Log::info( 'Inserted new transaction to db. Tx id: ' . $tx_id . ', user id: ' . $address_model->user_id . ', satoshi amount: ' .
-				                     $satoshi_amount . ', address new balance: ' . $new_address_balance );
-
 				// update address balance
 				Address::updateBalance($address_model, $satoshi_amount);
-				Log::info( 'Updated address ' . $address_model->address . ', added amount: ' . $satoshi_amount );
 
 				/* update API user balance */
-				$old_balance = $this->user->balances()->first()->balance;
-				$new_balance = bcadd( $this->user->balance, $satoshi_amount );
-				$total_received   = bcadd( $this->user->total_received, $satoshi_amount );
-				$balance_model = Balance::getBalance($this->user->id, $this->crypto_type_id);
-
-				Balance::updateUserBalance($balance_model, $new_balance, $total_received);
-				Log::info( 'Updated user (' . $this->user->email . ') balance: ' . $new_balance . ', previous balance: ' . $old_balance . ', added amount: ' . $satoshi_amount );
-
+				Balance::updateUserBalance($this->user, $satoshi_amount);
 			}
 			else
 			{
@@ -651,7 +636,7 @@ class ApiController extends BaseController {
 				'tx_category'       => $category,
 				'address_account'   => $account_name,
 				'note'              => TX_UNREGISTERED_ADDRESS,
-				'balance'           => bcadd($initialUserBalance, $satoshi_amount), // new API user balance
+				'user_balance'      => bcadd($initialUserBalance, $satoshi_amount), // new API user balance
 				'previous_balance'  => $initialUserBalance->balance, // API user balance before that transaction, because user balance has not been updated yet
 				'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 			];
@@ -679,10 +664,8 @@ class ApiController extends BaseController {
 
 		$full_callback_url = $this->user->callback_url . '?'. $queryString;
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $this->user->secret; // don't include secret in a log
-		Log::info( 'Sending callback to: ' . $full_callback_url );
 
 		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
-		Log::info( 'Received response from server: ' . $app_response );
 
 		$callback_status = null;
 		if ( $app_response == "*ok*" ) {
@@ -693,8 +676,6 @@ class ApiController extends BaseController {
 		Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status );
 
 		DB::commit();
-
-		Log::info( 'Updated transaction id ' . $transaction_model->id . ' with response: ' . $app_response . ', callback status: ' . $callback_status );
 
 		$response = [
 			'confirmations' => $confirms,
@@ -791,7 +772,7 @@ class ApiController extends BaseController {
 			'user_id'               => $this->user->id,
 		]);
 
-		Log::info( '=== RECEIVE NEW ADDRESS GENERATED AND SAVED which is receiving address: ' . $receiving_address . ', input address' . $input_address . ' ===' );
+		Log::info( '=== RECEIVING ADDRESS: ' . $receiving_address . ', input address' . $input_address . ' ===' );
 
 		$response = array(
 			'fee_percent'   => 0,
@@ -806,8 +787,7 @@ class ApiController extends BaseController {
 
 	public function blocknotify()
 	{
-		Log::info( '=== BLOCK NOTIFY CALLBACK STARTED ===' );
-		Log::info('User id: '.Input::get('userid').', block hash: '.Input::get('blockhash'));
+		Log::info( '=== BLOCK NOTIFY. ' . 'User id: '.Input::get('userid').', block hash: '.Input::get('blockhash') );
 
 		$ip_address = Request::ip();
 
@@ -832,12 +812,8 @@ class ApiController extends BaseController {
 		// no point to add secret
 		$full_callback_url = $this->user->blocknotify_callback_url . '?blockhash=' . Input::get('blockhash') . '&host=' . gethostname();
 
-		Log::info( 'Sending callback to: ' . $full_callback_url );
-
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $this->user->secret; // don't include secret in a log
 		$app_response                  = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
-
-		Log::info( 'Received response from server: ' . $app_response );
 
 		return Response::json('ok :)');
 	}

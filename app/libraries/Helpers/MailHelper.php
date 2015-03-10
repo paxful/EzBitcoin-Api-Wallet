@@ -6,7 +6,7 @@ class MailHelper
 {
 	public static function sendEmailPlain($data)
 	{
-		Mail::queue([], $data, function($message) use ($data)
+		Mail::send([], $data, function($message) use ($data)
 		{
 			$message->to($data['email']);
 			$message->subject($data['subject']);
