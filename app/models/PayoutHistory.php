@@ -10,6 +10,17 @@ class PayoutHistory extends Eloquent {
 		return self::create($data);
 	}
 
+	public static function getByTxId($tx_id) {
+		return self::where('tx_id', $tx_id)->first();
+	}
+
+	public static function updateTxConfirmation($payoutModel, $confirms)
+	{
+		$payoutModel->confirmations = $confirms;
+		$payoutModel->save();
+		return $payoutModel;
+	}
+
 	public function user()
 	{
 		return $this->belongsTo('User');

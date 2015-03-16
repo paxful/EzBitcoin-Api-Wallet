@@ -827,16 +827,24 @@ class ApiController extends BaseController {
 	 */
 	private function processOutgoingTransaction( $user_id, $btc_amount, $to_address, $tx_id, $confirms )
 	{
-		Log::info( "Sent out $btc_amount bitcoins to $to_address, tx_id $tx_id" );
+		$payout = PayoutHistory::getByTxId($tx_id);
+		if (count($payout)) {
+			// update confirms
+			if ($confirms > 0) {
+				PayoutHistory::updateTxConfirmation($payout, $confirms);
+			}
+		} else {
+			Log::info( "Sent out $btc_amount bitcoins to $to_address, tx_id $tx_id" );
 
-		PayoutHistory::insertNewTransaction( [
-			'user_id'        => $user_id,
-			'tx_id'          => $tx_id,
-			'crypto_amount'  => bcmul( $btc_amount, SATOSHIS_FRACTION ),
-			'crypto_type_id' => $this->crypto_type_id,
-			'address_to'     => $to_address,
-			'confirmations'  => $confirms,
-		] );
+			PayoutHistory::insertNewTransaction( [
+				'user_id'        => $user_id,
+				'tx_id'          => $tx_id,
+				'crypto_amount'  => bcmul( $btc_amount, SATOSHIS_FRACTION ),
+				'crypto_type_id' => $this->crypto_type_id,
+				'address_to'     => $to_address,
+				'confirmations'  => $confirms,
+			] );
+		}
 	}
 
 	/**
