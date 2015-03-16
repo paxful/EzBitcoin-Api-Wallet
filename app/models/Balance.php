@@ -24,7 +24,7 @@ class Balance extends Eloquent {
 		$balance = self::getBalance($user->id, $crypto_type_id);
 		$new_balance = bcadd($balance->balance, $amount_to_add);
 		$balance->balance = $new_balance;
-		$balance->total_received = $new_balance;
+		$balance->total_received = bcadd($balance->total_recieved, $amount_to_add);
 		$balance->num_transactions = bcadd($balance->num_transactions, 1);
 		$balance->save();
 		return $balance;
