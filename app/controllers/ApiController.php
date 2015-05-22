@@ -247,6 +247,7 @@ class ApiController extends BaseController {
 		$to_address = Input::get( 'to' );
 		$amount     = Input::get( 'amount' );
 		$note       = Input::get( 'note' );
+		$external_user_id = Input::get( 'external_user_id' );
 
 		if ( ! $note ) {
 			$note = '';
@@ -298,6 +299,7 @@ class ApiController extends BaseController {
 					'crypto_type_id' => $this->crypto_type_id,
 					'address_to' => $to_address,
 					'note' => $note,
+					'external_user_id' => $external_user_id
 				]);
 			}
 
