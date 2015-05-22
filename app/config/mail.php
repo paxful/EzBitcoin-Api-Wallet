@@ -2,7 +2,7 @@
 
 return array(
 
-	'admin_email' => $_ENV['ADMIN_EMAIL'],
+	'admin_email' => getenv('ADMIN_EMAIL'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -17,7 +17,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'smtp',
+	'driver' => 'mandrill',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ return array(
 	|
 	*/
 
-	'host' => 'smtp.sendgrid.net',
+	'host' => 'smtp.mandrillapp.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -56,7 +56,7 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => $_ENV['ADMIN_EMAIL'], 'name' => 'Admin'),
+	'from' => array('address' => getenv('ADMIN_EMAIL'), 'name' => 'Admin'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -82,7 +82,7 @@ return array(
 	|
 	*/
 
-	'username' => $_ENV['EMAIL_USERNAME'],
+	'username' => getenv('EMAIL_USERNAME'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -95,7 +95,7 @@ return array(
 	|
 	*/
 
-	'password' => $_ENV['EMAIL_PASSWORD'],
+	'password' => getenv('EMAIL_PASSWORD'),
 
 	/*
 	|--------------------------------------------------------------------------
