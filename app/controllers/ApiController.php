@@ -271,6 +271,7 @@ class ApiController extends BaseController {
 		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
 
 		if ( $user_balance->balance < $amount ) {
+			DB::rollback();
 			Log::error( '#payment: ' . NO_FUNDS );
 			return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
 		}
@@ -320,6 +321,7 @@ class ApiController extends BaseController {
 	 * Receiving transaction gets into mempool
 	 * Sending out transaction - has negative amount
 	 * Transaction gets 1st confirmation
+	 * This is most important function in whole thing, but very spaghetti. Has to be refactored
 	 */
 	public function callback()
 	{

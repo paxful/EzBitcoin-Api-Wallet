@@ -7,7 +7,7 @@ class Balance extends Eloquent {
 	protected $fillable = array('crypto_type_id', 'balance', 'total_received', 'num_transactions');
 
 	public static function getBalance($user_id, $crypto_type_id = 1) {
-		return self::where('user_id', $user_id)->where('crypto_type_id', $crypto_type_id)->first();
+		return self::where('user_id', $user_id)->where('crypto_type_id', $crypto_type_id)->lockForUpdate()->first();
 	}
 
 	public static function setNewUserBalance($user_balance, $new_balance, $total_received = null) {
