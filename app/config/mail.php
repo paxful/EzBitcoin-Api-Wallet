@@ -17,7 +17,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'mandrill',
+	'driver' => 'smtp',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -121,6 +121,7 @@ return array(
 	|
 	*/
 
-	'pretend' => App::environment('local', 'testing') ? true : false,
+//	'pretend' => App::environment('local', 'testing') ? true : false,
+	'pretend' => false,
 
 );
