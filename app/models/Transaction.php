@@ -25,10 +25,11 @@ class Transaction extends Eloquent {
 		return self::create($data);
 	}
 
-	public static function updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status ) {
+	public static function updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status, $external_user_id = null ) {
 		$transaction_model->response_callback = $app_response;
 		$transaction_model->callback_url = $full_callback_url;
 		$transaction_model->callback_status = $callback_status;
+		$transaction_model->external_user_id = $external_user_id;
 		$transaction_model->save();
 		return $transaction_model;
 	}

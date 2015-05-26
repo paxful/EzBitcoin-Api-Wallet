@@ -529,13 +529,19 @@ class ApiController extends BaseController {
 
 			$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
-			$callback_status = null;
+			$callback_status = $external_user_id = null;
 			if ( $app_response == '*ok*' ) {
 				$callback_status = 1;
 			}
 
+			$json_response = json_encode($app_response);
+			if ($json_response and isset($app_response->external_user_id)) {
+				$external_user_id = $app_response->external_user_id;
+				$callback_status = 1;
+			}
+
 			//if we get back an *ok* from the script then update the transactions status
-			Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status );
+			Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status, $external_user_id );
 
 			DB::commit();
 
@@ -671,13 +677,19 @@ class ApiController extends BaseController {
 
 		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
-		$callback_status = null;
+		$callback_status = $external_user_id = null;
 		if ( $app_response == "*ok*" ) {
 			$callback_status = 1;
 		}
 
+		$json_response = json_encode($app_response);
+		if ($json_response and isset($app_response->external_user_id)) {
+			$external_user_id = $app_response->external_user_id;
+			$callback_status = 1;
+		}
+
 		//if we get back an *ok* from the script then update the transactions status
-		Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status );
+		Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status, $external_user_id );
 
 		DB::commit();
 

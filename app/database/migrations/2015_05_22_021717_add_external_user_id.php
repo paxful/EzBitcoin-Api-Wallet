@@ -10,6 +10,9 @@ class AddExternalUserId extends Migration {
 		Schema::table('transactions', function($table) {
 			$table->bigInteger('external_user_id')->nullable();
 		});
+		Schema::table('payout_history', function($table) {
+			$table->bigInteger('external_user_id')->nullable();
+		});
 	}
 
 	/**
@@ -20,6 +23,9 @@ class AddExternalUserId extends Migration {
 	public function down()
 	{
 		Schema::table('transactions', function($table) {
+			$table->dropColumn('external_user_id');
+		});
+		Schema::table('payout_history', function($table) {
 			$table->dropColumn('external_user_id');
 		});
 	}
