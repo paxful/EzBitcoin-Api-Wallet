@@ -844,7 +844,7 @@ class ApiController extends BaseController {
 	private function processOutgoingTransaction( $user_id, $btc_amount, $to_address, $tx_id, $confirms )
 	{
 		$payout = PayoutHistory::getByTxId($tx_id);
-		if (count($payout)) {
+		if ($payout) {
 			// update confirms
 			if ($confirms > 0) {
 				PayoutHistory::updateTxConfirmation($payout, $confirms);
