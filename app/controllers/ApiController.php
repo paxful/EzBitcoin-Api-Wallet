@@ -51,6 +51,23 @@ class ApiController extends BaseController {
 		return Response::json($response);
 	}
 
+	/**
+	 * Get bitcoin-core core balance, good for accounting by comparing your app users balances sum and bitcoin core balance
+	 * example.com/api/<guid>/core-balance?&password=zzz
+	 */
+	public function coreBalance($guid)
+	{
+		if ( ! $this->attemptAuth() ) {
+			return Response::json( ['error' => AUTHENTICATION_FAIL] );
+		}
+
+		$this->bitcoin_core->setRpcConnection($this->user->rpc_connection);
+
+		$balance = $this->bitcoin_core->getbalance();
+
+		return Response::json(['balance' => $balance]);
+	}
+
 	public function addressBalance($guid) {
 		// not implemented
 	}

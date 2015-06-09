@@ -4,6 +4,7 @@ Route::get('/', function()  {
 });
 Route::get('api', 'ApiController@getIndex');
 Route::get('api/{guid}/balance',                array('as' => 'balance',                'uses' => 'ApiController@balance'));
+Route::get('api/{guid}/core-balance',           array('as' => 'core-balance',           'uses' => 'ApiController@coreBalance'));
 Route::get('api/{guid}/address-balance',        array('as' => 'addressBalance',         'uses' => 'ApiController@addressBalance')); // not implemented
 Route::get('api/{guid}/validate-transaction',   array('as' => 'validateTransaction',    'uses' => 'ApiController@validateTransaction'));
 Route::get('api/{guid}/validate-address',       array('as' => 'validateAddress',        'uses' => 'ApiController@validateAddress'));

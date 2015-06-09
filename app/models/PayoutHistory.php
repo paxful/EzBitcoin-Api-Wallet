@@ -10,7 +10,10 @@ class PayoutHistory extends Eloquent {
 		return self::create($data);
 	}
 
-	public static function getByTxId($tx_id) {
+	public static function getByTxId($tx_id, $lock_for_update = false) {
+		if ($lock_for_update) {
+			return self::where('tx_id', $tx_id)->lockForUpdate()->first();
+		}
 		return self::where('tx_id', $tx_id)->first();
 	}
 
