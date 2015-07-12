@@ -1,5 +1,6 @@
 <?php namespace Helpers;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Mail;
 
 class MailHelper

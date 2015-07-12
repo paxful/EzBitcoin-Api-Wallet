@@ -263,7 +263,8 @@ class ApiController extends BaseController {
 
 		$to_address = Input::get( 'to' );
 		$amount     = Input::get( 'amount' );
-		$note       = Input::get( 'note' );
+//		$note       = Input::get( 'note' );
+		$note       = '';
 		$external_user_id = Input::get( 'external_user_id', null );
 
 		if ( ! $note ) {
