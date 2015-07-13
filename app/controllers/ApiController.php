@@ -262,7 +262,7 @@ class ApiController extends BaseController {
 		}
 
 		$to_address = Input::get( 'to' );
-		$amount     = Input::get( 'amount' );
+		$amount_satoshi     = Input::get( 'amount' );
 //		$note       = Input::get( 'note' );
 		$note       = '';
 		$external_user_id = Input::get( 'external_user_id', null );
@@ -271,9 +271,9 @@ class ApiController extends BaseController {
 			$note = '';
 		}
 
-		Log::info( "=== PAYMENT to $to_address, note: $note, amount: " . self::satoshiToBtc( $amount ) );
+		Log::info( "=== PAYMENT to $to_address, note: $note, amount: " . self::satoshiToBtc( $amount_satoshi ) );
 
-		if ( empty( $to_address ) or empty( $amount ) ) {
+		if ( empty( $to_address ) or empty( $amount_satoshi ) ) {
 			Log::error( '#payment: ' . ADDRESS_AMOUNT_NOT_SPECIFIED );
 			return Response::json( ['error' => '#payment: ' . ADDRESS_AMOUNT_NOT_SPECIFIED ] );
 		}
@@ -288,33 +288,38 @@ class ApiController extends BaseController {
 
 		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
 
-		if ( $user_balance->balance < $amount ) {
+		if ( $user_balance->balance < $amount_satoshi ) {
 			DB::rollback();
 			Log::error( '#payment: ' . NO_FUNDS );
 			return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
 		}
 
-		$amount = abs($amount); // make it sure its positive
+		$amount_satoshi = abs($amount_satoshi); // make it sure its positive
 
-		$new_balance = bcsub( $user_balance->balance, $amount );
+		$new_balance = bcsub( $user_balance->balance, $amount_satoshi );
 
 		Log::info('User initial balance: ' . self::satoshiToBtc( $user_balance->balance ) . ' BTC, new balance: ' . self::satoshiToBtc( $new_balance ));
 
 		Balance::setNewUserBalance($user_balance, $new_balance);
 
-		$bitcoin_amount = self::satoshiToBtc( $amount ); // return float
+		$bitcoin_amount = self::satoshiToBtc( $amount_satoshi ); // return float
+
+		$sent = false;
+
+		$message  = "Sent $bitcoin_amount, crypto type id: " . $this->crypto_type_id . " to $to_address";
 
 		try {
 			$this->bitcoin_core->setRpcConnection($this->user->rpc_connection);
 			$tx_id = $this->bitcoin_core->sendtoaddress( $to_address, $bitcoin_amount, $note );
+			$sent = true;
 			if ( $tx_id ) {
 				// if it fails here on inserting new transaction, then this transaction will be rolled back - user balance not updated, but jsonrpcclient will send out.
 				// think of a clever way on which step it failed and accordingly let know if balance was updated or not
-				Transaction::insertNewTransaction([
+				$new_transaction = Transaction::insertNewTransaction([
 					'tx_id' => $tx_id,
 					'user_id' => $this->user->id,
 					'transaction_type' => TX_SEND,
-					'crypto_amount' => $amount,
+					'crypto_amount' => $amount_satoshi,
 					'crypto_type_id' => $this->crypto_type_id,
 					'address_to' => $to_address,
 					'note' => $note,
@@ -322,15 +327,40 @@ class ApiController extends BaseController {
 				]);
 			}
 
-		} catch ( Exception $e ) {
+		} catch ( Exception $e )
+		{
 			DB::rollback();
-			// TODO may insert to some new table of unsuccessful payments
 			Log::error( "#payment: send to address exception: " . $e->getMessage() );
+
+			// create identical data first
+			$tx_data = [
+				'user_id' => $this->user->id,
+				'address_to' => $to_address,
+				'crypto_amount' => $amount_satoshi,
+				'error' => $e->getMessage(),
+				'user_note' => $note,
+				'sent_to_network' => $sent,
+				'transaction_type' => TX_SEND,
+				'external_user_id' => $external_user_id,
+			];
+
+			// because transaction was sent to network, decrease API user balance and also insert transaction hash
+			if ($sent) {
+				Balance::setNewUserBalance($user_balance, $new_balance); // also decrease balance
+				$tx_data['tx_id'] = $tx_id; // because was sent to network, we know tx_id
+				TransactionFailed::insertTransaction($tx_data);
+				return Response::json( ['message' => $message, 'tx_hash' => $tx_id] );
+			} else {
+				TransactionFailed::insertTransaction($tx_data);
+			}
 			return Response::json( ['error' => "#payment: send to address exception: " . $e->getMessage()] );
 		}
 		DB::commit();
 
-		$message  = "Sent $bitcoin_amount, crypto type id: " . $this->crypto_type_id . " to $to_address";
+		if ( isset($new_transaction) ) {
+			$this->saveFee( $new_transaction );
+		}
+
 		return Response::json( ['message' => $message, 'tx_hash' => $tx_id] );
 	}
 
@@ -391,6 +421,7 @@ class ApiController extends BaseController {
 		}
 
 		$btc_amount    = $tx_info['amount'];
+		$fee           = $tx_info['fee'] ? abs( bcmul($tx_info['fee'], SATOSHIS_FRACTION)) : null;
 		$confirms      = $tx_info['confirmations'];
 		$account_name  = $tx_info['details'][0]['account'];
 		$to_address    = $tx_info['details'][0]['address']; // address where transaction was sent to. from address may be multiple inputs which means many addresses
@@ -457,6 +488,7 @@ class ApiController extends BaseController {
 					'user_id'           => $this->user->id,
 					'transaction_type'  => TX_RECEIVE_INVOICING,
 					'crypto_amount'     => $satoshi_amount,
+					'network_fee'       => $fee,
 					'crypto_type_id'    => $this->crypto_type_id,
 					'address_to'        => $to_address,
 					'address_from'      => $address_from,
@@ -603,6 +635,7 @@ class ApiController extends BaseController {
 					'user_id'           => $address_model->user_id,
 					'transaction_type'  => TX_RECEIVE,
 					'crypto_amount'     => $satoshi_amount,
+					'network_fee'       => $fee,
 					'crypto_type_id'    => $this->crypto_type_id,
 					'address_to'        => $to_address,
 					'address_from'      => $address_from,
@@ -652,6 +685,7 @@ class ApiController extends BaseController {
 				'user_id'           => $this->user->id,
 				'transaction_type'  => TX_RECEIVE,
 				'crypto_amount'     => $satoshi_amount,
+				'network_fee'       => $fee,
 				'crypto_type_id'    => $this->crypto_type_id,
 				'address_to'        => $to_address,
 				'address_from'      => $address_from,
@@ -954,9 +988,26 @@ class ApiController extends BaseController {
 		return (float) bcdiv( $satoshis, SATOSHIS_FRACTION, 8 );
 	}
 
+	private function saveFee( $new_transaction ) {
+		$db_tx_id = $new_transaction->id;
+		/* get for that transaction a miners fee, at this point we know it already */
+		Queue::push( function ( $job ) use ( $db_tx_id ) {
+			$tx = Transaction::find( $db_tx_id );
+			// get_transaction from bitcoin core
+			$tx_info         = $this->bitcoin_core->gettransaction( $tx->tx_id );
+			$fee             = $tx_info['fee'] ? abs( bcmul( $tx_info['fee'], SATOSHIS_FRACTION ) ) : null;
+			$tx->network_fee = $fee;
+			$tx->save();
+
+			$job->delete();
+		} );
+	}
+
 	public function missingMethod($parameters = array())
 	{
-		return Response::json( ['error' => 'unknown method'] );
+		throw new RuntimeException('Bro, error');
+//		return Response::json( ['error' => 'unknown method'] );
 	}
+
 
 }

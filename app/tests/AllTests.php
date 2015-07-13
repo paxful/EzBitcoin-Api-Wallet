@@ -83,7 +83,7 @@ class AllTests extends TestCase {
 
 		$transactionModel = Transaction::find(1);
 		$this->assertEquals('151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160', $transactionModel->tx_id);
-		$this->assertEquals('151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160', $transactionModel->tx_id);
+		$this->assertEquals(20080, $transactionModel->network_fee);
 		// to, amount, note
 		// address valid
 		// user has enough balance

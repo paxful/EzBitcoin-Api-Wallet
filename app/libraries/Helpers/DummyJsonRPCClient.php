@@ -25,6 +25,7 @@ class DummyJsonRPCClient implements JsonRPCClientInterface {
 		if ($method == 'gettransaction') {
 			return [
 				'amount' => 0.1,
+				'fee'    => -0.0002008,
 				'txid' => '151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160',
 				'confirmations' => 0,
 				'details' => [

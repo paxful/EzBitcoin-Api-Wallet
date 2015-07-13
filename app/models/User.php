@@ -25,6 +25,11 @@ class User extends Eloquent {
 		return $this->hasMany('Transaction');
 	}
 
+	public function failedTransactions()
+	{
+		return $this->hasMany('TransactionFailed');
+	}
+
 	public function payoutHistories()
 	{
 		return $this->hasMany('PayoutHistory');
