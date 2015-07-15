@@ -421,7 +421,7 @@ class ApiController extends BaseController {
 		}
 
 		$btc_amount    = $tx_info['amount'];
-		$fee           = $tx_info['fee'] ? abs( bcmul($tx_info['fee'], SATOSHIS_FRACTION)) : null;
+		$fee           = isset($tx_info['fee']) ? abs( bcmul($tx_info['fee'], SATOSHIS_FRACTION)) : null;
 		$confirms      = $tx_info['confirmations'];
 		$account_name  = $tx_info['details'][0]['account'];
 		$to_address    = $tx_info['details'][0]['address']; // address where transaction was sent to. from address may be multiple inputs which means many addresses
@@ -995,7 +995,7 @@ class ApiController extends BaseController {
 			$tx = Transaction::find( $db_tx_id );
 			// get_transaction from bitcoin core
 			$tx_info         = $this->bitcoin_core->gettransaction( $tx->tx_id );
-			$fee             = $tx_info['fee'] ? abs( bcmul( $tx_info['fee'], SATOSHIS_FRACTION ) ) : null;
+			$fee             = isset($tx_info['fee']) ? abs( bcmul( $tx_info['fee'], SATOSHIS_FRACTION ) ) : null;
 			$tx->network_fee = $fee;
 			$tx->save();
 
