@@ -579,7 +579,8 @@ class ApiController extends BaseController {
 
 			$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
-			$callback_status = $external_user_id = null;
+			$callback_status = false;
+			$external_user_id = null;
 			if ( $app_response == '*ok*' ) {
 				$callback_status = 1;
 			}
@@ -729,6 +730,7 @@ class ApiController extends BaseController {
 
 		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
+		$callback_status = false;
 		$external_user_id = null;
 		if ( $app_response == "*ok*" ) {
 			$callback_status = 1;
