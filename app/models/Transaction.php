@@ -12,11 +12,15 @@ class Transaction extends Eloquent {
 		return self::where('tx_id', $txId)->first();
 	}
 
-	public static function updateTxConfirmation($transactionModel, $confirms, $block_hash, $block_index, $block_index)
+	public static function getTransactionByTxIdAndAddress($txId, $address) {
+		return self::where('tx_id', $txId)->where('address_to', $address)->first();
+	}
+
+	public static function updateTxConfirmation($transactionModel, $data)
 	{
-		$transactionModel->confirmations = $confirms;
-		$transactionModel->block_hash = $block_hash;
-		$transactionModel->block_index = $block_index;
+		$transactionModel->confirmations = $data['confirmations'];
+		$transactionModel->block_hash = $data['block_hash'];
+		$transactionModel->block_index = $data['block_index'];
 		$transactionModel->save();
 		return $transactionModel;
 	}

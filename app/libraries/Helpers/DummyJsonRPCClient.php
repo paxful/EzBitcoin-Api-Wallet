@@ -24,7 +24,7 @@ class DummyJsonRPCClient implements JsonRPCClientInterface {
 		}
 		if ($method == 'gettransaction') {
 			return [
-				'amount' => 0.1,
+				'amount' => 1,
 				'fee'    => -0.0002008,
 				'txid' => '151f9b43343c5cd4f2064b5ac2a722f67cc53a845d05cdf9979379fa4ed19160',
 				'confirmations' => 0,
@@ -33,6 +33,18 @@ class DummyJsonRPCClient implements JsonRPCClientInterface {
 						'amount' => 0.1,
 						'account' => 'xxx',
 						'address'=> 'mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr',
+						'category' => 'xxx'
+					],
+					[
+						'amount' => 0.4,
+						'account' => 'xxx',
+						'address'=> 'n21cjTZa59QcMBXFvoKx2WoRotBV9mErnJ',
+						'category' => 'xxx'
+					],
+					[
+						'amount' => 0.5,
+						'account' => 'xxx',
+						'address'=> 'mxKRETCDzCuLVLiw9MieJb8xFi1WhkQ9wY',
 						'category' => 'xxx'
 					]
 				],

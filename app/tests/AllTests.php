@@ -49,7 +49,7 @@ class AllTests extends TestCase {
 		// check crypto type id, user id, label, balance 0
 		$this->assertEquals('xxx', $jsonResult->label);
 
-		$addressModel = Address::find(1);
+		$addressModel = Address::whereAddress('mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr')->first();
 		$this->assertEquals(1, $addressModel->user_id);
 		$this->assertEquals(1, $addressModel->crypto_type_id);
 		$this->assertEquals(0, $addressModel->balance);
@@ -108,8 +108,19 @@ class AllTests extends TestCase {
 			'userid'        => 1,
 			'time'          => 'xxx',
 		]);
-		$this->call('GET', 'api/callback?'.$queryString);
 
+		$response = $this->call('GET', 'api/callback?'.$queryString);
+		$result = $response->getContent();
+		$this->assertEquals('*ok*', $result);
+		/* check addresses */
+		$address1 = Address::whereAddress('mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr')->first();
+		$address2 = Address::whereAddress('n21cjTZa59QcMBXFvoKx2WoRotBV9mErnJ')->first();
+		$address3 = Address::whereAddress('mxKRETCDzCuLVLiw9MieJb8xFi1WhkQ9wY')->first();
+
+		$this->assertEquals('mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr', $address1->address);
+		$this->assertEquals(10000000, $address1->balance);
+		$this->assertEquals(40000000, $address2->balance);
+		$this->assertEquals(50000000, $address3->balance);
 	}
 
 	public function testInvoiceAddressCallback()
@@ -134,9 +145,8 @@ class AllTests extends TestCase {
 		]);
 
 		$response = $this->call('GET', 'api/callback?'.$queryString);
-		$jsonResult = json_decode($response->getContent());
-		$this->assertEquals('mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr', $jsonResult->address);
-		$this->assertEquals('*ok*', $jsonResult->response);
+		$result = $response->getContent();
+		$this->assertEquals('*ok*', $result);
 
 	}
 

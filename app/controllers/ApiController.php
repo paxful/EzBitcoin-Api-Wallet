@@ -2,6 +2,7 @@
 
 use Helpers\DataParserInterface;
 use Helpers\JsonRPCClientInterface;
+use Illuminate\Support\Facades\Response;
 
 class ApiController extends BaseController {
 
@@ -9,11 +10,13 @@ class ApiController extends BaseController {
 	protected $user;
 	protected $bitcoin_core;
 	protected $dataParser;
+	protected $HOST_NAME;
 
 	public function __construct(JsonRPCClientInterface $bitcoin_core_client, DataParserInterface $dataParser)
 	{
 		$this->bitcoin_core = $bitcoin_core_client;
 		$this->dataParser   = $dataParser;
+		$this->HOST_NAME    = gethostname();
 	}
 
 	public function getIndex() {
@@ -365,6 +368,125 @@ class ApiController extends BaseController {
 	}
 
 	/**
+	 * example.com/api/<guid>/sendmany?to=xxx&amount=satoshis&note=yyy&password=zzz&account=invoice&debug=1
+	 */
+	public function sendmany($guid)
+	{
+		if ( ! $this->attemptAuth() ) {
+			return Response::json( ['error' => AUTHENTICATION_FAIL] );
+		}
+
+		$recipients_json = Input::get( 'recipients' );
+//		$note       = Input::get( 'note' );
+		$note       = '';
+		$external_user_id = Input::get( 'external_user_id', null );
+		$account = Input::get('account', "");
+
+		if ( ! $note ) {
+			$note = '';
+		}
+
+		/* validate that recipients is JSON object with address:satoshi pairs */
+		$recipients = json_decode($recipients_json);
+		$is_valid_recipients = $this->validateSendManyJson($recipients);
+
+		if ( !$is_valid_recipients ) {
+			return Response::json( ['error' => '#sendmany: ' . ADDRESS_AMOUNT_NOT_SPECIFIED_SEND_MANY ] );
+		}
+
+		Log::info('=== START PAYMENT to MANY');
+		foreach ($recipients as $btc_address => $satoshi_amount) {
+			Log::info( "Payment to $btc_address, note: $note, amount: " . self::satoshiToBtc( $satoshi_amount ) );
+		}
+		Log::info('=== END PAYMENT to MANY');
+
+		$total_satoshis = $this->getSendManyTotalAmount($recipients);
+
+		DB::beginTransaction(); // begin DB transaction
+
+		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
+
+		if ( $user_balance->balance < $total_satoshis ) {
+			DB::rollback();
+			Log::error( '#sendmany: ' . NO_FUNDS );
+			return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
+		}
+
+		$total_satoshis = abs($total_satoshis); // make it sure its positive
+
+		$new_balance = bcsub( $user_balance->balance, $total_satoshis );
+
+		Log::info('User initial balance: ' . self::satoshiToBtc( $user_balance->balance ) . ' BTC, new balance: ' . self::satoshiToBtc( $new_balance ));
+
+		Balance::setNewUserBalance($user_balance, $new_balance);
+
+		$sent = false;
+
+		try
+		{
+			// convert satoshis to btc
+			$recipients_copy = clone $recipients; // need to copy to another array, since satoshis are converted to bitcoin denomination by reference
+			$recipients_bitcoin_denomination_obj = $this->convertSendManySatoshisToBtc($recipients_copy, false);
+
+			$this->bitcoin_core->setRpcConnection($this->user->rpc_connection);
+			$tx_id = $this->bitcoin_core->sendmany( $account, $recipients_bitcoin_denomination_obj, 0, $note );
+			$sent = true;
+			if ( $tx_id ) {
+				// if it fails here on inserting new transaction, then this transaction will be rolled back - user balance not updated, but jsonrpcclient will send out.
+				// think of a clever way on which step it failed and accordingly let know if balance was updated or not
+				foreach ($recipients as $address => $amount_satoshi) {
+					$new_transaction = Transaction::insertNewTransaction([
+						'tx_id' => $tx_id,
+						'user_id' => $this->user->id,
+						'transaction_type' => TX_SEND,
+						'crypto_amount' => $amount_satoshi,
+						'crypto_type_id' => $this->crypto_type_id,
+						'address_to' => $address,
+						'note' => $note,
+						'external_user_id' => $external_user_id
+					]);
+				}
+			}
+
+		} catch ( Exception $e )
+		{
+			DB::rollback();
+			Log::error( "#sendmany: send to address exception: " . $e->getMessage() );
+
+			foreach ($recipients as $address => $amount_satoshi) {
+				// create identical data first
+				$tx_data = [
+					'user_id' => $this->user->id,
+					'address_to' => $address,
+					'crypto_amount' => $amount_satoshi,
+					'error' => $e->getMessage(),
+					'user_note' => $note,
+					'sent_to_network' => $sent,
+					'transaction_type' => TX_SEND,
+					'external_user_id' => $external_user_id,
+				];
+
+				// because transaction was sent to network, decrease API user balance and also insert transaction hash
+				if ($sent) {
+					Balance::setNewUserBalance($user_balance, $new_balance); // also decrease balance
+					$tx_data['tx_id'] = $tx_id; // because was sent to network, we know tx_id
+					TransactionFailed::insertTransaction($tx_data);
+					return Response::json( ['message' => "#sendmany: send to address exception: " . $e->getMessage(), 'tx_hash' => $tx_id] );
+				} else {
+					TransactionFailed::insertTransaction($tx_data);
+				}
+			}
+			return Response::json( ['error' => "#sendmany: send to address exception: " . $e->getMessage()] );
+		}
+		DB::commit();
+
+		if ( isset($new_transaction) ) {
+			$this->saveFee( $new_transaction );
+		}
+		return Response::json( ['message' => 'Sent To Multiple Recipients', 'tx_hash' => $tx_id] );
+	}
+
+	/**
 	 * Callback is initiated when:
 	 * Receiving transaction gets into mempool
 	 * Sending out transaction - has negative amount
@@ -420,271 +542,47 @@ class ApiController extends BaseController {
 			return Response::json( ['error' => '#callback: get transaction exception: ' . $e->getMessage()] );
 		}
 
-		$btc_amount    = $tx_info['amount'];
-		$fee           = isset($tx_info['fee']) ? abs( bcmul($tx_info['fee'], SATOSHIS_FRACTION)) : null;
 		$confirms      = $tx_info['confirmations'];
-		$account_name  = $tx_info['details'][0]['account'];
-		$to_address    = $tx_info['details'][0]['address']; // address where transaction was sent to. from address may be multiple inputs which means many addresses
-		$address_from  = ''; //always blank as there is no way to know where bitcoin comes from UNLESS we do get rawtransaction
-		$time          = $tx_info['time'];
-		$time_received = $tx_info['timereceived'];
-		$category      = $tx_info['details'][0]['category'];
 		$block_hash    = isset( $tx_info['blockhash'] ) ? $tx_info['blockhash'] : null;
 		$block_index   = isset( $tx_info['blockindex'] ) ? $tx_info['blockindex'] : null;
 		$block_time    = isset( $tx_info['blocktime'] ) ? $tx_info['blocktime'] : null;
+		$time          = $tx_info['time'];
+		$time_received = $tx_info['timereceived'];
+		$fee           = isset($tx_info['fee']) ? abs( bcmul($tx_info['fee'], SATOSHIS_FRACTION)) : null;
 
-		if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
-		$new = "Transaction hash: " . $tx_id
-		       . "\n amount: " . $tx_info['details'][0]["amount"]
-		       . "\n confirmations: " . $tx_info["confirmations"]
-		       . "\n blockhash: " . $block_hash
-		       . "\n blockindex: " . $block_index
-		       . "\n blocktime: " . $block_time
-		       . "\n txid: " . $tx_info["txid"]
-		       . "\n time: " . $tx_info["time"]
-		       . "\n timereceived: " . $tx_info["timereceived"]
-		       . "\n account: " . $tx_info["details"][0]["account"]
-		       . "\n address: " . $tx_info["details"][0]["address"]
-		       . "\n category: " . $tx_info["details"][0]["category"]
-		       . "\n amount: " . $tx_info["details"][0]["amount"];
-			echo nl2br( $new ) . "\n";
-		}
+		$transaction_details = $tx_info["details"];
 
-		Log::info( "Address $to_address, amount (BTC): $btc_amount, confirms: $confirms received transaction id $tx_id" );
-
-		/******************* START of checking if its outgoing transaction *******************/
-		if ( $btc_amount < 0 )
+		foreach ($transaction_details as $tx)
 		{
-			$this->processOutgoingTransaction( $user_id, $btc_amount, $to_address, $tx_id, $confirms );
-			return Response::json( ['sent_out_amount' => $btc_amount, 'address' => $to_address, 'txid' => $tx_id, 'crypto_type' => $this->crypto_type_id,] );
-		}
-		/******************* END of checking if its outgoing transaction *******************/
+			$to_address    = $tx['address']; // address where transaction was sent to. from address may be multiple inputs which means many addresses
+			$account_name  = $tx['account'];
+			$address_from  = ''; //always blank as there is no way to know where bitcoin comes from UNLESS we do get rawtransaction
+			$category      = $tx['category'];
+			$btc_amount    = $tx["amount"];
 
-		// whether new transaction or notify was fired on 1st confirmation
-		$transaction_model = Transaction::getTransactionByTxId( $tx_id );
-		$satoshi_amount    = bcmul( $btc_amount, SATOSHIS_FRACTION );
+			if ( ( Input::get( 'debug' ) or API_DEBUG == true ) ) {
+				$this->print_debug( $tx_id, $tx_info, $block_hash, $block_index, $block_time, $account_name, $to_address, $category, $btc_amount );
+			}
 
-
-		$HOST_NAME = gethostname();
-
-		DB::beginTransaction();
-
-		/******************* START processing the invoicing callback **************/
-		$invoice_address_model = InvoiceAddress::getAddress( $to_address );
-		if ( count($invoice_address_model) ) {
-
-			Log::info( 'Processing invoicing address ' . $to_address . ', destination address: ' . $invoice_address_model->destination_address .
-			                     ', label: ' . $invoice_address_model->label . ', amount satoshi: ' . $invoice_address_model->received_amount .
-			                     ', callback url: ' . $invoice_address_model->callback_url . ', forward: ' . $invoice_address_model->forward );
-
-			$forward_tx_id = 0; // needed for callback. stays 0 when forwarding is not chosen
-
-			if ( !count($transaction_model) )
+			/******************* START of checking if its outgoing transaction *******************/
+			if ( $btc_amount < 0 )
 			{
-				$initialUserBalance = Balance::getBalance($this->user->id, $this->crypto_type_id);
-				// first callback, because no transaction initially found in db
-				$invoice_tx_data = [
-					'tx_id'             => $tx_id,
-					'user_id'           => $this->user->id,
-					'transaction_type'  => TX_RECEIVE_INVOICING,
-					'crypto_amount'     => $satoshi_amount,
-					'network_fee'       => $fee,
-					'crypto_type_id'    => $this->crypto_type_id,
-					'address_to'        => $to_address,
-					'address_from'      => $address_from,
-					'confirmations'     => $confirms,
-					'block_hash'        => $block_hash,
-					'block_index'       => $block_index,
-					'block_time'        => $block_time,
-					'tx_time'           => $time,
-					'tx_timereceived'   => $time_received,
-					'tx_category'       => $category,
-					'address_account'   => $account_name,
-					'user_balance'      => bcadd($initialUserBalance->balance, $satoshi_amount), // new API user balance
-					'balance'           => bcadd($invoice_address_model->balance, $satoshi_amount), // new address balance
-					'previous_balance'  => $invoice_address_model->balance, // address balance before that transaction
-					'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
-				];
-				$transaction_model = Transaction::insertNewTransaction($invoice_tx_data);
-
-				$total_received = bcadd( $invoice_address_model->received_amount, $satoshi_amount );
-				InvoiceAddress::updateReceived($invoice_address_model, $total_received);// update amount and mark as received
-				/* update API user balance */
-				$user_balance_updated = Balance::updateUserBalance($this->user, $satoshi_amount);
-
-				// check if needs to be forwarded
-				if ( $invoice_address_model->forward == 1 )
-				{
-					$bitcoin_amount = bcdiv( $satoshi_amount, SATOSHIS_FRACTION, 8 ); // division
-					Log::info( 'Starting to forward ' . $satoshi_amount . ' satoshis which is ' . $bitcoin_amount . ' bitcoins' );
-					try
-					{
-						$forward_data = [
-							'user_id' => $this->user->id,
-							'transaction_type' => TX_SEND,
-							'crypto_amount' => $satoshi_amount,
-							'crypto_type_id' => $this->crypto_type_id,
-							'address_to' => $to_address,
-							'note' => 'invoice forwarding',
-							'balance' => bcsub($transaction_model->balance, $satoshi_amount),
-						];
-						$forward_tx_id = $this->bitcoin_core->sendtoaddress( $invoice_address_model->destination_address, (float) $bitcoin_amount );
-						if ( $forward_tx_id )
-						{
-							$forward_data['tx_id'] = $forward_tx_id;
-							$forward_data['previous_balance']  = $transaction_model->balance;
-							$forward_data['bitcoind_balance']  = bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION);
-							Transaction::insertNewTransaction($forward_data);
-							Balance::updateUserBalance($this->user, $satoshi_amount);
-							Log::info( 'Forwarded ' . $bitcoin_amount . ' bitcoins to ' . $to_address );
-						} // TODO fucked when sendtoaddress throws exception, should send to server still the response.
-					}
-					catch ( Exception $e )
-					{
-						Log::error( "#callback: send to address exception: " . $e->getMessage() );
-
-						// add to transaction entry anyway, with failed forwarding and send warning out email !
-						$forward_data['note'] = 'failed invoice forwarding';
-						Transaction::insertNewTransaction($forward_data);
-						DB::commit();
-
-						MailHelper::sendEmailPlain([
-							'email'     => Config::get('mail.admin_email'),
-							'subject'   => 'FAILED INVOICE FORWARDING!',
-							'text'      => 'Failed to forward to ' . $to_address . ', ' . $satoshi_amount . ' satoshis, tx hash: ' . $tx_id,
-						]);
-
-						return Response::json( ['invoice forwarding failed'] ); // TODO some proper warning
-					}
-				}
+				$this->processOutgoingTransaction( $user_id, $btc_amount, $to_address, $tx_id, $confirms );
+				continue; // loop more in case there is something
 			}
-			else
-			{
-				/* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-				Transaction::updateTxConfirmation( $transaction_model, $confirms, $block_hash, $block_index, $block_index );
-			}
+			/******************* END of checking if its outgoing transaction *******************/
 
-			$queryString = http_build_query([
-				'value'                     => $satoshi_amount,
-				'input_address'             => $invoice_address_model->address,
-				'confirmations'             => $confirms,
-				'transaction_hash'          => $forward_tx_id,
-				'input_transaction_hash'    => $tx_id,
-				'destination_address'       => $invoice_address_model->destination_address,
-				'host'                      => $HOST_NAME,
-				'type'                      => TX_INVOICE
-			]);
-			$full_callback_url              = $invoice_address_model->callback_url . '?' . $queryString;
-			$full_callback_url_with_secret  = $full_callback_url . '&secret=' . Config::get( 'bitcoin.app_secret' ); // don't include secret in log
+			Log::info( "Address $to_address, amount (BTC): $btc_amount, confirms: $confirms received transaction id $tx_id" );
 
-			$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
+			/* whether new transaction or notify was fired on 1st confirmation */
+			$transaction_model = Transaction::getTransactionByTxIdAndAddress( $tx_id, $to_address );
+			$satoshi_amount    = bcmul( $btc_amount, SATOSHIS_FRACTION );
+			$is_own_address = false; // if not own address, then unknown address received transaction
 
-			$callback_status = false;
-			$external_user_id = null;
-			if ( $app_response == '*ok*' ) {
-				$callback_status = 1;
-			}
-
-			$json_response = json_encode($app_response);
-			if ($json_response and isset($app_response->external_user_id)) {
-				$external_user_id = $app_response->external_user_id;
-				$callback_status = 1;
-			}
-
-			//if we get back an *ok* from the script then update the transactions status
-			Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status, $external_user_id );
-
-			DB::commit();
-
-			// do the response to server from either 0 confirmation or 1 confirmation
-			$response = [
-				'confirmations' => $confirms,
-				'address'       => $to_address,
-				'amount'        => $btc_amount,
-				'txid'          => $tx_id,
-				'callback_url'  => $full_callback_url,
-				'response'      => $app_response,
-			];
-			return Response::json( $response );
-		}
-		/*************** END processing the invoicing callback **************/
-
-		/*************************************************************************************/
-		/* at this point its not the invoicing address, lookup address in address table
-		/*************************************************************************************/
-
-		$address_model = Address::getAddress( $to_address );
-
-		/************* It is incoming transaction, because it is sent to some of the inner addresses *************/
-		if ( $address_model )
-		{
-			$this->user = $address_model->user;
-
-			// 0 conf, just hit mempool, not 1-st confirmation
-			if ( !$transaction_model )
-			{
-				// first callback, because no transaction initially found in db
-				Log::info( 'Received address ' . $address_model->address . ' label: ' . $address_model->label .
-				                     ', user guid: ' . $this->user->guid . ', email: ' . $this->user->email );
-
-				$new_address_balance = bcadd( $address_model->balance, $satoshi_amount );
-
-				$initialUserBalance = Balance::getBalance($this->user->id, $this->crypto_type_id);
-
-				$data = [
-					'tx_id'             => $tx_id,
-					'user_id'           => $address_model->user_id,
-					'transaction_type'  => TX_RECEIVE,
-					'crypto_amount'     => $satoshi_amount,
-					'network_fee'       => $fee,
-					'crypto_type_id'    => $this->crypto_type_id,
-					'address_to'        => $to_address,
-					'address_from'      => $address_from,
-					'confirmations'     => $confirms,
-					'block_hash'        => $block_hash,
-					'block_index'       => $block_index,
-					'block_time'        => $block_time,
-					'tx_time'           => $time,
-					'tx_timereceived'   => $time_received,
-					'tx_category'       => $category,
-					'address_account'   => $account_name,
-					'balance'           => $new_address_balance,
-					'user_balance'      => bcadd($initialUserBalance->balance, $satoshi_amount),
-					'previous_balance'  => $address_model->balance,
-					'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
-				];
-
-				// insert new transaction
-				$transaction_model = Transaction::insertNewTransaction( $data );
-
-				// update address balance
-				Address::updateBalance($address_model, $satoshi_amount);
-
-				/* update API user balance */
-				Balance::updateUserBalance($this->user, $satoshi_amount);
-			}
-			else
-			{
-				/* bitcoind sent 2nd callback for the transaction which is 1st confirmation */
-				Transaction::updateTxConfirmation( $transaction_model, $confirms, $block_hash, $block_index, $block_index );
-			}
-		}
-		else
-		{
-			/* either its change address or somebody sent to some address that is not registered in db!
-			/ say some shit that address is unknown, and mail too! */
-			MailHelper::sendEmailPlain([
-				'email'     => Config::get('mail.admin_email'),
-				'subject'   => 'RECEIVED BITCOINS TO UNKNOWN ADDRESS',
-				'text'      => 'RECEIVED ' . $btc_amount . ' BITCOINS TO UNKNOWN ADDRESS. Address that received it: ' . $to_address,
-			]);
-
-			$initialUserBalance = Balance::getBalance($this->user->id, $this->crypto_type_id);
-
-			$data = [
+			/* create common data for transaction */
+			$common_data = [
 				'tx_id'             => $tx_id,
 				'user_id'           => $this->user->id,
-				'transaction_type'  => TX_RECEIVE,
 				'crypto_amount'     => $satoshi_amount,
 				'network_fee'       => $fee,
 				'crypto_type_id'    => $this->crypto_type_id,
@@ -698,65 +596,40 @@ class ApiController extends BaseController {
 				'tx_timereceived'   => $time_received,
 				'tx_category'       => $category,
 				'address_account'   => $account_name,
-				'note'              => TX_UNREGISTERED_ADDRESS,
-				'user_balance'      => bcadd($initialUserBalance, $satoshi_amount), // new API user balance
-				'previous_balance'  => $initialUserBalance->balance, // API user balance before that transaction, because user balance has not been updated yet
-				'bitcoind_balance'  => bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION), // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
 			];
 
-			// insert new transaction anyway
-			Transaction::insertNewTransaction( $data );
+			/******************* START processing the invoicing callback **************/
+			$invoice_address_model = InvoiceAddress::getAddress( $to_address );
+			if ( $invoice_address_model ) {
+				$is_own_address = true;
+				$this->processInvoiceAddress($transaction_model, $invoice_address_model, $common_data, $satoshi_amount);
+				continue; // continue into the next loop
+			}
+			/*************** END processing the invoicing callback **************/
 
-			DB::commit();
+			/*************************************************************************************/
+			/* at this point its not the invoicing address, lookup address in address table
+			/*************************************************************************************/
 
-			Log::warning('Received payment to unregistered address');
+			/************* It is incoming transaction, because it is sent to some of the inner addresses *************/
+			$address_model = Address::getAddress( $to_address );
+			if ( $address_model )
+			{
+				$is_own_address = true;
+				$this->processUserAddress($transaction_model, $address_model, $common_data, $satoshi_amount);
+				continue;
+			}
 
-			return 'fuck yea';
+			/* The receiving address wasn't in the database, so its not tied to any API user, but generated outside API directly in bitcoin core*/
+			if ( !$is_own_address )
+			{
+				$this->processUnknownAddress( $confirms, $transaction_model, $common_data, $btc_amount, $to_address, $satoshi_amount );
+				continue;
+			}
 		}
 
-		/* Now it is time to fire to the API user callback URL which is his app that is using this server's API
-		/ mind the secret here, that app has to verify that it is coming from the API server not somebody else */
-		$queryString = http_build_query([
-			'input_transaction_hash' => $tx_id,
-			'input_address'          => $to_address,
-			'value'                  => $satoshi_amount,
-			'confirmations'          => $confirms,
-			'host'                   => $HOST_NAME,
-			'type'                   => TX_API_USER,
-		]);
+		return '*ok*'; // just dummy return, since it's not being processed on other end. the return is processed in fetchUrl()
 
-		$full_callback_url = $this->user->callback_url . '?'. $queryString;
-		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $this->user->secret; // don't include secret in a log
-
-		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
-
-		$callback_status = false;
-		$external_user_id = null;
-		if ( $app_response == "*ok*" ) {
-			$callback_status = 1;
-		}
-
-		$json_response = json_encode($app_response);
-		if ($json_response and isset($app_response->external_user_id)) {
-			$external_user_id = $app_response->external_user_id;
-			$callback_status = 1;
-		}
-
-		//if we get back an *ok* from the script then update the transactions status
-		Transaction::updateTxOnAppResponse( $transaction_model, $app_response, $full_callback_url, $callback_status, $external_user_id );
-
-		DB::commit();
-
-		$response = [
-			'confirmations' => $confirms,
-			'address'       => $to_address,
-			'amount'        => $btc_amount,
-			'txid'          => $tx_id,
-			'callback_url'  => $full_callback_url,
-			'response'      => $app_response,
-		];
-
-		return Response::json($response);
 	}
 
 	/* example.com/api/receive?method=create&address=xxx&callback=https://callback_url.com&label=xxx&forward=1&userid=1
@@ -885,7 +758,7 @@ class ApiController extends BaseController {
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $this->user->secret; // don't include secret in a log
 		$app_response                  = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
 
-		return Response::json('ok :)');
+		return Response::json('*ok*');
 	}
 
 	/**
@@ -1005,11 +878,301 @@ class ApiController extends BaseController {
 		} );
 	}
 
+	private function processInvoiceAddress(Transaction $transaction_model = null, InvoiceAddress $invoice_address_model, array $common_data, $satoshi_amount)
+	{
+		Log::info( 'Processing invoicing address ' . $common_data['address_to'] . ', destination address: ' . $invoice_address_model->destination_address .
+		           ', label: ' . $invoice_address_model->label . ', amount satoshi: ' . $invoice_address_model->received_amount .
+		           ', callback url: ' . $invoice_address_model->callback_url . ', forward: ' . $invoice_address_model->forward );
+
+		$forward_tx_id = 0; // needed for callback. stays 0 when forwarding is not chosen
+
+		DB::beginTransaction();
+
+		if ( !$transaction_model )
+		{
+			$initialUserBalance = Balance::getBalance($this->user->id, $this->crypto_type_id);
+			// first callback, because no transaction initially found in db
+			$common_data['transaction_type'] = TX_RECEIVE_INVOICING; // new API user balance
+			$common_data['user_balance']     = bcadd($initialUserBalance->balance, $satoshi_amount);
+			$common_data['balance']          = bcadd($invoice_address_model->balance, $satoshi_amount); // new address balance
+			$common_data['previous_balance'] = $invoice_address_model->balance; // address balance before that transaction
+			$common_data['bitcoind_balance'] = bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION); // bitcoind balance on received! that means this transaction is not included, because it has 0 conf;
+
+			$transaction_model = Transaction::insertNewTransaction($common_data);
+
+			$total_received = bcadd( $invoice_address_model->received_amount, $satoshi_amount );
+			InvoiceAddress::updateReceived($invoice_address_model, $total_received);// update amount and mark as received
+			/* update API user balance */
+			$user_balance_updated = Balance::updateUserBalance($this->user, $satoshi_amount);
+
+			// check if needs to be forwarded
+			if ( $invoice_address_model->forward == 1 )
+			{
+				$bitcoin_amount = bcdiv( $satoshi_amount, SATOSHIS_FRACTION, 8 ); // division
+				Log::info( 'Starting to forward ' . $satoshi_amount . ' satoshis which is ' . $bitcoin_amount . ' bitcoins' );
+				try
+				{
+					$forward_data = [
+						'user_id'           => $this->user->id,
+						'transaction_type'  => TX_SEND,
+						'crypto_amount'     => $satoshi_amount,
+						'crypto_type_id'    => $this->crypto_type_id,
+						'address_to'        => $common_data['address_to'],
+						'note'              => 'invoice forwarding',
+						'balance'           => bcsub($transaction_model->balance, $satoshi_amount),
+					];
+					$forward_tx_id = $this->bitcoin_core->sendtoaddress( $invoice_address_model->destination_address, (float) $bitcoin_amount );
+					if ( $forward_tx_id )
+					{
+						$forward_data['tx_id'] = $forward_tx_id;
+						$forward_data['previous_balance']  = $transaction_model->balance;
+						$forward_data['bitcoind_balance']  = bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION);
+						Transaction::insertNewTransaction($forward_data);
+						Balance::updateUserBalance($this->user, $satoshi_amount);
+						Log::info( 'Forwarded ' . $bitcoin_amount . ' bitcoins to ' . $common_data['address_to'] );
+					} // TODO fucked when sendtoaddress throws exception, should send to server still the response.
+				}
+				catch ( Exception $e )
+				{
+					Log::error( "#callback: send to address exception: " . $e->getMessage() );
+
+					// add to transaction entry anyway, with failed forwarding and send warning out email !
+					$forward_data['note'] = 'failed invoice forwarding';
+					Transaction::insertNewTransaction($forward_data);
+					DB::commit();
+
+					MailHelper::sendEmailPlain([
+						'email'     => Config::get('mail.admin_email'),
+						'subject'   => 'FAILED INVOICE FORWARDING!',
+						'text'      => 'Failed to forward to ' . $common_data['address_to'] . ', ' . $satoshi_amount . ' satoshis, tx hash: ' . $common_data['tx_id'],
+					]);
+				}
+			}
+
+			// add data that is specific to invoice address
+			$common_data['transaction_hash'] = $forward_tx_id;
+			$common_data['destination_address'] = $invoice_address_model->destination_address;
+
+			$response = $this->sendUrl(
+				$common_data,
+				$satoshi_amount,
+				TX_INVOICE,
+				$invoice_address_model->callback_url,
+				Config::get( 'bitcoin.app_secret')
+			);
+
+			// if we get back an *ok* from the script then update the transactions status
+			Transaction::updateTxOnAppResponse( $transaction_model, $response['app_response'], $response['callback_url'], $response['callback_status'], $response['external_user_id'] );
+		}
+		else
+		{
+			/* bitcoind sent 2nd callback for the transaction which is 1st confirmation
+			 * no need to shoot to the application, since application is updating first confirmation anyway on block-notify */
+			Transaction::updateTxConfirmation( $transaction_model, $common_data );
+		}
+
+		DB::commit();
+	}
+
+	private function processUserAddress(Transaction $transaction_model = null, Address $address_model, array $common_data, $satoshi_amount )
+	{
+		$this->user = $address_model->user;
+
+		DB::beginTransaction();
+		// 0 conf, just hit mempool, not 1-st confirmation
+		if ( !$transaction_model )
+		{
+			// first callback, because no transaction initially found in db
+			Log::info( 'Received address ' . $address_model->address . ' label: ' . $address_model->label .
+			           ', user guid: ' . $this->user->guid . ', email: ' . $this->user->email );
+
+			$common_data['transaction_type'] = TX_RECEIVE;
+
+			$new_address_balance = bcadd( $address_model->balance, $satoshi_amount );
+
+			$initialUserBalance = Balance::getBalance($this->user->id, $this->crypto_type_id);
+
+			/* add data that is related to user address only */
+			$common_data['balance']             = $new_address_balance;
+			$common_data['user_balance']        = bcadd($initialUserBalance->balance, $satoshi_amount);
+			$common_data['previous_balance']    = $address_model->balance;
+			$common_data['bitcoind_balance']    = bcmul($this->bitcoin_core->getbalance(), SATOSHIS_FRACTION);
+
+			// insert new transaction
+			$transaction_model = Transaction::insertNewTransaction( $common_data );
+
+			// update address balance
+			Address::updateBalance($address_model, $satoshi_amount);
+
+			/* update API user balance */
+			Balance::updateUserBalance($this->user, $satoshi_amount);
+
+			/* send to to application the response! */
+			$response = $this->sendUrl(
+				$common_data,
+				$satoshi_amount,
+				TX_API_USER,
+				$this->user->callback_url,
+				$this->user->secret
+			);
+
+			// if we get back an *ok* from the script then update the transactions status
+			Transaction::updateTxOnAppResponse( $transaction_model, $response['app_response'], $response['callback_url'], $response['callback_status'], $response['external_user_id'] );
+		}
+		else
+		{
+			/* bitcoind sent 2nd callback for the transaction which is 1st confirmation
+			 * no need to shoot to the application, since application is updating first confirmation anyway on block-notify */
+			Transaction::updateTxConfirmation( $transaction_model, $common_data );
+		}
+		DB::commit();
+	}
+
+	/**
+	 * @param $tx_id
+	 * @param $tx_info
+	 * @param $block_hash
+	 * @param $block_index
+	 * @param $block_time
+	 * @param $account_name
+	 * @param $to_address
+	 * @param $category
+	 * @param $btc_amount
+	 */
+	private function print_debug( $tx_id, $tx_info, $block_hash, $block_index, $block_time, $account_name, $to_address, $category, $btc_amount ) {
+		$new = "Transaction hash: " . $tx_id
+		       . "\n amount: " . $tx_info['amount']
+		       . "\n confirmations: " . $tx_info["confirmations"]
+		       . "\n blockhash: " . $block_hash
+		       . "\n blockindex: " . $block_index
+		       . "\n blocktime: " . $block_time
+		       . "\n txid: " . $tx_info["txid"]
+		       . "\n time: " . $tx_info["time"]
+		       . "\n timereceived: " . $tx_info["timereceived"]
+		       . "\n account: " . $account_name
+		       . "\n address: " . $to_address
+		       . "\n category: " . $category
+		       . "\n amount address: " . $btc_amount;
+		echo nl2br( $new ) . "\n";
+	}
+
+	/**
+	 * @param $confirms
+	 * @param $transaction_model
+	 * @param $common_data
+	 * @param $btc_amount
+	 * @param $to_address
+	 * @param $satoshi_amount
+	 *
+	 * @return mixed
+	 */
+	private function processUnknownAddress( $confirms, $transaction_model = null, $common_data, $btc_amount, $to_address, $satoshi_amount ) {
+		if ( $confirms > 0 ) {
+			/* bitcoind sent 2nd callback for the transaction which is 1st confirmation
+			 * no need to shoot to the application, since application is updating first confirmation anyway on block-notify */
+			Transaction::updateTxConfirmation( $transaction_model, $common_data );
+
+			return $common_data;
+		} else {
+			/* either its change address or somebody sent to some address that is not registered in db!
+			 * say some shit that address is unknown, and mail too! */
+			MailHelper::sendEmailPlain( [
+				'email'   => Config::get( 'mail.admin_email' ),
+				'subject' => 'RECEIVED BITCOINS TO UNKNOWN ADDRESS',
+				'text'    => 'RECEIVED ' . $btc_amount . ' BITCOINS TO UNKNOWN ADDRESS. Address that received it: ' . $to_address,
+			] );
+
+			$initialUserBalance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
+
+			$common_data['transaction_type'] = TX_RECEIVE;
+			$common_data['note']             = TX_UNREGISTERED_ADDRESS;
+			$common_data['user_balance']     = bcadd( $initialUserBalance, $satoshi_amount ); // new API user balance
+			$common_data['previous_balance'] = $initialUserBalance->balance; // API user balance before that transaction, because user balance has not been updated yet
+			$common_data['bitcoind_balance'] = bcmul( $this->bitcoin_core->getbalance(), SATOSHIS_FRACTION ); // bitcoind balance on received! that means this transaction is not included, because it has 0 conf
+
+			// insert new transaction anyway
+			Transaction::insertNewTransaction( $common_data );
+
+			Log::warning( 'Received payment to unregistered address' );
+		}
+	}
+
+	private function sendUrl(array $common_data, $satoshi_amount, $type, $callback_url, $secret)
+	{
+		/* Now it is time to fire to the API user callback URL which is his app that is using this server's API
+		 * mind the secret here, that app has to verify that it is coming from the API server not somebody else */
+		$queryString = http_build_query([
+			'value'                  => $satoshi_amount,
+			'input_address'          => $common_data['address_to'],
+			'confirmations'          => $common_data['confirmations'],
+			'input_transaction_hash' => $common_data['tx_id'],
+			'host'                   => $this->HOST_NAME,
+			'type'                   => $type,
+		]);
+
+		$full_callback_url = $callback_url . '?'. $queryString;
+		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $secret; // don't include secret in a log
+
+		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
+
+		$callback_status = false;
+		$external_user_id = null;
+		if ( $app_response == "*ok*" ) {
+			$callback_status = 1;
+		} else {
+			$json_response = json_decode($app_response);
+			if ($json_response and isset($app_response->external_user_id)) {
+				$external_user_id = $app_response->external_user_id;
+				$callback_status = 1;
+			}
+		}
+
+		return [
+			'app_response'      => $app_response,
+			'callback_status'   => $callback_status,
+			'callback_url'      => $full_callback_url,
+			'external_user_id'  => $external_user_id,
+		];
+	}
+
+	private function validateSendManyJson(stdClass $recipients)
+	{
+		if ($recipients === null) {
+			return false;
+		}
+		foreach ($recipients as $btc_address => $satoshi_amount) {
+			// is valid bitcoin address
+			// satoshis are in integer
+			// satoshi is more than zero
+			if ( !BitcoinHelper::isValid($btc_address) or !is_int($satoshi_amount) or $satoshi_amount <= 0 ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private function getSendManyTotalAmount(stdClass $recipients) {
+		$total_satoshis = 0;
+		foreach ($recipients as $btc_address => $satoshi_amount) {
+			$total_satoshis = bcadd($satoshi_amount, $total_satoshis);
+		}
+		return $total_satoshis;
+	}
+
+	private function convertSendManySatoshisToBtc(stdClass $recipients, $to_json_string = true)
+	{
+		foreach ($recipients as &$satoshi_amount) {
+			$satoshi_amount = self::satoshiToBtc($satoshi_amount);
+		}
+		if ($to_json_string) {
+			$recipients = json_encode($recipients);
+		}
+		return $recipients;
+	}
+
 	public function missingMethod($parameters = array())
 	{
 		throw new RuntimeException('Bro, error');
 //		return Response::json( ['error' => 'unknown method'] );
 	}
-
-
 }
