@@ -1067,13 +1067,14 @@ class ApiController extends BaseController {
 	 * @return mixed
 	 */
 	private function processUnknownAddress( $confirms, $transaction_model = null, $common_data, $btc_amount, $to_address, $satoshi_amount ) {
-		if ( $confirms > 0 ) {
+		if ( $confirms > 0 )
+		{
 			/* bitcoind sent 2nd callback for the transaction which is 1st confirmation
 			 * no need to shoot to the application, since application is updating first confirmation anyway on block-notify */
 			Transaction::updateTxConfirmation( $transaction_model, $common_data );
-
-			return $common_data;
-		} else {
+		}
+		else
+		{
 			/* either its change address or somebody sent to some address that is not registered in db!
 			 * say some shit that address is unknown, and mail too! */
 			MailHelper::sendEmailPlain( [
@@ -1113,7 +1114,8 @@ class ApiController extends BaseController {
 		$full_callback_url = $callback_url . '?'. $queryString;
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $secret; // don't include secret in a log
 
-		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret ); // TODO wrap in exception - means the host did not respond
+		// TODO wrap in exception - means the host did not respond
+		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret );
 
 		$callback_status = false;
 		$external_user_id = null;
