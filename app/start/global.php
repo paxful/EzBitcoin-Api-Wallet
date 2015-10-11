@@ -52,7 +52,7 @@ App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
 	$user = Auth::check() ? json_encode(Auth::user()) : 'no user';
-	$visitor_ip = LocationHelper::real_user_ip();
+	$visitor_ip = Request::getClientIp();
 	$message = "Code: $code\n\nIP: $visitor_ip\n\nURL: " . Request::url()."\n\nUser: $user\nInput: ".json_encode(Input::all())."\n\nexception: $exception";
 	Log::error($exception);
 	MailHelper::sendEmailPlain([

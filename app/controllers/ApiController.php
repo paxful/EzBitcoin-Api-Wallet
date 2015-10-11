@@ -486,6 +486,17 @@ class ApiController extends BaseController {
 		return Response::json( ['message' => 'Sent To Multiple Recipients', 'tx_hash' => $tx_id] );
 	}
 
+	public function listUnspent()
+	{
+		$min_confirms = Input::get('confirms', 1);
+		if ( ! $this->attemptAuth() ) {
+			return Response::json( ['error' => AUTHENTICATION_FAIL] );
+		}
+		$this->bitcoin_core->setRpcConnection($this->user->rpc_connection);
+		$unspent = $this->bitcoin_core->listunspent( $min_confirms );
+		return Response::json($unspent);
+	}
+
 	/**
 	 * Callback is initiated when:
 	 * Receiving transaction gets into mempool
@@ -623,6 +634,8 @@ class ApiController extends BaseController {
 			/* The receiving address wasn't in the database, so its not tied to any API user, but generated outside API directly in bitcoin core*/
 			if ( !$is_own_address )
 			{
+				/* This can be enabled when needed to save payment for unknown address received
+				 * but because we have change addresses that are used in 'sendmany', we don't want to bloat transactions table */
 				$this->processUnknownAddress( $confirms, $transaction_model, $common_data, $btc_amount, $to_address, $satoshi_amount );
 				continue;
 			}
