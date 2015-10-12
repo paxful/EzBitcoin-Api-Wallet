@@ -636,7 +636,7 @@ class ApiController extends BaseController {
 			{
 				/* This can be enabled when needed to save payment for unknown address received
 				 * but because we have change addresses that are used in 'sendmany', we don't want to bloat transactions table */
-				$this->processUnknownAddress( $confirms, $transaction_model, $common_data, $btc_amount, $to_address, $satoshi_amount );
+				//$this->processUnknownAddress( $confirms, $transaction_model, $common_data, $btc_amount, $to_address, $satoshi_amount );
 				continue;
 			}
 		}
