@@ -178,6 +178,10 @@ class ApiController extends BaseController {
 	 */
 	public function newAddress($guid)
 	{
+		// because it can be a long process, set execution time to a lot more
+		ini_set('max_execution_time', 600);
+		ini_set('memory_limit','512M');
+
 		if ( ! $this->attemptAuth() ) {
 			return Response::json( ['error' => AUTHENTICATION_FAIL] );
 		}
@@ -260,6 +264,10 @@ class ApiController extends BaseController {
 	 */
 	public function payment($guid)
 	{
+		// because it can be a long process, set execution time to a lot more
+		ini_set('max_execution_time', 600);
+		ini_set('memory_limit','512M');
+
 		if ( ! $this->attemptAuth() ) {
 			return Response::json( ['error' => AUTHENTICATION_FAIL] );
 		}
@@ -372,6 +380,10 @@ class ApiController extends BaseController {
 	 */
 	public function sendmany($guid)
 	{
+		// because it can be a long process, set execution time to a lot more
+		ini_set('max_execution_time', 600);
+		ini_set('memory_limit','512M');
+
 		if ( ! $this->attemptAuth() ) {
 			return Response::json( ['error' => AUTHENTICATION_FAIL] );
 		}
@@ -649,6 +661,10 @@ class ApiController extends BaseController {
 	/ if forward = 0, then don't forward to address. label needed just in this case, when forward 0 and it has a role of note */
 	public function receive()
 	{
+		// because it can be a long process, set execution time to a lot more
+		ini_set('max_execution_time', 600);
+		ini_set('memory_limit','512M');
+
 		Log::info( '=== RECEIVE STARTED ===' );
 
 		$ip_address = Request::ip();
