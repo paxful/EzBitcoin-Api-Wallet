@@ -500,7 +500,7 @@ class ApiController extends BaseController {
 
 	public function listUnspent()
 	{
-		$min_confirms = Input::get('confirms', 1);
+		$min_confirms = (int)Input::get('confirms', 1);
 		if ( ! $this->attemptAuth() ) {
 			return Response::json( ['error' => AUTHENTICATION_FAIL] );
 		}
