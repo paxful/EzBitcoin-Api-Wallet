@@ -460,12 +460,14 @@ class ApiController extends BaseController {
 				}
 			}
 
-		} catch ( Exception $e )
+		}
+		catch ( Exception $e )
 		{
 			DB::rollback();
 			Log::error( "#sendmany: send to address exception: " . $e->getMessage() );
 
-			foreach ($recipients as $address => $amount_satoshi) {
+			foreach ($recipients as $address => $amount_satoshi)
+			{
 				// create identical data first
 				$tx_data = [
 					'user_id' => $this->user->id,
@@ -488,6 +490,13 @@ class ApiController extends BaseController {
 					TransactionFailed::insertTransaction($tx_data);
 				}
 			}
+			// send email
+			MailHelper::sendEmailPlain([
+
+				'email'     => Config::get('mail.admin_email'),
+				'subject'   => 'Failed in sendmany',
+				'text'      => "Message\n".$e->getMessage()."\nTrade\n".$e,
+			]);
 			return Response::json( ['error' => "#sendmany: send to address exception: " . $e->getMessage()] );
 		}
 		DB::commit();
