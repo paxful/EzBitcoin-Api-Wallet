@@ -4,8 +4,12 @@ class ChangeAddressesSettingsSeeder extends Seeder {
 
 	public function run()
 	{
-		DB::table('change_addresses')->delete();
-		DB::table('settings')->delete();
+		// not to delete in production just in case lol
+		if ( App::environment('production') )
+		{
+			DB::table('change_addresses')->delete();
+			DB::table('settings')->delete();
+		}
 
 		Settings::create(['key' => 'monitor_outputs', 'value' => 1]);
 		Settings::create(['key' => 'minimum_outputs_threshold', 'value' => 125]);

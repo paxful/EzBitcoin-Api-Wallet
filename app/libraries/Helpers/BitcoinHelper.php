@@ -91,6 +91,7 @@ class BitcoinHelper {
 		if ($changeAddresses->count() < 1)
 		{
 			// no addresses, just return same address:amount pairs
+			Log::warning('No change addresses found in DB!');
 			return $sendOutPairs;
 		}
 		$position = Cache::rememberForever(self::NEXT_CHANGE_ADDRESS_POS_KEY, function()
