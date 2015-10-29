@@ -466,9 +466,10 @@ class ApiController extends BaseController {
 						$outputs = $this->bitcoin_core->listunspent(1);
 						$outputsResponse = new UnspentOutputsResponse($outputs);
 						$total = $outputsResponse->getTotal();
-						Log::info('Initiating checking outputs, total outputs: ' . $total);
+						$outputsThreshold = BitcoinHelper::getOutputsThreshold();
+						Log::info('Initiating checking outputs, total outputs: ' . $total . '. Outputs threshold: ' . $outputsThreshold);
 						// if total less than 150, create 125 more
-						if ($total < BitcoinHelper::getOutputsThreshold())
+						if ($total < $outputsThreshold)
 						{
 							// send to own addresses some 0.06 or something
 							// get 125 more addresses and create pairs for them
