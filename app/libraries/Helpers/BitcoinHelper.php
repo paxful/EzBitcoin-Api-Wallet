@@ -1,8 +1,13 @@
 <?php namespace Helpers;
 
+use ChangeAddress;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Settings;
 
 class BitcoinHelper {
+
+	const NEXT_CHANGE_ADDRESS_POS_KEY = 'next-change-address';
 
 	public static function isValid($addr) {
 
@@ -67,5 +72,80 @@ class BitcoinHelper {
 		}
 
 		return $withPadding;
+	}
+
+	public static function isMonitoringOutputsEnabled()
+	{
+		$monitor = Settings::getSettingValue('monitor_outputs');
+		if ($monitor == 1)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public static function addOutputsToChangeAddresses($sendOutPairs, $userId)
+	{
+		// get change addresses and cache for 12h
+		$changeAddresses = ChangeAddress::remember(720, 'change_addresses')->where('user_id', $userId)->get();
+		if ($changeAddresses->count() < 1)
+		{
+			// no addresses, just return same address:amount pairs
+			return $sendOutPairs;
+		}
+		$position = Cache::rememberForever(self::NEXT_CHANGE_ADDRESS_POS_KEY, function()
+		{
+			return 0;
+		});
+		$takeNum = self::getOutputsToAdd();
+		$addressesToFill = $changeAddresses->slice($position, $takeNum); // which addresses to fill with outputs
+
+		// calculate next position where to start slicing on next outputs adding
+		$nextPosition = $position + $takeNum;
+
+		// if it took less than 125 addresses, take extra from beginning the remainder
+		if ($addressesToFill->count() < $takeNum)
+		{
+			// check how much more needs to be taken to have 125 in total
+			$remainder = $takeNum - $addressesToFill->count();
+			$nextPosition = $remainder; // next position for more outputs is the remainder position where to start
+			$slicedSecond = $changeAddresses->slice(0, $remainder); // take the remainder from beginning
+			$addressesToFill = $addressesToFill->merge($slicedSecond);
+		}
+
+		Cache::forever(self::NEXT_CHANGE_ADDRESS_POS_KEY, $nextPosition); // save the next position
+
+		$amountToAdd = self::getAmountToAdd();
+
+		foreach ($addressesToFill as $address)
+		{
+			// add 0.069 btc to pairs
+			$sendOutPairs->{$address->address} = $amountToAdd;
+		}
+		return $sendOutPairs;
+	}
+
+	public static function getOutputsThreshold()
+	{
+		$outputsThreshold = Settings::where('key', 'minimum_outputs_threshold')->first();
+		return $outputsThreshold->value;
+	}
+
+	public static function getOutputsToAdd()
+	{
+		$outputsToAdd = Settings::where('key', 'outputs_to_add')->first();
+		return $outputsToAdd->value;
+	}
+
+	public static function getAmountToAdd()
+	{
+		$amountToAdd = Settings::where('key', 'amount_to_add')->first();
+		return $amountToAdd->value;
+	}
+
+	public static function getOutputsCacheDuration()
+	{
+		$outputsCacheDuration = Settings::where('key', 'outputs_cache_duration')->first();
+		return $outputsCacheDuration->value;
 	}
 }

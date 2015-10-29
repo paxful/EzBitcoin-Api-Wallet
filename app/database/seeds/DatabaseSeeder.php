@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder {
 
 		$this->call('BitcoinAddressesSeeder');
 		$this->command->info('Bitcoin addresses seeded!');
+
+		$this->call('ChangeAddressesSettingsSeeder');
+		$this->command->info('Change addresses and settings seeded!');
 	}
 
 }

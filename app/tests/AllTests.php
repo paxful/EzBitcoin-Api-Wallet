@@ -91,6 +91,25 @@ class AllTests extends TestCase {
 
 	}
 
+	public function testSendMany()
+	{
+		$userBalance = Balance::find(1);
+		$userBalance->balance = 8900000000; // 89 BTC !
+		$userBalance->save();
+
+		// TODO compile some addresses
+
+		$recipients = [
+			'recipients' => json_encode([
+				'mrcpH23MHKweJmzNWNbPKMxtVKMJYVpKgr' => 4500000,
+				'n21cjTZa59QcMBXFvoKx2WoRotBV9mErnJ' => 5500000,
+				'mxKRETCDzCuLVLiw9MieJb8xFi1WhkQ9wY'=> 6500000,
+			])];
+
+		$response = $this->call('POST', 'api/7xDsRLyXEd1PgJ6Glrhs6d/sendmany?password=strong_pass_plz', $recipients);
+		$jsonResult = json_decode($response->getContent());
+	}
+
 	public function testStaticAddressCallback()
 	{
 

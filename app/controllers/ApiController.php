@@ -3,6 +3,7 @@
 use Helpers\DataParserInterface;
 use Helpers\JsonRPCClientInterface;
 use Illuminate\Support\Facades\Response;
+use Services\Blockchain\Response\UnspentOutputsResponse;
 
 class ApiController extends BaseController {
 
@@ -12,6 +13,8 @@ class ApiController extends BaseController {
 	protected $dataParser;
 	protected $HOST_NAME;
 
+	const OUTPUTS_CACHE_KEY = 'outputs-cache';
+
 	public function __construct(JsonRPCClientInterface $bitcoin_core_client, DataParserInterface $dataParser)
 	{
 		$this->bitcoin_core = $bitcoin_core_client;
@@ -19,7 +22,8 @@ class ApiController extends BaseController {
 		$this->HOST_NAME    = gethostname();
 	}
 
-	public function getIndex() {
+	public function getIndex()
+	{
 		return View::make('hello');
 	}
 
@@ -384,7 +388,8 @@ class ApiController extends BaseController {
 		ini_set('max_execution_time', 600);
 		ini_set('memory_limit','512M');
 
-		if ( ! $this->attemptAuth() ) {
+		if ( ! $this->attemptAuth() )
+		{
 			return Response::json( ['error' => AUTHENTICATION_FAIL] );
 		}
 
@@ -394,7 +399,8 @@ class ApiController extends BaseController {
 		$external_user_id = Input::get( 'external_user_id', null );
 		$account = Input::get('account', "");
 
-		if ( ! $note ) {
+		if ( ! $note )
+		{
 			$note = '';
 		}
 
@@ -402,12 +408,14 @@ class ApiController extends BaseController {
 		$recipients = json_decode($recipients_json);
 		$is_valid_recipients = $this->validateSendManyJson($recipients);
 
-		if ( !$is_valid_recipients ) {
+		if ( !$is_valid_recipients )
+		{
 			return Response::json( ['error' => '#sendmany: ' . ADDRESS_AMOUNT_NOT_SPECIFIED_SEND_MANY ] );
 		}
 
 		Log::info('=== START PAYMENT to MANY');
-		foreach ($recipients as $btc_address => $satoshi_amount) {
+		foreach ($recipients as $btc_address => $satoshi_amount)
+		{
 			Log::info( "Payment to $btc_address, note: $note, amount: " . self::satoshiToBtc( $satoshi_amount ) );
 		}
 		Log::info('=== END PAYMENT to MANY');
@@ -418,7 +426,8 @@ class ApiController extends BaseController {
 
 		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
 
-		if ( $user_balance->balance < $total_satoshis ) {
+		if ( $user_balance->balance < $total_satoshis )
+		{
 			DB::rollback();
 			Log::error( '#sendmany: ' . NO_FUNDS );
 			return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
@@ -438,15 +447,69 @@ class ApiController extends BaseController {
 		{
 			// convert satoshis to btc
 			$recipients_copy = clone $recipients; // need to copy to another array, since satoshis are converted to bitcoin denomination by reference
-			$recipients_bitcoin_denomination_obj = $this->convertSendManySatoshisToBtc($recipients_copy, false);
 
 			$this->bitcoin_core->setRpcConnection($this->user->rpc_connection);
+
+			$addedExtraOutputs = false;
+
+			/* check if that functionality is there */
+			if ( BitcoinHelper::isMonitoringOutputsEnabled() )
+			{
+				// if anything fails in here, just continue sending
+				try
+				{
+					/* Check here if there are enough confirmed UTXOs and whether more need to be added
+					 * Check of outputs were not checked recently, otherwise query for unspents */
+					$checkedOutputsRecently = Cache::get(self::OUTPUTS_CACHE_KEY);
+					if ( !$checkedOutputsRecently )
+					{
+						$outputs = $this->bitcoin_core->listunspent(1);
+						$outputsResponse = new UnspentOutputsResponse($outputs);
+						$total = $outputsResponse->getTotal();
+						// if total less than 150, create 125 more
+						if ($total < BitcoinHelper::getOutputsThreshold())
+						{
+							// send to own addresses some 0.06 or something
+							// get 125 more addresses and create pairs for them
+							$recipients_copy = BitcoinHelper::addOutputsToChangeAddresses($recipients_copy, $this->user->id);
+							// sending email of new transaction hash to email at the end of this method
+							$addedExtraOutputs = true;
+						}
+						else
+						{
+							// not added, just email about it
+							MailHelper::sendAdminEmail([
+								'subject' => 'Enough outputs exists',
+								'text'    => 'No need to add extra. Number of outputs: '.$outputsResponse->getTotal(),
+							]);
+						}
+
+						// set cache for 45 minutes until next check for outputs
+						$outputsCacheDuration = BitcoinHelper::getOutputsCacheDuration();
+						Cache::put(self::OUTPUTS_CACHE_KEY, 1, $outputsCacheDuration);
+					}
+				}
+				catch (Exception $e)
+				{
+					MailHelper::sendAdminEmail([
+						'subject' => 'Failed in adding more outputs',
+						'text'    => "Message\n".$e->getMessage()."\nTrace\n".$e,
+					]);
+
+					// replace back only original recipients
+					$recipients_copy = clone $recipients;
+				}
+			}
+
+			$recipients_bitcoin_denomination_obj = $this->convertSendManySatoshisToBtc($recipients_copy, false);
+
 			$tx_id = $this->bitcoin_core->sendmany( $account, $recipients_bitcoin_denomination_obj, 0, $note );
 			$sent = true;
 			if ( $tx_id ) {
 				// if it fails here on inserting new transaction, then this transaction will be rolled back - user balance not updated, but jsonrpcclient will send out.
 				// think of a clever way on which step it failed and accordingly let know if balance was updated or not
-				foreach ($recipients as $address => $amount_satoshi) {
+				foreach ($recipients as $address => $amount_satoshi)
+				{
 					$new_transaction = Transaction::insertNewTransaction([
 						'tx_id' => $tx_id,
 						'user_id' => $this->user->id,
@@ -481,28 +544,39 @@ class ApiController extends BaseController {
 				];
 
 				// because transaction was sent to network, decrease API user balance and also insert transaction hash
-				if ($sent) {
+				if ($sent)
+				{
 					Balance::setNewUserBalance($user_balance, $new_balance); // also decrease balance
 					$tx_data['tx_id'] = $tx_id; // because was sent to network, we know tx_id
 					TransactionFailed::insertTransaction($tx_data);
 					return Response::json( ['message' => "#sendmany: send to address exception: " . $e->getMessage(), 'tx_hash' => $tx_id] );
-				} else {
+				}
+				else
+				{
 					TransactionFailed::insertTransaction($tx_data);
 				}
 			}
 			// send email
-			MailHelper::sendEmailPlain([
-
-				'email'     => Config::get('mail.admin_email'),
-				'subject'   => 'Failed in sendmany',
-				'text'      => "Message\n".$e->getMessage()."\nTrade\n".$e,
+			MailHelper::sendAdminEmail([
+				'subject' => 'Failed in sendmany',
+				'text'    => "Message\n".$e->getMessage()."\nTrace\n".$e,
 			]);
 			return Response::json( ['error' => "#sendmany: send to address exception: " . $e->getMessage()] );
 		}
 		DB::commit();
 
-		if ( isset($new_transaction) ) {
+		if ( isset($new_transaction) )
+		{
 			$this->saveFee( $new_transaction );
+
+			if ($addedExtraOutputs)
+			{
+				// send email about extra outputs with tx hash
+				MailHelper::sendAdminEmail([
+					'subject' => 'Added extra outputs',
+					'text'    => "Tx id: $tx_id",
+				]);
+			}
 		}
 		return Response::json( ['message' => 'Sent To Multiple Recipients', 'tx_hash' => $tx_id] );
 	}
@@ -902,15 +976,15 @@ class ApiController extends BaseController {
 	}
 
 	private function saveFee( $new_transaction ) {
-		$db_tx_id = $new_transaction->id;
+		$tx_hash = $new_transaction->tx_id;
 		/* get for that transaction a miners fee, at this point we know it already */
-		Queue::push( function ( $job ) use ( $db_tx_id ) {
-			$tx = Transaction::find( $db_tx_id );
+		Queue::push( function ( $job ) use ( $tx_hash )
+		{
 			// get_transaction from bitcoin core
-			$tx_info         = $this->bitcoin_core->gettransaction( $tx->tx_id );
+			$tx_info         = $this->bitcoin_core->gettransaction( $tx_hash );
 			$fee             = isset($tx_info['fee']) ? abs( bcmul( $tx_info['fee'], SATOSHIS_FRACTION ) ) : null;
-			$tx->network_fee = $fee;
-			$tx->save();
+			// save fee for that transaction hash
+			Transaction::where('tx_id', $tx_hash)->update(['network_fee' => $fee]);
 
 			$job->delete();
 		} );
