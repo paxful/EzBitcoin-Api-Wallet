@@ -50,17 +50,21 @@ Log::useDailyFiles(storage_path().'/logs/'.$logFile);
 
 App::error(function(Exception $exception, $code)
 {
-	Log::error($exception);
-	$user = Auth::check() ? json_encode(Auth::user()) : 'no user';
-	$visitor_ip = Request::getClientIp();
-	$message = "Code: $code\n\nIP: $visitor_ip\n\nURL: " . Request::url()."\n\nUser: $user\nInput: ".json_encode(Input::all())."\n\nexception: $exception";
-	Log::error($exception);
-	MailHelper::sendEmailPlain([
+	// shoot error only if its not NotFoundException
+	if (get_class($exception) != 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException')
+	{
+		Log::error($exception);
+		$user = Auth::check() ? json_encode(Auth::user()) : 'no user';
+		$visitor_ip = Request::getClientIp();
+		$message = "Code: $code\n\nIP: $visitor_ip\n\nURL: " . Request::url()."\n\nUser: $user\nInput: ".json_encode(Input::all())."\n\nexception: $exception";
+		Log::error($exception);
+		MailHelper::sendEmailPlain([
 
-		'email'     => Config::get('mail.admin_email'),
-		'subject'   => "Exception code $code",
-		'text'      => $message,
-	]);
+			'email'     => Config::get('mail.admin_email'),
+			'subject'   => "Exception code $code",
+			'text'      => $message,
+		]);
+	}
 });
 
 /*
