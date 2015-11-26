@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="nginx:8282 local">
+  <component name="PublishConfigData" serverName="bitcoin-api-remote">
     <serverData>
-      <paths name="nginx:8282 local">
+      <paths name="Bitcoin-api">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="bitcoi-api-wallet" />
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="bitcoin-api-remote">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/vagrant/Code/bitcoin-api" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="vagrant">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/vagrant/Code/paxful" local="$PROJECT_DIR$/../paxful" web="/" />
           </mappings>
         </serverdata>
       </paths>
     </serverData>
   </component>
 </project>
-
