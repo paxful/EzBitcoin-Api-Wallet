@@ -190,6 +190,7 @@ return array(
 		'Validator'         => 'Illuminate\Support\Facades\Validator',
 		'View'              => 'Illuminate\Support\Facades\View',
 		'BitcoinHelper'     => 'Helpers\BitcoinHelper',
+		'BitGoHelper'       => 'Helpers\BitGoHelper',
 		'BitcoinCoreJsonRPCClient'     => 'Helpers\BitcoinCoreJsonRPCClient',
 		'MailHelper'        => 'Helpers\MailHelper',
 

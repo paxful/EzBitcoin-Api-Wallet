@@ -509,6 +509,11 @@ class ApiController extends BaseController {
 
 			$recipients_bitcoin_denomination_obj = $this->convertSendManySatoshisToBtc($recipients_copy, false);
 
+			// if user is BitGoD, need to call specific walletpassphrase command to unlock sending
+			if ($this->user->name == 'BitGoD')
+			{
+				BitGoHelper::unlockWallet($this->bitcoin_core);
+			}
 			$tx_id = $this->bitcoin_core->sendmany( $account, $recipients_bitcoin_denomination_obj, 0, $note );
 			$sent = true;
 			if ( $tx_id ) {
@@ -527,6 +532,10 @@ class ApiController extends BaseController {
 						'external_user_id' => $external_user_id
 					]);
 				}
+			}
+			if ($this->user->name == 'BitGoD')
+			{
+				BitGoHelper::lockWallet($this->bitcoin_core);
 			}
 
 		}
