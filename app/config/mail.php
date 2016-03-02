@@ -121,7 +121,7 @@ return array(
 	|
 	*/
 
-//	'pretend' => App::environment('local', 'testing') ? true : false,
-	'pretend' => false,
+	'pretend' => App::environment('local', 'testing') ? true : false,
+//	'pretend' => false,
 
 );

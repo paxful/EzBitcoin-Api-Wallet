@@ -424,22 +424,26 @@ class ApiController extends BaseController {
 
 		DB::beginTransaction(); // begin DB transaction
 
-		$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
-
-		if ( $user_balance->balance < $total_satoshis )
+		// ignore balance when using bitGo
+		if ($this->user->ignore_balance)
 		{
-			DB::rollback();
-			Log::error( '#sendmany: ' . NO_FUNDS );
-			return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
+			$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
+
+			if ( $user_balance->balance < $total_satoshis )
+			{
+				DB::rollback();
+				Log::error( '#sendmany: ' . NO_FUNDS );
+				return Response::json( ['error' => '#payment: ' . NO_FUNDS] );
+			}
+
+			$total_satoshis = abs($total_satoshis); // make it sure its positive
+
+			$new_balance = bcsub( $user_balance->balance, $total_satoshis );
+
+			Log::info('User initial balance: ' . self::satoshiToBtc( $user_balance->balance ) . ' BTC, new balance: ' . self::satoshiToBtc( $new_balance ));
+
+			Balance::setNewUserBalance($user_balance, $new_balance);
 		}
-
-		$total_satoshis = abs($total_satoshis); // make it sure its positive
-
-		$new_balance = bcsub( $user_balance->balance, $total_satoshis );
-
-		Log::info('User initial balance: ' . self::satoshiToBtc( $user_balance->balance ) . ' BTC, new balance: ' . self::satoshiToBtc( $new_balance ));
-
-		Balance::setNewUserBalance($user_balance, $new_balance);
 
 		$sent = false;
 
@@ -548,7 +552,11 @@ class ApiController extends BaseController {
 				// because transaction was sent to network, decrease API user balance and also insert transaction hash
 				if ($sent)
 				{
-					Balance::setNewUserBalance($user_balance, $new_balance); // also decrease balance
+					// ignore balance when using bitGo
+					if ($this->user->ignore_balance)
+					{
+						Balance::setNewUserBalance($user_balance, $new_balance); // also decrease balance
+					}
 					$tx_data['tx_id'] = $tx_id; // because was sent to network, we know tx_id
 					TransactionFailed::insertTransaction($tx_data);
 					return Response::json( ['message' => "#sendmany: send to address exception: " . $e->getMessage(), 'tx_hash' => $tx_id] );
@@ -1228,8 +1236,22 @@ class ApiController extends BaseController {
 		$full_callback_url = $callback_url . '?'. $queryString;
 		$full_callback_url_with_secret = $full_callback_url . "&secret=" . $secret; // don't include secret in a log
 
-		// TODO wrap in exception - means the host did not respond
-		$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret );
+		// wrapped in exception - means the host did not respond or something else happened,
+		// so save as 'non-notified' response, and with cron job shoot notification again to app
+		try
+		{
+			$app_response = $this->dataParser->fetchUrl( $full_callback_url_with_secret );
+		}
+		catch(Exception $e)
+		{
+			$app_response = 'non-notified';
+			$amontBtc = self::satoshiToBtc($satoshi_amount);
+			// email about non notified transaction
+			MailHelper::sendAdminEmail([
+				'subject' => 'App didnt return response on notifying about new transaction',
+				'text'    => "Full callback URL: $full_callback_url\nAmount: $amontBtc BTC",
+			]);
+		}
 
 		$callback_status = false;
 		$external_user_id = null;

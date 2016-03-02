@@ -4,8 +4,19 @@ class User extends Eloquent {
 
 	protected $table = 'users';
 
-	protected $fillable = array('guid', 'email', 'name', 'callback_url', 'users_callback_url', 'rpc_connection');
-	protected $hidden = array('password', 'secret');
+	protected $fillable = array(
+		'guid',
+		'email',
+		'name',
+		'callback_url',
+		'users_callback_url',
+		'rpc_connection',
+		'ignore_balance'
+	);
+	protected $hidden = array(
+		'password',
+		'secret'
+	);
 
 	public static function getUserByGuid($guid) {
 		return self::where('guid', $guid)->first();
