@@ -1,8 +1,8 @@
 <?php
 
 return array(
-	'is_testnet' => $_ENV['TESTNET'],
-	'callback_secret' => $_ENV['CALLBACK_SECRET'],
-	'app_secret' => $_ENV['APP_SECRET'],
-	'private_invoicing' => $_ENV['PRIVATE_INVOICING'],
+	'is_testnet' => getenv('TESTNET'),
+	'callback_secret' => getenv('CALLBACK_SECRET'),
+	'app_secret' => getenv('APP_SECRET'),
+	'private_invoicing' => getenv('PRIVATE_INVOICING'),
 );

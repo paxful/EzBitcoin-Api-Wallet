@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'default' => $_ENV['DATABASE_DRIVER'],
+	'default' => getenv('DATABASE_DRIVER'),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -66,9 +66,9 @@ return array(
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',
-			'database' => $_ENV['DATABASE_NAME'],
-			'username' => $_ENV['DATABASE_USER'],
-			'password' => $_ENV['DATABASE_PASS'],
+			'database' => getenv('DATABASE_NAME'),
+			'username' => getenv('DATABASE_USER'),
+			'password' => getenv('DATABASE_PASS'),
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',

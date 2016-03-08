@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Helpers\DataParserInterface;
 use Helpers\JsonRPCClientInterface;
 use Illuminate\Support\Facades\Response;
@@ -997,13 +998,17 @@ class ApiController extends BaseController {
 	private function saveFee( $new_transaction ) {
 		$tx_hash = $new_transaction->tx_id;
 		/* get for that transaction a miners fee, at this point we know it already */
-		Queue::push( function ( $job ) use ( $tx_hash )
+		$bitcoinCli = $this->bitcoin_core;
+		$date = Carbon::now()->addSeconds(30);
+		Queue::later($date, function ( $job ) use ( $tx_hash, $bitcoinCli )
 		{
 			// get_transaction from bitcoin core
-			$tx_info         = $this->bitcoin_core->gettransaction( $tx_hash );
+			$tx_info         = $bitcoinCli->gettransaction( $tx_hash );
 			$fee             = isset($tx_info['fee']) ? abs( bcmul( $tx_info['fee'], SATOSHIS_FRACTION ) ) : null;
 			// save fee for that transaction hash
-			Transaction::where('tx_id', $tx_hash)->update(['network_fee' => $fee]);
+			Transaction::on('pgsql')
+				->where('tx_id', $tx_hash)
+				->update(['network_fee' => $fee]);
 
 			$job->delete();
 		} );

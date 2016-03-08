@@ -1,6 +1,6 @@
 <?php
 
-define('API_DEBUG', $_ENV['DEBUG']);
+define('API_DEBUG', getenv('DEBUG'));
 define('SATOSHIS_FRACTION', 100000000);
 
 /* error messages */

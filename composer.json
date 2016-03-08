@@ -8,7 +8,8 @@
 		"laravel/framework": "4.2.*",
 	  	"barryvdh/laravel-debugbar": "1.*",
 	  	"raahul/larryfour": "1.*",
-        "guzzlehttp/guzzle": "~5.3"
+        "guzzlehttp/guzzle": "~5.3",
+		"pda/pheanstalk": "~2.0"
 	},
 	"require-dev": {
 	  "phpunit/phpunit": "4.3.*",
