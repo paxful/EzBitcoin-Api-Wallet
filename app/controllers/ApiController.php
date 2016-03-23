@@ -426,7 +426,7 @@ class ApiController extends BaseController {
 		DB::beginTransaction(); // begin DB transaction
 
 		// ignore balance when using bitGo
-		if ($this->user->ignore_balance)
+		if (!$this->user->ignore_balance)
 		{
 			$user_balance = Balance::getBalance( $this->user->id, $this->crypto_type_id );
 
@@ -563,7 +563,7 @@ class ApiController extends BaseController {
 				if ($sent)
 				{
 					// ignore balance when using bitGo
-					if ($this->user->ignore_balance)
+					if (!$this->user->ignore_balance)
 					{
 						Balance::setNewUserBalance($user_balance, $new_balance); // also decrease balance
 					}
