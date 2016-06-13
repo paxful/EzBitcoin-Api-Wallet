@@ -1004,7 +1004,7 @@ class ApiController extends BaseController {
 		{
 			// get_transaction from bitcoin core
 			$tx_info         = $bitcoinCli->gettransaction( $tx_hash );
-			$fee             = isset($tx_info['fee']) ? abs( bcmul( $tx_info['fee'], SATOSHIS_FRACTION ) ) : null;
+			$fee             = isset($tx_info['fee']) ? abs($tx_info['fee']*SATOSHIS_FRACTION) : null;
 			// save fee for that transaction hash
 			Transaction::on('pgsql')
 				->where('tx_id', $tx_hash)
