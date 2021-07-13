@@ -48,16 +48,16 @@ return array(
 
 		'sqlite' => array(
 			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../database/production.sqlite',
+			'database' => __DIR__ . '/../database/production.sqlite',
 			'prefix'   => '',
 		),
 
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'forge',
-			'username'  => 'forge',
-			'password'  => '',
+			'database'  => getenv('DATABASE_NAME'),
+			'username'  => getenv('DATABASE_USER'),
+			'password'  => getenv('DATABASE_PASS'),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

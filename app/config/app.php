@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(E_ALL ^ E_DEPRECATED);
 return array(
 
 	/*
@@ -136,7 +136,7 @@ return array(
 	|
 	*/
 
-	'manifest' => storage_path().'/meta',
+	'manifest' => storage_path() . '/meta',
 
 	/*
 	|--------------------------------------------------------------------------

@@ -17,9 +17,9 @@ class CreateChangeAddressesSettingsTables extends Migration {
 			$table->bigIncrements('id');
 			$table->string('address', 48)->nullable();
 			$table->integer('user_id');
-			$table->foreign('user_id')->references('id')->on('users');
+			// $table->foreign('user_id')->references('id')->on('users');
 			$table->integer('crypto_type_id')->default(1);
-			$table->foreign('crypto_type_id')->references('id')->on('crypto_types');
+			// $table->foreign('crypto_type_id')->references('id')->on('crypto_types');
 			$table->timestamps();
 		});
 

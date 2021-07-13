@@ -30,7 +30,7 @@ return array(
 	|
 	*/
 
-	'host' => 'smtp.mailgun.org',
+	'host' => 'smtp-relay.sendinblue.com',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -122,6 +122,6 @@ return array(
 	*/
 
 	'pretend' => App::environment('local', 'testing') ? true : false,
-//	'pretend' => false,
+	//	'pretend' => false,
 
 );
